@@ -1,0 +1,33 @@
+
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+/*
+ * https://fonts.google.com/
+ */
+/* @import url('https://fonts.googleapis.com/css?family=Anton'); */
+/* @import url('https://fonts.googleapis.com/css?family=Bitter'); */
+/* @import url('https://fonts.googleapis.com/css?family=Indie+Flower'); */
+
+/*
+--arreevblue: #7B9AC1;
+--arreevliteblue: #9CAEC4
+--arreevlitegray: #F5F5FC
+--arreevliteoffwhite: #FBFBFB
+ */
+
+html,body {
+  margin: 0px;
+
+  width: 100%;
+  height: 100%;
+
+  font-size: 1em !important;
+  font-family: Roboto,sans-serif !important;
+
+  background: #F2F2F8;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+

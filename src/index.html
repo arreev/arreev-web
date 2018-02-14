@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>arreev</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-size: 50pt;
+      color: #5555AA;
+    }
+
+    @keyframes dots {
+      from { opacity: 0 }
+      to { opacity: 1 }
+    }
+    .d { animation: dots .5s alternate; }
+    .d1 { animation-delay: 0.00s; }
+    .d2 { animation-delay: 0.25s; }
+    .d3 { animation-delay: 0.50s; }
+  </style>
+
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <app-root>
+    <div class="loading">
+      <span class="d d1">&middot</span>
+      <span class="d d2">&middot</span>
+      <span class="d d3">&middot</span>
+    </div>
+  </app-root>
+</body>
+</html>

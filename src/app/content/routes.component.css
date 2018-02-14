@@ -1,0 +1,19 @@
+
+.routes-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.routes-top {
+  height: 128px;
+}
+
+.routes-middle {
+  flex-grow: 1;
+  background: pink;
+}
+
+.routes-bottom {
+  height: 195px;
+}

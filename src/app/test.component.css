@@ -1,0 +1,57 @@
+
+.test-container {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: 100%;
+
+  background: red;
+}
+
+.test-header {
+  flex: none;
+
+  width: 100%;
+  height: 48px;
+
+  background: purple;
+}
+
+.test-content {
+  flex: auto;
+
+  width: 100%;
+  height: 100vh;
+
+  background: skyblue;
+}
+
+.test-sidenav {
+  width: 218px;
+
+  background: green;
+}
+
+.test-editor {
+  overflow-y: auto;
+
+  background: salmon;
+}
+
+.test-sidebar {
+  width: 96px;
+
+  background: white;
+}
+
+.test-footer {
+  flex: none;
+  align-self: flex-end;
+
+  width: 100%;
+  height: 24px;
+
+  background: orange;
+}
+

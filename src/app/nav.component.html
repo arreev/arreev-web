@@ -1,0 +1,35 @@
+
+<div class="nav-flex">
+
+  <div class="ui-grid ui-grid-responsive ui-fluid" style="max-height:512px;overflow-y:auto;overflow-x:hidden;">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">
+        <button *ngIf="currentroute != 'home'" pButton type="button" label="home" [className]="navbutton" icon="fa-home" (click)="onContent( 'home' )"></button>
+        <button *ngIf="currentroute == 'home'" pButton type="button" label="home" [className]="navbuttonselected" icon="fa-home" (click)="onContent( 'home' )"></button>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">
+        <button *ngIf="currentroute != 'routes'" pButton type="button" label="routes" [className]="navbutton" icon="fa-map-marker" (click)="onContent( 'routes' )"></button>
+        <button *ngIf="currentroute == 'routes'" pButton type="button" label="routes" [className]="navbuttonselected" icon="fa-map-marker" (click)="onContent( 'routes' )"></button>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">
+        <button *ngIf="currentroute != 'people'" pButton type="button" label="people" [className]="navbutton" icon="fa-user" (click)="onContent( 'people' )"></button>
+        <button *ngIf="currentroute == 'people'" pButton type="button" label="people" [className]="navbuttonselected" icon="fa-user" (click)="onContent( 'people' )"></button>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="flex-grow: 1;"></div>
+
+  <div>
+    <span style="font-size:.65em;color:#EEEEEE;">ADVERTISEMENT</span>
+    <a href="https://f.wishabi.net/page_item_supplemental_infos/107044030/1516914861/extra_large">
+      <img src="https://f.wishabi.net/page_item_supplemental_infos/107044030/1516914861/extra_large" width="195px" height="195px">
+    </a>
+  </div>
+
+</div>

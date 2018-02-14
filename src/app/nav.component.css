@@ -1,0 +1,32 @@
+
+.nav-flex {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.nav-button {
+  animation-duration: .5s;
+  animation-name: slidein;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.nav-button-selected {
+  font-size: 1.25em;
+  font-weight: bold;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+
+@keyframes slidein {
+  from {
+    margin-left: 100%;
+    width: 300%;
+  }
+  to {
+    margin-left: 0%;
+    width: 100%;
+  }
+}

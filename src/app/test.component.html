@@ -1,0 +1,44 @@
+
+<div class="test-container">
+
+  <div class="test-header"></div>
+
+  <mat-sidenav-container class="test-content">
+    <mat-sidenav #right mode="side" opened="true" position="start" class="test-sidenav">
+      NAV DRAWER
+    </mat-sidenav>
+    <div class="test-editor">
+      <button mat-button (click)="right.toggle()" style="margin:20px;">right</button>
+      <button mat-button (click)="left.toggle()" style="margin:20px;">left</button>
+      <div>editor</div><div>editor</div><div>editor</div><div>editor</div><div>editor</div>
+      <div>editor</div><div>editor</div><div>editor</div><div>editor</div><div>editor</div>
+      <div>editor</div><div>editor</div><div>editor</div><div>editor</div><div>editor</div>
+      <div>editor</div><div>editor</div><div>editor</div><div>editor</div><div>editor</div>
+      <div>editor</div><div>editor</div><div>editor</div><div>editor</div><div>editor</div>
+    </div>
+    <mat-sidenav #left mode="side" opened="false" position="end" class="test-sidebar">
+      QUICK BAR
+    </mat-sidenav>
+  </mat-sidenav-container>
+
+  <div class="test-footer"></div>
+
+</div>
+
+
+  <!--
+  <mat-sidenav-container>
+    <mat-sidenav #right mode="side" opened="true" position="start" style="width:250px;background:salmon;">
+      NAV DRAWER
+    </mat-sidenav>
+    <mat-sidenav #left mode="side" opened="false" position="end" style="width:100px;background:lime;">
+      QUICK BAR
+    </mat-sidenav>
+    <div style="background:gray;">
+      <button mat-button (click)="right.toggle()" style="margin:20px;">right</button>
+      <div style="width:100%;text-align:right;">
+        <button mat-button (click)="left.toggle()" style="margin:20px;">left</button>
+      </div>
+    </div>
+  </mat-sidenav-container>
+  -->
