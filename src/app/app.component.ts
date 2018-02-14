@@ -15,7 +15,7 @@ export class AppComponent implements OnInit,OnDestroy
   avatarURL$?:Observable<string>;
 
   constructor( private userService:UserService ) {
-    this.avatarURL$ = Observable.of( '/assets/avatar.png' );
+    this.avatarURL$ = null;
   }
 
   ngOnInit(): void {}

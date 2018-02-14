@@ -12,7 +12,8 @@
       </div>
       <div class="app-header-icon" style="margin-left:5px;margin-right:15px;"><i class="fa fa-search"></i></div>
       <div style="width:15px;"></div>
-      <img src="{{avatarURL$|async}}" border="0" width="28px" style="cursor:pointer;"/>
+      <div *ngIf="avatarURL == null" class="app-header-icon"><i class="fa fa-user-circle-o"></i></div>
+      <img *ngIf="avatarURL != null" src="{{avatarURL$|async}}" border="0" width="28px" style="cursor:pointer;"/>
       <div class="app-header-icon"><i class="fa fa-sign-in"></i></div>
       <div class="app-header-icon"><i class="fa fa-commenting-o"></i></div>
       <div class="app-header-icon"><i class="fa fa-cog"></i></div>
@@ -29,7 +30,7 @@
       <router-outlet></router-outlet>
     </div>
     <mat-sidenav #sidebar mode="side" opened="false" position="end" class="app-sidebar">
-      QUICK BAR
+      <app-bar></app-bar>
     </mat-sidenav>
   </mat-sidenav-container>
 

@@ -18,10 +18,12 @@ import {
   ChipsModule,TerminalModule,DragDropModule,ToggleButtonModule,SidebarModule
 } from 'primeng/primeng';
 
+import { LocaleService } from './locale.service';
 import { UserService } from './user.service';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav.component';
+import { BarComponent } from './bar.component';
 import { HomeComponent } from './content/home.component';
 import { RoutesComponent } from './content/routes.component';
 import { PageNotFoundComponent } from './pagenotfound.component';
@@ -31,6 +33,7 @@ import { TestComponent } from './test.component';
   declarations: [
     AppComponent,
     NavComponent,
+    BarComponent,
     HomeComponent,
     RoutesComponent,
     TestComponent,
@@ -83,6 +86,7 @@ import { TestComponent } from './test.component';
     SidebarModule
   ],
   providers: [
+    LocaleService,
     UserService
   ],
   bootstrap: [ AppComponent ]
