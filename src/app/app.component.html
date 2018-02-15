@@ -5,7 +5,7 @@
     <div class="app-header-bar">
       <button pButton type="button" icon="fa-bars" (click)="sidenav.toggle()"></button>
       <img src="assets/arreev-icon.png" style="margin-left:15px;cursor:pointer;" (click)="onArreev()">
-      <span style="margin-left:-5px;font-weight:bold;font-size:24pt;color:white;text-shadow: 2px 2px rgba( 0,0,0,.5 );">arreev</span>
+      <span (click)="onArreev()" style="cursor:pointer;margin-left:-5px;font-weight:bold;font-size:24pt;color:white;text-shadow: 2px 2px rgba( 0,0,0,.5 );">arreev</span>
       <span class="spacer"></span>
       <div class="ui-inputgroup" style="font-size:9pt;">
         <input type="text" pInputText placeholder="" size="30">
@@ -14,7 +14,8 @@
       <div style="width:15px;"></div>
       <div *ngIf="avatarURL == null" class="app-header-icon"><i class="fa fa-user-circle-o"></i></div>
       <img *ngIf="avatarURL != null" src="{{avatarURL$|async}}" border="0" width="28px" style="cursor:pointer;"/>
-      <div class="app-header-icon"><i class="fa fa-sign-in"></i></div>
+      <div *ngIf="!loggedin" class="app-header-icon"><i class="fa fa-sign-in" (click)="onLogin()"></i></div>
+      <div *ngIf="loggedin" class="app-header-icon"><i class="fa fa-sign-out" (click)="onLogout()"></i></div>
       <div class="app-header-icon"><i class="fa fa-commenting-o"></i></div>
       <div class="app-header-icon"><i class="fa fa-cog"></i></div>
       <div style="width:15px;"></div>
@@ -29,7 +30,7 @@
     <div class="app-editor">
       <router-outlet></router-outlet>
     </div>
-    <mat-sidenav #sidebar mode="side" opened="false" position="end" class="app-sidebar">
+    <mat-sidenav #sidebar mode="side" opened="true" position="end" class="app-sidebar">
       <app-bar></app-bar>
     </mat-sidenav>
   </mat-sidenav-container>

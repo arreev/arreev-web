@@ -18,6 +18,8 @@ export class BarComponent implements OnInit,OnDestroy,AfterViewInit
 
   farenheit = 0;
   celsius = 0;
+  conditions = '';
+  weathericonurl = '';
 
   constructor( private localeService:LocaleService ) {}
 
@@ -42,5 +44,7 @@ export class BarComponent implements OnInit,OnDestroy,AfterViewInit
   private weatherUpdate( wu?:WeatherUpdate ) {
     this.farenheit = ( wu != null ? wu.farenheiht : 0 );
     this.celsius = ( wu != null ? wu.celsius : 0 );
+    this.conditions = ( wu != null ? wu.description : '' );
+    this.weathericonurl = ( wu != null ? wu.iconurl : '' );
   }
 }

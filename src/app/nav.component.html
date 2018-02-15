@@ -4,8 +4,8 @@
   <div class="ui-grid ui-grid-responsive ui-fluid" style="max-height:512px;overflow-y:auto;overflow-x:hidden;">
     <div class="ui-grid-row">
       <div class="ui-grid-col-12">
-        <button *ngIf="currentroute != 'home'" pButton type="button" label="home" [className]="navbutton" icon="fa-home" (click)="onContent( 'home' )"></button>
-        <button *ngIf="currentroute == 'home'" pButton type="button" label="home" [className]="navbuttonselected" icon="fa-home" (click)="onContent( 'home' )"></button>
+        <button *ngIf="currentroute != 'fleet'" pButton type="button" label="fleet" [className]="navbutton" icon="fa-bus" (click)="onContent( 'fleet' )"></button>
+        <button *ngIf="currentroute == 'fleet'" pButton type="button" label="fleet" [className]="navbuttonselected" icon="fa-bus" (click)="onContent( 'fleet' )"></button>
       </div>
     </div>
     <div class="ui-grid-row">
@@ -16,8 +16,32 @@
     </div>
     <div class="ui-grid-row">
       <div class="ui-grid-col-12">
+        <button *ngIf="currentroute != 'times'" pButton type="button" label="times" [className]="navbutton" icon="fa-clock-o" (click)="onContent( 'times' )"></button>
+        <button *ngIf="currentroute == 'times'" pButton type="button" label="times" [className]="navbuttonselected" icon="fa-clock-o" (click)="onContent( 'times' )"></button>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">
+        <button *ngIf="currentroute != 'events'" pButton type="button" label="events" [className]="navbutton" icon="fa-bell" (click)="onContent( 'events' )"></button>
+        <button *ngIf="currentroute == 'events'" pButton type="button" label="events" [className]="navbuttonselected" icon="fa-bell" (click)="onContent( 'events' )"></button>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">
+        <button *ngIf="currentroute != 'devices'" pButton type="button" label="devices" [className]="navbutton" icon="fa-mobile" (click)="onContent( 'devices' )"></button>
+        <button *ngIf="currentroute == 'devices'" pButton type="button" label="devices" [className]="navbuttonselected" icon="fa-mobile" (click)="onContent( 'devices' )"></button>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">
         <button *ngIf="currentroute != 'people'" pButton type="button" label="people" [className]="navbutton" icon="fa-user" (click)="onContent( 'people' )"></button>
         <button *ngIf="currentroute == 'people'" pButton type="button" label="people" [className]="navbuttonselected" icon="fa-user" (click)="onContent( 'people' )"></button>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">
+        <button *ngIf="currentroute != 'track'" pButton type="button" label="track" [className]="navbutton" icon="fa-user-secret" (click)="onContent( 'track' )"></button>
+        <button *ngIf="currentroute == 'track'" pButton type="button" label="track" [className]="navbuttonselected" icon="fa-user-secret" (click)="onContent( 'track' )"></button>
       </div>
     </div>
 

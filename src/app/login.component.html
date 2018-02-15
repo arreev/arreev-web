@@ -1,0 +1,66 @@
+
+<form [formGroup]="loginform" (ngSubmit)="onSubmit( loginform.value )" style="width:512px;">
+  <p-panel header="LOGIN">
+
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+          <span>EMail</span>
+        </div>
+        <div class="ui-grid-col-7">
+          <input pInputText type="email" formControlName="email" placeholder="" email pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}" style="width:100%;"/>
+        </div>
+        <div class="ui-grid-col-3">
+          <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!loginform.controls[ 'email' ].valid&&loginform.controls[ 'email' ].dirty">
+            <i class="fa fa-close"></i>
+            EMail must be valid format.
+          </div>
+        </div>
+      </div>
+
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-2" *ngIf="!new_password_required">
+          Password
+        </div>
+        <div class="ui-grid-col-2" style="font-size:10pt;" *ngIf="new_password_required">
+          <b>New Password</b>
+        </div>
+        <div class="ui-grid-col-7">
+          <input pInputText type="password" formControlName="password" placeholder="" style="width:100%;"/>
+        </div>
+        <div class="ui-grid-col-3">
+          <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!loginform.controls[ 'password' ].valid&&loginform.controls[ 'password' ].dirty">
+            <i class="fa fa-close"></i>
+            <span *ngIf="loginform.controls[ 'password' ].errors[ 'required' ]">Password is required.</span>
+            <span *ngIf="loginform.controls[ 'password' ].errors[ 'minlength' ]">Must be at least 8 characters.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ui-grid-row" style="margin-top:15px;">
+        <div class="ui-grid-col-2"></div>
+        <div class="ui-grid-col-7">
+          <button pButton type="submit" label="Submit" [disabled]="!loginform.valid"></button>
+        </div>
+        <div class="ui-grid-col-3"></div>
+      </div>
+
+    </div>
+  </p-panel>
+</form>
+
+<div *ngIf="isadmin" style="font-size:9pt;margin-top:5px;">
+  <p-inplace closable="closable">
+    <span pInplaceDisplay>
+        RESET?
+    </span>
+    <span pInplaceContent>
+        <input type="text" placeholder="verification code" [(ngModel)]="resetcode" pInputText>
+        <button pButton type="button" icon="fa-lock" label="Reset Password" class="ui-button-warning" (click)="onResetPassword()" [disabled]="!loginform.valid"></button>
+    </span>
+  </p-inplace>
+</div>
+
+<div style="width:512px;">
+  <p-messages [(value)]="messages"></p-messages>
+</div>

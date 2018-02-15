@@ -1,7 +1,9 @@
 
 import { Component,OnInit,OnDestroy } from '@angular/core';
+import { Authentication } from './authentication.service';
+import { SharedService } from './shared.service';
 import { Observable } from 'rxjs/Observable';
-import { UserService } from './user.service';
+import { Router } from '@angular/router';
 
 import 'rxjs/add/observable/of';
 
@@ -12,16 +14,34 @@ import 'rxjs/add/observable/of';
 })
 export class AppComponent implements OnInit,OnDestroy
 {
+  loggedin = false;
   avatarURL$?:Observable<string>;
 
-  constructor( private userService:UserService ) {
-    this.avatarURL$ = null;
+  constructor( private router:Router,private shared:SharedService ,private authentication:Authentication ) {
+    this.avatarURL$ = shared.avatarURL;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loggedin = ( this.authentication.isAuthorized() === true );
+  }
 
-  onArreev() {}
+  onArreev() {
+    this.router.navigate( [ 'home' ] ).catch( error => console.log( error ) );
+  }
+
   onAccount() {}
+
+  onLogin() {
+    this.authentication.logout();
+    this.loggedin = ( this.authentication.isAuthorized() === true );
+    this.router.navigate([ 'login' ] );
+  }
+
+  onLogout() {
+    this.authentication.logout();
+    this.loggedin = ( this.authentication.isAuthorized() === true );
+    this.router.navigate([ 'login' ] );
+  }
 
   hello() { console.log( 'hello' ); }
 

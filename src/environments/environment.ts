@@ -6,5 +6,12 @@
 export const environment = {
   production: false,
 
-  openweathermap_apikey: 'ef5b91a383228ba57ff9f478b8a74f27'
+  aws_region: 'us-west-2',
+  aws_userpool_id: 'us-west-2_n3Is5FJ0D',
+  aws_userpool_appclientid: '3one8mhjmhqj1uo4ui87vffsuh',
+
+  openweathermap_apikey: 'ef5b91a383228ba57ff9f478b8a74f27',
+
+  arreev_api_host: 'https://api.arreev.com/v1',
+  arreev_api_key: '1'
 };

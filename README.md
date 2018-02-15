@@ -26,4 +26,23 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
+## IE11
+in src/polyfills.ts uncomment the ES6 imports:
+/** IE9, IE10 and IE11 requires all of the following polyfills. **/
+
+## Installs
+npm install @angular/material@latest --save
+npm install @angular/cdk@latest --save
+npm install --save @angular/animations
+npm install --save hammerjs
+npm install primeng --save
+npm install --save font-awesome angular-font-awesome
+npm install --save rxjs 
+npm install aws-sdk
+npm install --save-dev @types/node
+npm install --save-dev webpack json-loader
+npm install --save amazon-cognito-identity-js
+
+## Notes
+tsconfig.app.json file, you can add "types": ["node"]
 
