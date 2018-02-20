@@ -4,9 +4,12 @@ import { Component,OnInit,OnDestroy } from '@angular/core';
 import { Router,ActivatedRoute } from '@angular/router';
 import { Authentication } from './authentication.service';
 import { Subscription } from 'rxjs/Subscription';
+import { AccountState } from './app.state';
 import { Message } from 'primeng/primeng';
-import { Sync } from './sync.service';
 import { Login } from './login';
+import { Store } from '@ngrx/store';
+
+import * as AccountActions from './store/account.actions';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +30,7 @@ export class LoginComponent implements OnInit,OnDestroy
   resetcode: string;
   isadmin = true;
 
-  constructor( private router:Router,private route:ActivatedRoute,private authentication:Authentication,private sync:Sync,private formbuilder:FormBuilder ) {}
+  constructor( private router:Router,private route:ActivatedRoute,private authentication:Authentication,private formbuilder:FormBuilder,private accountstore:Store<AccountState> ) {}
 
   ngOnInit(): void {
     this.loginform = this.formbuilder.group({
@@ -97,7 +100,7 @@ export class LoginComponent implements OnInit,OnDestroy
       let goto = this.content;
       if ( !goto ) { goto = 'project'; }
       this.router.navigate( [ goto ] ).catch( error => { console.log( 'bad route '+this.content ); } );
-      this.sync.getAccount();
+      this.accountstore.dispatch( new AccountActions.AccountFetchAction() );
     }
   }
 

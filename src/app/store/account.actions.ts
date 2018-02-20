@@ -2,19 +2,26 @@
 import { Account } from '../model/account';
 import { Action } from '@ngrx/store';
 
-export const ACCOUNT          = 'PERSISTENT_ACCOUNT';
-export const PENDINGACCOUNT   = 'PERSISTENT_PENDINGACCOUNT';
+export const ACCOUNT_POST           = 'ACCOUNT_POST';
+export const ACCOUNT_FETCH          = 'ACCOUNT_FETCH';
+export const ACCOUNT_FETCHED        = 'ACCOUNT_FETCHED';
 
-export class AccountAction implements Action
+export class AccountPostAction implements Action
 {
-  readonly type = ACCOUNT;
+  readonly type = ACCOUNT_POST;
   constructor( public account:Account ) {}
 }
 
-export class PendingAccountAction implements Action
+export class AccountFetchAction implements Action
 {
-  readonly type = PENDINGACCOUNT;
-  constructor( public pending:Account ) {}
+  readonly type = ACCOUNT_FETCH;
+  constructor() {}
 }
 
-export type All = AccountAction | PendingAccountAction;
+export class AccountFetchedAction implements Action
+{
+  readonly type = ACCOUNT_FETCHED;
+  constructor( public account:Account ) {}
+}
+
+export type All = AccountPostAction | AccountFetchAction | AccountFetchedAction;

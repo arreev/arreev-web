@@ -3,23 +3,23 @@
 
   <div class="app-header">
     <div class="app-header-bar">
-      <button pButton type="button" icon="fa-bars" (click)="sidenav.toggle()"></button>
+      <div class="app-header-icon"><i class="fa fa-bars animated bounce" style="cursor:pointer;" (click)="sidenav.toggle()"></i></div>
       <img src="assets/arreev-icon.png" style="margin-left:15px;cursor:pointer;" (click)="onArreev()">
       <span (click)="onArreev()" style="cursor:pointer;margin-left:-5px;font-weight:bold;font-size:24pt;color:white;text-shadow: 2px 2px rgba( 0,0,0,.5 );">arreev</span>
       <span class="spacer"></span>
       <div class="ui-inputgroup" style="font-size:9pt;">
         <input type="text" pInputText placeholder="" size="30">
       </div>
-      <div class="app-header-icon" style="margin-left:5px;margin-right:15px;"><i class="fa fa-search"></i></div>
+      <div class="app-header-icon" [@app-fade]="void" style="margin-left:5px;margin-right:15px;"><i class="fa fa-search"></i></div>
       <div style="width:15px;"></div>
-      <div *ngIf="avatarURL == null" class="app-header-icon"><i class="fa fa-user-circle-o"></i></div>
-      <img *ngIf="avatarURL != null" src="{{avatarURL$|async}}" border="0" width="28px" style="cursor:pointer;"/>
-      <div *ngIf="!loggedin" class="app-header-icon"><i class="fa fa-sign-in" (click)="onLogin()"></i></div>
-      <div *ngIf="loggedin" class="app-header-icon"><i class="fa fa-sign-out" (click)="onLogout()"></i></div>
-      <div class="app-header-icon"><i class="fa fa-commenting-o"></i></div>
-      <div class="app-header-icon"><i class="fa fa-cog"></i></div>
+      <div *ngIf="!avataravailable" class="app-header-icon"><i class="fa fa-user-circle-o" style="cursor:pointer;" (click)="onAccount()" pTooltip="my account" showDelay="750"></i></div>
+      <img *ngIf="avataravailable" src="{{avatarURL$|async}}" border="0" width="28px" style="cursor:pointer;" (click)="onAccount()" pTooltip="my account" showDelay="750"/>
+      <div *ngIf="!loggedin" class="app-header-icon"><i class="fa fa-sign-in" (click)="onLogin()" pTooltip="sign in" showDelay="750"></i></div>
+      <div *ngIf="loggedin" class="app-header-icon"><i class="fa fa-sign-out" (click)="onLogout()" pTooltip="sign out" showDelay="750"></i></div>
+      <div class="app-header-icon"><i class="fa fa-commenting-o" pTooltip="communiques" showDelay="750"></i></div>
+      <div class="app-header-icon"><i class="fa fa-cog" pTooltip="settings" showDelay="750"></i></div>
       <div style="width:15px;"></div>
-      <div class="app-header-icon" (click)="sidebar.toggle()"><i class="fa fa-ellipsis-v"></i></div>
+      <div class="app-header-icon" [@app-component-yellow]="void" (click)="sidebar.toggle()"><i class="fa fa-ellipsis-v"></i></div>
     </div>
   </div>
 

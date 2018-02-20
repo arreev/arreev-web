@@ -1,0 +1,94 @@
+
+<div class="account-container">
+
+  <p-panel header="account information">
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+
+      <div style="height:5px;"></div>
+
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-6">
+          <span class="account-label">email</span>
+          <input pInputText type="text" placeholder="..." [(ngModel)]="accountvm.email" readonly/>
+        </div>
+        <div class="ui-grid-col-6">
+          <span class="account-label"> </span><br>
+          <p-checkbox label="active" [(ngModel)]="accountvm.active" binary="true"></p-checkbox>
+        </div>
+      </div>
+
+      <div style="height:10px;"></div>
+
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-6">
+          <span class="account-label">first name</span>
+          <input pInputText type="text" placeholder="..." [(ngModel)]="accountvm.firstname" (ngModelChange)="update()"/>
+        </div>
+        <div class="ui-grid-col-6">
+          <span class="account-label">last name</span>
+          <input pInputText type="text" placeholder="..." [(ngModel)]="accountvm.lastname" (ngModelChange)="update()"/>
+        </div>
+      </div>
+
+      <div style="height:10px;"></div>
+
+      <!--
+      <div *ngIf="account$ | async as a">
+        <div>{{a.email}}</div>
+        <div>{{a.groups}}</div>
+      </div>
+      -->
+
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-4">
+          <span class="account-label">roles</span>
+          <p-multiSelect [options]="roles" [(ngModel)]="selectedroles" [filter]="false" defaultLabel="..." [panelStyle]="{'width':'100%'}">
+            <ng-template let-role let-i="index" pTemplate="item">
+              {{i}}
+              <img src="assets/role-{{role.label}}.png" style="width:24px;display:inline-block;vertical-align:middle"/>
+              <div style="font-size:14px;float:right;margin-top:4px">{{role.label}}</div>
+            </ng-template>
+          </p-multiSelect>
+        </div>
+        <div class="ui-grid-col-4">
+          <span class="account-label">groups</span>
+          <p-multiSelect [options]="groups" [(ngModel)]="selectedgroups" [filter]="false" defaultLabel="..." [panelStyle]="{'width':'100%'}">
+            <ng-template let-group let-i="index" pTemplate="item">
+              {{i}}
+              <img src="assets/group-{{group.label}}.png" style="width:24px;display:inline-block;vertical-align:middle"/>
+              <div style="font-size:14px;float:right;margin-top:4px">{{group.label}}</div>
+            </ng-template>
+          </p-multiSelect>
+        </div>
+        <div class="ui-grid-col-4">
+          <span class="account-label">permissions</span>
+          <p-multiSelect [options]="permissions" [(ngModel)]="selectedpermissions" [filter]="false" defaultLabel="..." [panelStyle]="{'width':'100%'}">
+            <ng-template let-permission let-i="index" pTemplate="item">
+              {{i}}
+              <img src="assets/permission-{{permission.label}}.png" style="width:24px;display:inline-block;vertical-align:middle"/>
+              <div style="font-size:14px;float:right;margin-top:4px">{{permission.label}}</div>
+            </ng-template>
+          </p-multiSelect>
+        </div>
+      </div>
+
+    </div>
+  </p-panel>
+
+  <div style="height:5px;"></div>
+
+  <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-2">
+        <div class="account-avatar" (click)="onAvatar()">
+          <img src="{{accountvm.avatarurl}}" width="100%">
+        </div>
+      </div>
+      <div class="ui-grid-col-10">
+        <p-steps [model]="rankitems"></p-steps>
+      </div>
+    </div>
+  </div>
+
+</div>
+

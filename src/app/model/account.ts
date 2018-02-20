@@ -12,3 +12,13 @@ export interface Account extends Entity
   group?: string;
   active?: boolean;
 }
+
+export function dumpAccount( account:Account ) : string {
+  let dump = null;
+
+  if ( account != null ) {
+    dump = 'Account<' + account.firstname + ',' + account.lastname + ',' + account.email + ',' + (account.active ? 'active' : 'inactive') + '>';
+  }
+
+  return dump;
+}

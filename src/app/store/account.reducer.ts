@@ -1,21 +1,19 @@
 
+import { Account,dumpAccount } from '../model/account';
 import * as AccountActions from './account.actions';
-import { Account } from '../model/account';
 
 export type Action = AccountActions.All;
 
-const defaultState: Account = {};
+const defaultAccountState: Account = {};
 
-const newState = ( state,newData ) => {
-  return Object.assign( {},state,newData );
-};
-
-export function accountReducer( state:Account=defaultState,action:Action ) {
+export function accountReducer( state:Account=defaultAccountState,action:Action ) {
   switch ( action.type ) {
-    case AccountActions.ACCOUNT:
-      return newState( state,action.account );
-    case AccountActions.PENDINGACCOUNT:
-      return state; // dont change here, it is pending only
+    case AccountActions.ACCOUNT_POST:
+      return Object.assign({},state,action.account ); // builds left-to-right, will take only non-nulls from account.action and these will override {} and state
+    case AccountActions.ACCOUNT_FETCH:
+      return state;
+    case AccountActions.ACCOUNT_FETCHED:
+      return Object.assign({},state,action.account ); // builds left-to-right, will take only non-nulls from account.action and these will override {} and state
     default:
       return state;
   }

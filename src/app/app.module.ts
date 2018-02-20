@@ -17,14 +17,17 @@ import {
   DataListModule,DataGridModule,ConfirmDialogModule,GrowlModule,OrderListModule,InplaceModule,FieldsetModule,CarouselModule,
   ChipsModule,TerminalModule,DragDropModule,ToggleButtonModule,SidebarModule
 } from 'primeng/primeng';
+import { TableModule } from 'primeng/table';
 
 import { Authentication } from './authentication.service';
 import { AuthGuard } from './auth-guard.service';
 import { SharedService } from './shared.service';
 import { LocaleService } from './locale.service';
 import { UserService } from './user.service';
-import { Sync } from './sync.service';
 import { API } from './api.service';
+
+import { AppRouteReuseStrategy } from './app.route-reuse-strategy';
+import { RouteReuseStrategy } from '@angular/router';
 
 import { APIInterceptor } from './api.interceptor';
 
@@ -46,8 +49,12 @@ import { DevicesComponent } from './content/devices.component';
 import { PeopleComponent } from './content/people.component';
 import { TrackComponent } from './content/track.component';
 import { LoginComponent } from './login.component';
+import { AccountComponent } from './content/account.component';
 import { PageNotFoundComponent } from './pagenotfound.component';
 import { TestComponent } from './test.component';
+
+import { environment } from '../environments/environment';
+import { StepsModule } from 'primeng/steps';
 
 @NgModule({
   declarations: [
@@ -64,6 +71,7 @@ import { TestComponent } from './test.component';
     TrackComponent,
     TestComponent,
     LoginComponent,
+    AccountComponent,
     PageNotFoundComponent
   ],
   imports: [
@@ -111,17 +119,22 @@ import { TestComponent } from './test.component';
     DragDropModule,
     ToggleButtonModule,
     SidebarModule,
+    TableModule,
+    StepsModule,
 
     StoreModule.forRoot({ account:accountReducer } ),
-    EffectsModule.forRoot([ AccountEffects ] )
+    EffectsModule.forRoot([ AccountEffects ] ),
+
+    environment.imports
   ],
   providers: [
+    { provide:RouteReuseStrategy,useClass:AppRouteReuseStrategy },
+
     Authentication,
     AuthGuard,
     SharedService,
     LocaleService,
     UserService,
-    Sync,
     API,
 
     // TODO: figure out how to discriminate so that some requests do not result in pre-flight

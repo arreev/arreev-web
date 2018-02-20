@@ -1,6 +1,5 @@
 
 import { RouterStateSnapshot } from '@angular/router';
-import { SharedService } from './shared.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Login } from './login';
@@ -11,7 +10,9 @@ import {
   CognitoUserPool, CognitoUserSession
 } from 'amazon-cognito-identity-js';
 import * as AWS from 'aws-sdk/global';
+
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import 'rxjs/add/observable/throw';
 
 import { environment } from '../environments/environment';
 
@@ -44,7 +45,7 @@ export class Authentication
    * http://docs.aws.amazon.com/cognito/latest/developerguide/using-amazon-cognito-user-identity-pools-javascript-examples.html
    */
 
-  constructor( private shared:SharedService ) {}
+  constructor() {}
 
   login( email:string,password:string ) : Observable<Login> {
     AWS.config.region = environment.aws_region; // Authentication.AWS_REGION;
@@ -182,8 +183,6 @@ export class Authentication
     this._accessToken.next( '' );
     this._idToken.next( '' );
     this._refreshToken.next( '' );
-
-    this.shared.setAvatarURL( 'assets/avatar.png' );
   }
 
   private getCurrentUser() : CognitoUser {

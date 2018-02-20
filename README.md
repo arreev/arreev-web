@@ -31,18 +31,30 @@ in src/polyfills.ts uncomment the ES6 imports:
 /** IE9, IE10 and IE11 requires all of the following polyfills. **/
 
 ## Installs
-npm install @angular/material@latest --save
-npm install @angular/cdk@latest --save
-npm install --save @angular/animations
-npm install --save hammerjs
-npm install primeng --save
-npm install --save font-awesome angular-font-awesome
-npm install --save rxjs 
-npm install aws-sdk
-npm install --save-dev @types/node
-npm install --save-dev webpack json-loader
-npm install --save amazon-cognito-identity-js
+npm install @angular/material@latest --save<br>
+npm install @angular/cdk@latest --save<br>
+npm install --save @angular/animations<br>
+npm install --save hammerjs<br>
+npm install primeng --save<br>
+npm install --save font-awesome angular-font-awesome<br>
+npm install --save rxjs <br>
+npm install aws-sdk<br>
+npm install --save-dev @types/node<br>
+npm install --save-dev webpack json-loader<br>
+npm install --save amazon-cognito-identity-js<br>
 
 ## Notes
-tsconfig.app.json file, you can add "types": ["node"]
+<u>tsconfig.app.json file add:<br></u>
+"types": ["node"]<br>
+ 
+<u>in polyfills.ts, uncomment:</u><br>
+import 'web-animations-js';  // Run `npm install --save web-animations-js`.<br>
+
+<u>and install web animations api:</u><br>
+npm install --save web-animations-js<br>
+
+# Tools
+https://github.com/ngrx/store-devtools<br>
+https://blog.schwarty.com/using-ngrx-store-devtools-with-the-angular-cli-a3b5f88f12e9
+
 

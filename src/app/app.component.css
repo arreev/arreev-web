@@ -38,13 +38,21 @@
 .app-header-icon {
   color:#FFFFFF;
 
-  font-size:18pt;
-  font-weight:normal;
-  text-shadow:2px 2px #555555;
+  font-size: 1.5em;
+  font-weight: normal;
+  text-shadow: 2px 2px #555555;
 
   cursor: pointer;
 
-  margin-left:12px;
+  margin-left: 10px;
+}
+
+.app-header-icon:hover {
+  color: #F2F2FF;
+}
+
+.app-header-icon:active {
+  color: cyan;
 }
 
 .app-content {
@@ -73,9 +81,8 @@
 }
 
 .app-editor {
-  padding: 8px;
-
   overflow-y: auto;
+  height: 100%;
 
   background: transparent;
 }

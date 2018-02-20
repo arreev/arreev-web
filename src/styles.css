@@ -1,5 +1,6 @@
 
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "../node_modules/animate.css"; /* npm install animate.css --save */
 
 /*
  * https://fonts.google.com/

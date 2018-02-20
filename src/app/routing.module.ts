@@ -13,6 +13,8 @@ import { DevicesComponent } from './content/devices.component';
 import { PeopleComponent } from './content/people.component';
 import { TrackComponent } from './content/track.component';
 
+import { AccountComponent } from './content/account.component';
+
 import { LoginComponent } from './login.component';
 import { PageNotFoundComponent } from './pagenotfound.component';
 
@@ -28,6 +30,8 @@ const routes: Routes = [
   { path:'devices',component:DevicesComponent,canActivate:[AuthGuard] },
   { path:'people',component:PeopleComponent,canActivate:[AuthGuard] },
   { path:'track',component:TrackComponent,canActivate:[AuthGuard] },
+
+  { path:'account',component:AccountComponent,canActivate:[AuthGuard] },
 
   { path:'login',component:LoginComponent },
   { path:'**',component:PageNotFoundComponent }
