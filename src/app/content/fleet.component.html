@@ -1,79 +1,46 @@
 
 <div class="fleet-container">
 
-  <p-toolbar [style]="{'margin-bottom':'2px'}">
+  <p-toolbar>
+    <div class="ui-toolbar-group-left">
+    </div>
+
     <div class="ui-toolbar-group-right">
-      <button pButton type="button" icon="fa-plus" class="ui-button"></button>
+      <span class="fleet-stack" pTooltip="add fleet" showDelay="750" (click)="onAddFleet()">
+        <i class="fa fa-bus" style="color:#DDDDDD;"></i>
+        <i class="fa fa-bus" style="color:#EEEEEE;margin-left:-3px;"></i>
+        <i class="fa fa-bus" style="color:#FFFFFF;margin-left:-3px;"></i>
+        <i class="fa fa-plus fleet-superscript"></i>
+      </span>
+      <span class="fleet-stack" pTooltip="add transporter" showDelay="750" (click)="onAddTransporter()">
+        <i class="fa fa-bus"></i>
+        <i class="fa fa-plus fleet-superscript"></i>
+      </span>
+      <i class="fa fa-refresh" style="cursor:pointer;" (click)="onRefresh()"></i>
     </div>
   </p-toolbar>
 
-  <p-table [columns]="cols" [value]="transporters" dataKey="vin">
-    <!-- header -->
-    <ng-template pTemplate="header" let-columns>
-      <tr>
-        <th style="width: 2.25em"></th>
-        <th>name</th>
-        <th>number</th>
-        <th>marquee</th>
-        <th>description</th>
-      </tr>
+  <p-dataGrid [value]="fleets" emptyMessage="&nbsp;" [rows]="1"
+    [hidden]="fleets.length === 0" [@grid-animation]="fleets.length">
+    <ng-template let-fleet pTemplate="item">
+      <div class="fleet-card" (click)="onFleet(fleet)">
+        <p-panel [header]="fleet.name" styleClass="fleet-panel">
+          <img src="{{fleet.imageURL}}" width="150" height="125" style="object-fit: cover;">
+          <div class="fleet-text">{{fleet.type}}</div>
+        </p-panel>
+      </div>
     </ng-template>
-    <!-- row -->
-    <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
-      <tr>
-        <td>
-          <a href="#" [pRowToggler]="rowData">
-            <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
-          </a>
-        </td>
-        <td pEditableColumn class="fleet-text">
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <input type="text" [(ngModel)]="rowData.name">
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{rowData.name}}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td pEditableColumn class="fleet-text">
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <input type="text" [(ngModel)]="rowData.number">
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{rowData.number}}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td pEditableColumn class="fleet-text">
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <input type="text" [(ngModel)]="rowData.marquee">
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{rowData.marquee}}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td pEditableColumn class="fleet-text">
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <input type="text" [(ngModel)]="rowData.description">
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{rowData.description}}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-      </tr>
-    </ng-template>
-    <!-- expansion -->
-    <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
-      <tr>
-        <td [attr.colspan]="5"><div style="height:200px;"></div></td>
-      </tr>
-    </ng-template>
-  </p-table>
+  </p-dataGrid>
+
+  <div *ngIf="selectedfleet != null">
+    <app-fleet-edit [fleetid]="selectedfleet.id"></app-fleet-edit>
+  </div>
 
 </div>
+
+<p-dialog [(visible)]="showfleetnew" [modal]="true" [resizable]="true" appendTo="body">
+  <p-header>
+    add a new fleet
+  </p-header>
+  <app-fleet-new *ngIf="showfleetnew" (finished)="onFinishedFleetNew()"></app-fleet-new>
+</p-dialog>

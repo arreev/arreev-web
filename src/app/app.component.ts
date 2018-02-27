@@ -16,6 +16,10 @@ import { appFade } from './app.animations';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/skip';
 
+import * as firebase from 'firebase';
+
+import { environment } from '../environments/environment';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -33,6 +37,7 @@ export class AppComponent implements OnInit,OnDestroy
   loggedin = false;
   avataravailable = false;
   avatarURL$?:Observable<string>;
+  showinfo?: boolean;
 
   private accountStoreSubscription: Subscription;
   private account$: Observable<Account>;
@@ -45,6 +50,11 @@ export class AppComponent implements OnInit,OnDestroy
   ngOnInit(): void {
     this.accountStoreSubscription = this.account$.skip( 1 ).subscribe(account => this.fromAccountStore( account ) );
     this.loggedin = ( this.authentication.isAuthorized() === true );
+
+    /*
+     * because AngularFireModule.initializeApp( environment.firebase ) in app.module not work
+     */
+    firebase.initializeApp( environment.firebase );
 
     this.avataravailable = false;
 
@@ -75,6 +85,10 @@ export class AppComponent implements OnInit,OnDestroy
     this.router.navigate([ 'login' ] );
   }
 
+  onInfo() {
+    this.showinfo = true;
+  }
+
   hello() { console.log( 'hello' ); }
 
   ngOnDestroy(): void {
@@ -83,7 +97,7 @@ export class AppComponent implements OnInit,OnDestroy
 
   private fromAccountStore( account?:Account ) {
     if ( account === null ) { return; }
-    this.avataravailable = ( account.avatarURL != null );
-    this.avatarURL$ = Observable.of( account.avatarURL );
+    this.avataravailable = ( account.imageURL != null );
+    this.avatarURL$ = Observable.of( account.imageURL );
   }
 }

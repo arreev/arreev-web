@@ -1,0 +1,27 @@
+
+<div class="fleet-edit-container">
+
+  <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-3"><span class="fleet-edit-label">name</span></div>
+      <div class="ui-grid-col-3"><span class="fleet-edit-label">type</span></div>
+      <div class="ui-grid-col-3"><span class="fleet-edit-label">category</span></div>
+      <div class="ui-grid-col-3"><span class="fleet-edit-label">description</span></div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-3">
+        <input pInputText type="text" placeholder="" [(ngModel)]="fleetvm.name" (ngModelChange)="update()"/>
+      </div>
+      <div class="ui-grid-col-3">
+        <input pInputText type="text" placeholder="" [(ngModel)]="fleetvm.type" (ngModelChange)="update()"/>
+      </div>
+      <div class="ui-grid-col-3">
+        <input pInputText type="text" placeholder="" [(ngModel)]="fleetvm.category" (ngModelChange)="update()"/>
+      </div>
+      <div class="ui-grid-col-3">
+        <input pInputText type="text" placeholder="" [(ngModel)]="fleetvm.description" (ngModelChange)="update()"/>
+      </div>
+    </div>
+  </div>
+
+</div>

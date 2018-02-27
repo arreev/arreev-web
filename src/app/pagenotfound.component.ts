@@ -1,15 +1,10 @@
 
-import { Component,OnInit,OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-pagenotfound',
-  templateUrl: './pagenotfound.component.html',
-  styleUrls: ['./pagenotfound.component.css']
+  template: '<div style="margin:15px;color:red;">404 PAGE NOT FOUND</div>'
 })
-export class PageNotFoundComponent implements OnInit,OnDestroy
+export class PageNotFoundComponent
 {
-  constructor() {}
-
-  ngOnInit(): void {}
-  ngOnDestroy(): void {}
 }

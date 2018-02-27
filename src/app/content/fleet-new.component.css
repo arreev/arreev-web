@@ -1,0 +1,13 @@
+
+.fleet-new-container {
+  width: 512px;
+  font-size: .85em;
+  margin: 10px;
+}
+
+.fleet-new-label {
+  color: cornflowerblue;
+  font-weight: bold;
+  font-style: italic;
+}
+

@@ -15,11 +15,12 @@ import {
   MessagesModule,FileUploadModule,RadioButtonModule,PanelModule,DropdownModule,CheckboxModule,ProgressSpinnerModule,
   DataTableModule,CalendarModule,MultiSelectModule,SelectButtonModule,TabViewModule,InputTextareaModule,OverlayPanelModule,
   DataListModule,DataGridModule,ConfirmDialogModule,GrowlModule,OrderListModule,InplaceModule,FieldsetModule,CarouselModule,
-  ChipsModule,TerminalModule,DragDropModule,ToggleButtonModule,SidebarModule
+  ChipsModule,TerminalModule,DragDropModule,ToggleButtonModule,SidebarModule,CardModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 
 import { Authentication } from './authentication.service';
+import { SecureGuard } from './secure-guard.service';
 import { AuthGuard } from './auth-guard.service';
 import { SharedService } from './shared.service';
 import { LocaleService } from './locale.service';
@@ -33,25 +34,37 @@ import { APIInterceptor } from './api.interceptor';
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { AccountEffects } from './effects.service';
+import { AccountEffects } from './store/account-effects.service';
+import { FleetEffects } from './store/fleet-effects.service';
 
 import { accountReducer } from './store/account.reducer';
+import { fleetReducer } from './store/fleet.reducer';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav.component';
 import { BarComponent } from './bar.component';
 import { HomeComponent } from './content/home.component';
 import { FleetComponent } from './content/fleet.component';
+import { FleetNewComponent } from './content/fleet-new.component';
+import { FleetEditComponent } from './content/fleet-edit.component';
 import { RoutesComponent } from './content/routes.component';
 import { TimesComponent } from './content/times.component';
 import { EventsComponent } from './content/events.component';
 import { DevicesComponent } from './content/devices.component';
 import { PeopleComponent } from './content/people.component';
-import { TrackComponent } from './content/track.component';
+import { FollowComponent } from './content/follow.component';
+import { UTrackComponent } from './content/utrack.component';
 import { LoginComponent } from './login.component';
 import { AccountComponent } from './content/account.component';
+import { ForbiddenComponent } from './forbidden.component';
 import { PageNotFoundComponent } from './pagenotfound.component';
 import { TestComponent } from './test.component';
+
+import { AngularFireModule } from 'angularfire2';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireStorageModule } from 'angularfire2/storage';
+
+import { AgmCoreModule } from '@agm/core';
 
 import { environment } from '../environments/environment';
 import { StepsModule } from 'primeng/steps';
@@ -63,16 +76,20 @@ import { StepsModule } from 'primeng/steps';
     BarComponent,
     HomeComponent,
     FleetComponent,
+    FleetNewComponent,
+    FleetEditComponent,
     RoutesComponent,
     TimesComponent,
     EventsComponent,
     DevicesComponent,
     PeopleComponent,
-    TrackComponent,
+    FollowComponent,
+    UTrackComponent,
     TestComponent,
     LoginComponent,
     AccountComponent,
-    PageNotFoundComponent
+    ForbiddenComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule,
@@ -121,9 +138,16 @@ import { StepsModule } from 'primeng/steps';
     SidebarModule,
     TableModule,
     StepsModule,
+    CardModule,
 
-    StoreModule.forRoot({ account:accountReducer } ),
-    EffectsModule.forRoot([ AccountEffects ] ),
+    AngularFireModule.initializeApp( environment.firebase ),
+    AngularFirestoreModule,
+    AngularFireStorageModule,
+
+    AgmCoreModule.forRoot({ apiKey:environment.google_api_key } ),
+
+    StoreModule.forRoot({ account:accountReducer,fleet:fleetReducer } ),
+    EffectsModule.forRoot([ AccountEffects,FleetEffects ] ),
 
     environment.imports
   ],
@@ -131,6 +155,7 @@ import { StepsModule } from 'primeng/steps';
     { provide:RouteReuseStrategy,useClass:AppRouteReuseStrategy },
 
     Authentication,
+    SecureGuard,
     AuthGuard,
     SharedService,
     LocaleService,

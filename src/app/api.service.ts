@@ -1,14 +1,16 @@
 
+import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Authentication } from './authentication.service';
-import { HttpClient } from '@angular/common/http';
 import { Transporter } from './model/transporter';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { Account } from './model/account';
 import { JWTToken } from './jwt-token';
+import { Fleet } from './model/fleet';
 
 import { environment } from '../environments/environment';
 
+import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/concatMap';
 
 class APIResponse
@@ -20,9 +22,13 @@ class APIResponse
   total?: number;
 }
 
-class AccountResponse extends APIResponse
+class AccountResponse extends APIResponse { account?: Account = null; }
+class FleetsResponse extends APIResponse { fleets?: Fleet[] = null; }
+class FleetResponse extends APIResponse { fleet?: Fleet = null; }
+
+class StorageMetadata
 {
-  account?: Account = null;
+  name?: string;
 }
 
 @Injectable()
@@ -36,6 +42,10 @@ export class API
     this.authentication.idToken.subscribe(next => { this.idToken = next; } );
   }
 
+  /**
+   *
+   * @returns {Observable<Account>}
+   */
   getAccount() : Observable<Account> {
     const payload = new JWTToken( this.idToken ).decodePayload();
     const sub = payload.sub || '';
@@ -49,7 +59,12 @@ export class API
     return observable;
   }
 
-  putAccount( account: Account ) : Observable<Account> {
+  /**
+   *
+   * @param {Account} account
+   * @returns {Observable<Account>}
+   */
+  postAccount( account: Account ) : Observable<Account> {
     const body = JSON.stringify( account );
 
     const observable = this.http
@@ -61,7 +76,52 @@ export class API
     return observable;
   }
 
-  getFleet() : Observable<Transporter> {
-    return Observable.of( null );
+  /**
+   *
+   * @param {string} id
+   * @returns {Observable<Fleet>}
+   */
+  getFleet( id:string ) : Observable<Fleet> {
+    const observable = this.http
+      .get<FleetResponse>(environment.arreev_api_host + '/fleet?id=' + id )
+      .concatMap( r => {
+        return Observable.of( r.fleet );
+      } );
+
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} ownerid
+   * @returns {Observable<Fleet>}
+   */
+  getFleets( ownerid:string ) : Observable<Fleet> {
+    const observable = this.http
+      .get<FleetsResponse>(environment.arreev_api_host + '/fleets?ownerid=' + ownerid )
+      .concatMap( r => {
+        return Observable.from( r.fleets );
+      } );
+
+    return observable;
+  }
+
+  /**
+   * If fleet.id != null, then it affects an update ... if fleet.id == null, then affects a create.
+   *
+   * @param {string} ownerid
+   * @param {Fleet} fleet
+   * @returns {Observable<Fleet>}
+   */
+  postFleet( ownerid:string,fleet:Fleet ) : Observable<Fleet> {
+    const body = JSON.stringify( fleet );
+
+    const observable = this.http
+      .post<FleetResponse>(environment.arreev_api_host + '/fleet?ownerid=' + ownerid,body )
+      .concatMap( r => {
+        return Observable.of( r.fleet );
+      } );
+
+    return observable;
   }
 }

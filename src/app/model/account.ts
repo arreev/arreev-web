@@ -6,7 +6,8 @@ export interface Account extends Entity
   firstname?: string;
   lastname?: string;
   email?: string;
-  avatarURL?: string;
+  imageURL?: string;
+  thumbnailURL?: string;
   role?: string;
   permissions?: string;
   group?: string;

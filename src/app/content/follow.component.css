@@ -1,0 +1,9 @@
+
+.follow-container {
+  font-size: .85em;
+  margin: 10px;
+}
+
+agm-map {
+  height: 512px;
+}

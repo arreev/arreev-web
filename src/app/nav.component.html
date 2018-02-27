@@ -28,20 +28,20 @@
     </div>
     <div class="ui-grid-row">
       <div class="ui-grid-col-12">
-        <button *ngIf="currentroute != 'devices'" pButton type="button" label="devices" [className]="navbutton" icon="fa-mobile" (click)="onContent( 'devices' )"></button>
-        <button *ngIf="currentroute == 'devices'" pButton type="button" label="devices" [className]="navbuttonselected" icon="fa-mobile" (click)="onContent( 'devices' )"></button>
-      </div>
-    </div>
-    <div class="ui-grid-row">
-      <div class="ui-grid-col-12">
         <button *ngIf="currentroute != 'people'" pButton type="button" label="people" [className]="navbutton" icon="fa-user" (click)="onContent( 'people' )"></button>
         <button *ngIf="currentroute == 'people'" pButton type="button" label="people" [className]="navbuttonselected" icon="fa-user" (click)="onContent( 'people' )"></button>
       </div>
     </div>
     <div class="ui-grid-row">
       <div class="ui-grid-col-12">
-        <button *ngIf="currentroute != 'track'" pButton type="button" label="track" [className]="navbutton" icon="fa-user-secret" (click)="onContent( 'track' )"></button>
-        <button *ngIf="currentroute == 'track'" pButton type="button" label="track" [className]="navbuttonselected" icon="fa-user-secret" (click)="onContent( 'track' )"></button>
+        <button *ngIf="currentroute != 'follow'" pButton type="button" label="follow" [className]="navbutton" icon="fa-globe" (click)="onContent( 'follow' )"></button>
+        <button *ngIf="currentroute == 'follow'" pButton type="button" label="follow" [className]="navbuttonselected" icon="fa-globe" (click)="onContent( 'follow' )"></button>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">
+        <button *ngIf="currentroute != 'utrack'" pButton type="button" label="u-track" [className]="navbutton" icon="fa-user-secret" (click)="onContent( 'utrack' )"></button>
+        <button *ngIf="currentroute == 'utrack'" pButton type="button" label="u-track" [className]="navbuttonselected" icon="fa-user-secret" (click)="onContent( 'utrack' )"></button>
       </div>
     </div>
 

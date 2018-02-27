@@ -1,15 +1,15 @@
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Account,dumpAccount } from './model/account';
+import { Account,dumpAccount } from '../model/account';
 import { Actions,Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { Action,Store } from '@ngrx/store';
-import { AccountState } from './app.state';
-import { API } from './api.service';
+import { AccountState } from '../app.state';
+import { API } from '../api.service';
 
-import { ACCOUNT_POST,ACCOUNT_FETCH,ACCOUNT_FETCHED,AccountPostAction,AccountFetchAction,AccountFetchedAction } from './store/account.actions';
-import * as AccountActions from './store/account.actions';
+import { ACCOUNT_POST,ACCOUNT_FETCH,ACCOUNT_FETCHED,AccountPostAction,AccountFetchAction,AccountFetchedAction } from './account.actions';
+import * as AccountActions from './account.actions';
 
 import 'rxjs/add/operator/do';
 
@@ -60,7 +60,7 @@ export class AccountEffects
    */
   private post() {
     this.accountStore.select('account' ).take( 1 ).subscribe(account => {
-      this.api.putAccount( account ).subscribe(
+      this.api.postAccount( account ).subscribe(
         a => { console.log( 'FROM SERVER ' + dumpAccount( a ) ); },
         e => { console.log( e ); }
       );

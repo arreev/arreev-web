@@ -1,0 +1,17 @@
+
+<div class="follow-container">
+
+  <p-toolbar [style]="{'margin-bottom':'5px'}">
+    <div class="ui-toolbar-group-left">
+      <span>follow</span>
+    </div>
+    <div class="ui-toolbar-group-right">
+      <button pButton type="button" icon="fa-refresh" class="ui-button"></button>
+    </div>
+  </p-toolbar>
+
+  <agm-map [latitude]="lat" [longitude]="lng">
+    <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+  </agm-map>
+
+</div>

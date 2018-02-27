@@ -9,14 +9,23 @@
   animation-duration: .5s;
   animation-name: slidein;
   width: 100%;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  box-shadow: 3px 3px 3px rgba( 100,100,100,.25 );
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
 }
 
 .nav-button-selected {
   font-size: 1.25em;
-  font-weight: bold;
   width: 100%;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  box-shadow: 3px 3px 3px rgba( 100,100,100,.25 );
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+
+  border-color: #0073ea;
+  background: #0073ea;
+  color: #EEFFFF;
 }
 
 @keyframes slidein {

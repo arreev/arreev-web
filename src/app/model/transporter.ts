@@ -3,10 +3,19 @@ import { Entity } from './entity';
 
 export interface Transporter extends Entity
 {
-  vin?: string;
+  ownerid?: string;
+
   name?: string;
-  number?: number;
+  type?: string;
+  category?: string;
   description?: string;
-  marquee?: string;
   imageURL?: string;
+  thumbnailURL?: string;
+
+  number?: number;
+  marquee?: string;
+
+  status?: string;
+  latitude?: number;
+  longitude?: number;
 }

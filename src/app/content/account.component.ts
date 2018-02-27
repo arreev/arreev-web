@@ -1,11 +1,12 @@
 
-import { Component,OnInit,AfterViewInit,OnDestroy,ViewEncapsulation } from '@angular/core';
+import { Component,OnInit,AfterViewInit,OnDestroy,ViewEncapsulation,ViewChild } from '@angular/core';
 import { Authentication } from '../authentication.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Account,dumpAccount } from '../model/account';
 import { MenuItem,SelectItem } from 'primeng/api';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
+import { FileUpload } from 'primeng/primeng';
 import { AccountState } from '../app.state';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -18,16 +19,19 @@ import 'rxjs/add/operator/skip';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/debounceTime';
 
+import * as firebase from 'firebase';
+
 /*
  * MVVM Account View Model
  */
 class AccountVM
 {
+  id?: string;
   email?: string;
   firstname?: string;
   lastname?: string;
   active?: boolean;
-  avatarurl?: string;
+  imageURL?: string;
 }
 
 @Component({
@@ -38,7 +42,7 @@ class AccountVM
 })
 export class AccountComponent implements OnInit,AfterViewInit,OnDestroy
 {
-  accountvm = { email:'',firstname:'',lastname:'',active:false,avatarurl:'' };
+  accountvm = { id:'',email:'',firstname:'',lastname:'',active:false,imageURL:'' };
 
   private readonly _uichange = new BehaviorSubject<void>( null );
   private readonly uichange:Observable<void> = this._uichange.asObservable();
@@ -55,6 +59,8 @@ export class AccountComponent implements OnInit,AfterViewInit,OnDestroy
   selectedpermissions: string[] = [];
 
   rankitems: MenuItem[];
+
+  @ViewChild( 'inputFile' ) inputFile; // bit of a dom hack ?
 
   constructor( private router:Router,private authentication:Authentication,
                private accountstore:Store<AccountState> ) {
@@ -75,8 +81,21 @@ export class AccountComponent implements OnInit,AfterViewInit,OnDestroy
     this._uichange.next(null );
   }
 
-  onAvatar() {
-    console.log( 'onAvatar' );
+  onRefresh() {
+    this.accountstore.dispatch( new AccountActions.AccountFetchAction() );
+  }
+
+  onImage() {
+    this.inputFile.nativeElement.click(); // bit of a dom hack ?
+  }
+
+  onInputFile() {
+    try {
+      const file = this.inputFile.nativeElement.files[ 0 ];
+      this.uploadImage( file );
+    } catch ( x ) {
+      console.log( x );
+    }
   }
 
   ngOnDestroy(): void {
@@ -102,7 +121,8 @@ export class AccountComponent implements OnInit,AfterViewInit,OnDestroy
     console.log( 'AccountComponent.toAccountStore' );
     const account = {
       firstname:this.accountvm.firstname,
-      lastname:this.accountvm.lastname
+      lastname:this.accountvm.lastname,
+      imageURL:this.accountvm.imageURL
     };
     this.accountstore.dispatch( new AccountActions.AccountPostAction( account ) );
   }
@@ -117,11 +137,30 @@ export class AccountComponent implements OnInit,AfterViewInit,OnDestroy
   private assume( account?:Account ) {
     if ( account == null ) { return; }
 
+    this.accountvm.id = account.id;
     this.accountvm.email = account.email;
     this.accountvm.firstname = account.firstname;
     this.accountvm.lastname = account.lastname;
     this.accountvm.active = account.active;
-    this.accountvm.avatarurl = account.avatarURL;
+    this.accountvm.imageURL = account.imageURL;
+  }
+
+  private uploadImage( file:File ) {
+    const uploadtask = firebase.storage().ref().child( 'account/account.imageURL.'+this.accountvm.id ).put( file );
+    uploadtask.on( firebase.storage.TaskEvent.STATE_CHANGED,
+      (snapshot) => {},
+      e=>{ this.onError( e ); },
+      ()=>{ this.assumeImageURL( uploadtask.snapshot.downloadURL ); }
+    );
+  }
+
+  private assumeImageURL( imageURL:string ) {
+    this.accountvm.imageURL = imageURL;
+    this.toAccountStore();
+  }
+
+  private onError( e ) {
+    console.log( e );
   }
 
   private initialize() {

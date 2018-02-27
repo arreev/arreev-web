@@ -57,4 +57,8 @@ npm install --save web-animations-js<br>
 https://github.com/ngrx/store-devtools<br>
 https://blog.schwarty.com/using-ngrx-store-devtools-with-the-angular-cli-a3b5f88f12e9
 
-
+# Deploy
+https://cloud.google.com/appengine/docs/standard/java/getting-started/hosting-a-static-website<br>
+1. ng build --prod
+2. copy /dist contents to www.arreev.com/www 
+3. gcloud app deploy --project arreev-web
