@@ -20,6 +20,7 @@ import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/debounceTime';
 
 import * as firebase from 'firebase';
+import { animate,query,state,style,transition,trigger } from '@angular/animations';
 
 /*
  * MVVM Account View Model
@@ -38,6 +39,17 @@ class AccountVM
   selector: 'app-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.css'],
+  animations: [
+    trigger('account-in',[
+      state('in',style({ transform:'translateX(0)' } ) ),
+      transition('void => *',[ style({ transform:'translateX(+100%)' } ),animate('150ms ease-in' ) ] ),
+    ] ),
+    trigger('account-fade-in',[
+      state('here',style({ opacity:'0' } ) ),
+      state('now',style({ opacity:'1' } ) ),
+      transition('here => now',animate('750ms ease-in' ) )
+    ] )
+  ],
   encapsulation: ViewEncapsulation.None
 })
 export class AccountComponent implements OnInit,AfterViewInit,OnDestroy
@@ -62,6 +74,8 @@ export class AccountComponent implements OnInit,AfterViewInit,OnDestroy
 
   @ViewChild( 'inputFile' ) inputFile; // bit of a dom hack ?
 
+  titlestate = 'here';
+
   constructor( private router:Router,private authentication:Authentication,
                private accountstore:Store<AccountState> ) {
     this.account$ = this.accountstore.select('account' );
@@ -71,10 +85,12 @@ export class AccountComponent implements OnInit,AfterViewInit,OnDestroy
   ngOnInit(): void {
     this.accountStoreSubscription = this.account$.skip( 1 ).subscribe(account => this.fromAccountStore( account ) );
     this.accountstore.dispatch( new AccountActions.AccountFetchAction() );
+    this.titlestate = 'here';
   }
 
   ngAfterViewInit(): void {
     this.subscribeUI();
+    setTimeout(() => { this.titlestate = 'now'; } ); // RE: ExpressionChangedAfterItHasBeenCheckedError
   }
 
   update() {

@@ -12,7 +12,7 @@
         <i class="fa fa-bus" style="color:#FFFFFF;margin-left:-3px;"></i>
         <i class="fa fa-plus fleet-superscript"></i>
       </span>
-      <span class="fleet-stack" pTooltip="add transporter" showDelay="750" (click)="onAddTransporter()">
+      <span *ngIf="selectedfleet != null" class="fleet-stack" pTooltip="add transporter" showDelay="750" (click)="onAddTransporter()">
         <i class="fa fa-bus"></i>
         <i class="fa fa-plus fleet-superscript"></i>
       </span>
@@ -23,17 +23,19 @@
   <p-dataGrid [value]="fleets" emptyMessage="&nbsp;" [rows]="1"
     [hidden]="fleets.length === 0" [@grid-animation]="fleets.length">
     <ng-template let-fleet pTemplate="item">
-      <div class="fleet-card" (click)="onFleet(fleet)">
-        <p-panel [header]="fleet.name" styleClass="fleet-panel">
-          <img src="{{fleet.imageURL}}" width="150" height="125" style="object-fit: cover;">
-          <div class="fleet-text">{{fleet.type}}</div>
-        </p-panel>
-      </div>
+      <p-panel [header]="fleet.name" styleClass="fleet-panel" (click)="onFleet(fleet)" [@fleet-state]="fleet.state">
+        <img src="{{fleet.imageURL}}" width="150" height="125" style="object-fit: cover;">
+        <div class="fleet-text">{{fleet.type}}</div>
+      </p-panel>
     </ng-template>
   </p-dataGrid>
 
-  <div *ngIf="selectedfleet != null">
+  <div *ngIf="selectedfleet != null" [@fleet-edit]>
     <app-fleet-edit [fleetid]="selectedfleet.id"></app-fleet-edit>
+  </div>
+
+  <div *ngIf="selectedfleet != null" [@fleet-transporters]>
+    <app-fleet-transporters [fleetid]="selectedfleet.id" [refresh]="refresher"></app-fleet-transporters>
   </div>
 
 </div>
@@ -43,4 +45,11 @@
     add a new fleet
   </p-header>
   <app-fleet-new *ngIf="showfleetnew" (finished)="onFinishedFleetNew()"></app-fleet-new>
+</p-dialog>
+
+<p-dialog [(visible)]="showfleettransporternew" [modal]="true" [resizable]="true" appendTo="body">
+  <p-header>
+    add a new transporter
+  </p-header>
+  <app-fleet-transporter-new *ngIf="showfleettransporternew" [fleetid]="selectedfleet.id" (finished)="onFinishedFleetTransporterNew()"></app-fleet-transporter-new>
 </p-dialog>

@@ -14,8 +14,9 @@ export interface Transporter extends Entity
 
   number?: number;
   marquee?: string;
-
-  status?: string;
   latitude?: number;
   longitude?: number;
+  diatribe?: string;
+
+  status?: string;
 }

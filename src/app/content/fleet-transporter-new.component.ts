@@ -1,37 +1,37 @@
 
 import { Component,OnInit,OnDestroy,ViewEncapsulation,Input,EventEmitter,Output } from '@angular/core';
+import { Transporter } from '../model/transporter';
 import { Storage } from '@google-cloud/storage';
 import { AccountState } from '../app.state';
 import { API } from '../api.service';
-import { Fleet } from '../model/fleet';
 import { Store } from '@ngrx/store';
 import { isBlank } from '../util';
 
 import * as firebase from 'firebase';
 
-/*
- * MVVM Fleeet View Model
- */
-class FleetVM
+class TransporterVM
 {
   name?: string;
   description?: string;
+  number?: number;
+  marquee?: string;
   type?: string;
   category?: string;
 }
 
 @Component({
-  selector: 'app-fleet-new',
-  templateUrl: './fleet-new.component.html',
-  styleUrls: ['./fleet-new.component.css'],
+  selector: 'app-fleet-transporter-new',
+  templateUrl: './fleet-transporter-new.component.html',
+  styleUrls: ['./fleet-transporter-new.component.css'],
   encapsulation: ViewEncapsulation.None
 
 })
-export class FleetNewComponent implements OnInit,OnDestroy
+export class FleetTransporterNewComponent implements OnInit,OnDestroy
 {
+  @Input() fleetid: string;
   @Output() finished = new EventEmitter<void>();
 
-  fleetvm = { name:'',description:'',type:'',category:'' };
+  transportervm = { name:'',description:'',number:0,marquee:'',type:'',category:'' };
   validated = false;
   working = false;
 
@@ -46,10 +46,11 @@ export class FleetNewComponent implements OnInit,OnDestroy
   validation() {
     let v = false;
 
-    v = !isBlank( this.fleetvm.name ) &&
-      !isBlank( this.fleetvm.description ) &&
-      !isBlank( this.fleetvm.type ) &&
-      !isBlank( this.fleetvm.category ) &&
+    v = !isBlank( this.transportervm.name ) &&
+      !isBlank( this.transportervm.description ) &&
+      !isBlank( this.transportervm.marquee ) &&
+      !isBlank( this.transportervm.type ) &&
+      !isBlank( this.transportervm.category ) &&
       ( this.imagefile != null );
 
     this.validated = v;
@@ -65,7 +66,7 @@ export class FleetNewComponent implements OnInit,OnDestroy
   }
 
   onAdd() {
-    this.addNewFleet();
+    this.addNewTransporter();
   }
 
   ngOnDestroy(): void {
@@ -75,39 +76,42 @@ export class FleetNewComponent implements OnInit,OnDestroy
    * https://firebase.google.com/docs/storage/web/upload-files?authuser=1
    * https://firebase.google.com/docs/storage/security/start?authuser=1
    */
-  private addNewFleet() {
+  private addNewTransporter() {
     this.working = true;
 
-    const fleet: Fleet = {
-      name: this.fleetvm.name,
-      description: this.fleetvm.description,
-      type: this.fleetvm.type,
-      category: this.fleetvm.category
+    const transporter: Transporter = {
+      name: this.transportervm.name,
+      description: this.transportervm.description,
+      number: this.transportervm.number,
+      marquee: this.transportervm.marquee,
+      type: this.transportervm.type,
+      category: this.transportervm.category
     };
 
+    const fleetid = this.fleetid;
     const file = this.imagefile;
 
     this.accountstore.select('account' ).take( 1 ).subscribe(
       a => {
         /*
-         * 1. post to api with fleet.id == null (create)
+         * 1. post to api with transporter.id == null (create)
          */
         const ownerid = a.id;
-        this.api.postFleet( ownerid,fleet ).subscribe(
-          f => {
+        this.api.postTransporter( ownerid,fleetid,transporter ).subscribe(
+          t => {
             /*
-             * 2. upload file to storage, with fleet.id in the name
+             * 2. upload file to storage, with transporter.id in the name
              */
-            const uploadtask = firebase.storage().ref().child( 'fleet/fleet.imageURL.'+f.id ).put( file );
+            const uploadtask = firebase.storage().ref().child( 'transporter/transporter.imageURL.'+t.id ).put( file );
             uploadtask.on( firebase.storage.TaskEvent.STATE_CHANGED,
               (snapshot) => {},
               e => { this.onError( e ); },
               () => {
                 /*
-                 * 3. set fleet.imageURL,post to api with fleet.id != null (update)
+                 * 3. set transporter.imageURL,post to api with transporter.id != null (update)
                  */
-                f.imageURL = uploadtask.snapshot.downloadURL;
-                this.api.postFleet( ownerid,f ).subscribe(
+                t.imageURL = uploadtask.snapshot.downloadURL;
+                this.api.postTransporter( ownerid,fleetid,t ).subscribe(
                   ff => {},
                   e => { this.onError( e ); },
                   () => {
@@ -116,8 +120,8 @@ export class FleetNewComponent implements OnInit,OnDestroy
                   }
                 );
               }
-              );
-           },
+            );
+          },
           e => { this.onError( e ); },
           () => {}
         );

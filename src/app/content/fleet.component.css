@@ -26,13 +26,6 @@
   color: #AAFFFF;
 }
 
-.fleet-card {
-  /*animation-duration: .5s;*/
-  /*animation-name: fadeIn;*/
-
-  margin: 8px;
-}
-
 .fleet-panel {
   text-overflow: ellipsis;
   overflow: hidden;
@@ -40,9 +33,15 @@
 
   box-shadow: 3px 3px 5px rgba( 100,100,100,.25 );
   border-radius: 5px;
-  border: 1px solid #BBBBBB;
+  border: 2px solid #BBBBBB;
+
+  margin: 8px;
 
   cursor: pointer;
+}
+
+.fleet-panel:hover {
+  border: 2px solid #8899DD;
 }
 
 .ui-toolbar {

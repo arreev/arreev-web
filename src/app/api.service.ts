@@ -25,6 +25,8 @@ class APIResponse
 class AccountResponse extends APIResponse { account?: Account = null; }
 class FleetsResponse extends APIResponse { fleets?: Fleet[] = null; }
 class FleetResponse extends APIResponse { fleet?: Fleet = null; }
+class TransportersResponse extends APIResponse { transporters?: Transporter[] = null; }
+class TransporterResponse extends APIResponse { transporter?: Transporter = null; }
 
 class StorageMetadata
 {
@@ -107,7 +109,7 @@ export class API
   }
 
   /**
-   * If fleet.id != null, then it affects an update ... if fleet.id == null, then affects a create.
+   * in body, if fleet.id != null, then it affects an update ... if fleet.id == null, then affects a create
    *
    * @param {string} ownerid
    * @param {Fleet} fleet
@@ -120,6 +122,45 @@ export class API
       .post<FleetResponse>(environment.arreev_api_host + '/fleet?ownerid=' + ownerid,body )
       .concatMap( r => {
         return Observable.of( r.fleet );
+      } );
+
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} ownerid
+   * @param {string} fleetid
+   * @returns {Observable<Transporter>}
+   */
+  getTransporters( ownerid:string,fleetid:string ) : Observable<Transporter> {
+    const url = environment.arreev_api_host + '/transporters?ownerid='+ownerid+'&fleetid='+fleetid;
+    const observable = this.http
+      .get<TransportersResponse>( url )
+      .concatMap( r => {
+        return Observable.from( r.transporters );
+      } );
+
+    return observable;
+  }
+
+  /**
+   * in body, if transporter.id != null, then it affects an update ... if transporter.id == null, then affects a create
+   * to create, must also pass a fleetid
+   *
+   * @param {string} ownerid
+   * @param {string} fleetid
+   * @param {Transporter} transporter
+   * @returns {Observable<Transporter>}
+   */
+  postTransporter( ownerid:string,fleetid:string,transporter:Transporter ) : Observable<Transporter> {
+    const body = JSON.stringify( transporter );
+
+    const url = environment.arreev_api_host + '/transporter?ownerid='+ownerid + ( fleetid != null ? '&fleetid='+fleetid : '' );
+    const observable = this.http
+      .post<TransporterResponse>( url,body )
+      .concatMap( r => {
+        return Observable.of( r.transporter );
       } );
 
     return observable;

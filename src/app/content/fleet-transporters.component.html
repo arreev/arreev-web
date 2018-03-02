@@ -1,0 +1,73 @@
+
+<div class="fleet-transporters-container">
+  <span class="fleet-transporters-label">transporters</span>
+
+  <p-table [value]="transporters" rowExpandMode="multiple" dataKey="name">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 2.25em"></th>
+        <th>name</th>
+        <th style="width: 6em;">number</th>
+        <th>marquee</th>
+        <th style="width: 8em;">type</th>
+        <th>category</th>
+        <th>description</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-expanded="expanded">
+      <tr style="font-size:.90em;">
+        <td>
+          <a href="#" [pRowToggler]="rowData">
+            <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
+          </a>
+        </td>
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.name"></ng-template>
+            <ng-template pTemplate="output"><div class="fleet-transporters-cell">{{rowData.name}}</div></ng-template>
+          </p-cellEditor>
+        </td>
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.number"></ng-template>
+            <ng-template pTemplate="output"><div class="fleet-transporters-cell">{{rowData.number}}</div></ng-template>
+          </p-cellEditor>
+        </td>
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.marquee"></ng-template>
+            <ng-template pTemplate="output"><div class="fleet-transporters-cell">{{rowData.marquee}}</div></ng-template>
+          </p-cellEditor>
+        </td>
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.type"></ng-template>
+            <ng-template pTemplate="output"><div class="fleet-transporters-cell">{{rowData.type}}</div></ng-template>
+          </p-cellEditor>
+        </td>
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.category"></ng-template>
+            <ng-template pTemplate="output"><div class="fleet-transporters-cell">{{rowData.category}}</div></ng-template>
+          </p-cellEditor>
+        </td>
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.description"></ng-template>
+            <ng-template pTemplate="output"><div class="fleet-transporters-cell">{{rowData.description}}</div></ng-template>
+          </p-cellEditor>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-rowData>
+      <tr>
+        <td [attr.colspan]="7">
+          <div>
+            <img src="{{rowData.imageURL}}" width="96px" height="96px" style="object-fit:cover;"/>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+</div>

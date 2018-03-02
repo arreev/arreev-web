@@ -1,5 +1,10 @@
 
 
+      transition('void => *',[ style({ transform:'translateX(-100%)' } ),animate(100 ) ] ),
+      transition('* => void',[ style({ transform:'translateX(+100%)' } ),animate(100 ) ] )
+
+
+
 "../node_modules/primeng/resources/themes/flick/theme.css",
 
 "../node_modules/primeng/resources/themes/start/theme.css",

@@ -1,0 +1,24 @@
+
+.fleet-transporters-container {
+  margin: 8px;
+}
+
+.fleet-transporters-label {
+  color: cornflowerblue;
+  font-weight: normal;
+  font-style: italic;
+}
+
+.fleet-transporters-cell {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.ui-table .ui-table-thead > tr > th {
+  background: #FFFFFF;
+  color: cornflowerblue;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+

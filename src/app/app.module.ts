@@ -47,6 +47,8 @@ import { HomeComponent } from './content/home.component';
 import { FleetComponent } from './content/fleet.component';
 import { FleetNewComponent } from './content/fleet-new.component';
 import { FleetEditComponent } from './content/fleet-edit.component';
+import { FleetTransportersComponent } from './content/fleet-transporters.component';
+import { FleetTransporterNewComponent } from './content/fleet-transporter-new.component';
 import { RoutesComponent } from './content/routes.component';
 import { TimesComponent } from './content/times.component';
 import { EventsComponent } from './content/events.component';
@@ -78,6 +80,8 @@ import { StepsModule } from 'primeng/steps';
     FleetComponent,
     FleetNewComponent,
     FleetEditComponent,
+    FleetTransportersComponent,
+    FleetTransporterNewComponent,
     RoutesComponent,
     TimesComponent,
     EventsComponent,
