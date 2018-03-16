@@ -14,7 +14,7 @@ export const environment = {
 
   openweathermap_apikey: 'ef5b91a383228ba57ff9f478b8a74f27',
 
-  arreev_api_host: 'https://api.arreev.com/', // https://arreev-api-195423.appspot.com',
+  arreev_api_host: 'https://api.arreev.com', // https://arreev-api-195423.appspot.com',
   arreev_api_key: '1',
 
   firebase: {

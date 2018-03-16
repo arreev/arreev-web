@@ -9,3 +9,19 @@
   font-style: italic;
 }
 
+.fleet-edit-icon {
+  color: cornflowerblue;
+
+  font-size: 1.5em;
+  font-weight: normal;
+
+  cursor: pointer;
+}
+
+.fleet-edit-icon:hover {
+  color: blue;
+}
+
+.fleet-edit-icon:active {
+  color: cornflowerblue;
+}

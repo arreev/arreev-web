@@ -39,6 +39,7 @@ export class LoginComponent implements OnInit,OnDestroy
     });
 
     this.authentication.logout();
+    this.accountstore.dispatch( new AccountActions.AccountResetAction() );
     this.content = this.route.snapshot.queryParams[ 'content' ] || '/';
     this.clear();
   }
@@ -93,10 +94,10 @@ export class LoginComponent implements OnInit,OnDestroy
     this.blocked = false;
 
     if ( login.new_password_requested === true ) {
-      this.passwordExpired( true );
+      this.passwordExpired(true );
       this.messages.push( { severity:'warn',summary:'Password expired.',detail:'Please enter new password.' } );
     } else {
-      this.passwordExpired( false );
+      this.passwordExpired(false );
       let goto = this.content;
       if ( !goto ) { goto = 'project'; }
       this.router.navigate( [ goto ] ).catch( error => { console.log( 'bad route '+this.content ); } );

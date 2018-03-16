@@ -5,6 +5,7 @@ import { Transporter } from './model/transporter';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { Account } from './model/account';
+import { Follow } from './model/follow';
 import { JWTToken } from './jwt-token';
 import { Fleet } from './model/fleet';
 
@@ -27,6 +28,8 @@ class FleetsResponse extends APIResponse { fleets?: Fleet[] = null; }
 class FleetResponse extends APIResponse { fleet?: Fleet = null; }
 class TransportersResponse extends APIResponse { transporters?: Transporter[] = null; }
 class TransporterResponse extends APIResponse { transporter?: Transporter = null; }
+class FollowResponse extends APIResponse { follow?: Follow = null; }
+class FollowsResponse extends APIResponse { follows?: Follow[] = null; }
 
 class StorageMetadata
 {
@@ -129,12 +132,29 @@ export class API
 
   /**
    *
+   * @param {string} id
+   * @returns {Observable<Transporter>}
+   */
+  getTransporter( id:string ) : Observable<Transporter> {
+    const url = environment.arreev_api_host + '/transporter?id='+id;
+    const observable = this.http
+      .get<TransporterResponse>( url )
+      .concatMap( r => {
+        return Observable.of( r.transporter );
+      } );
+
+    return observable;
+  }
+
+  /**
+   *
    * @param {string} ownerid
    * @param {string} fleetid
    * @returns {Observable<Transporter>}
    */
   getTransporters( ownerid:string,fleetid:string ) : Observable<Transporter> {
     const url = environment.arreev_api_host + '/transporters?ownerid='+ownerid+'&fleetid='+fleetid;
+
     const observable = this.http
       .get<TransportersResponse>( url )
       .concatMap( r => {
@@ -161,6 +181,67 @@ export class API
       .post<TransporterResponse>( url,body )
       .concatMap( r => {
         return Observable.of( r.transporter );
+      } );
+
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Observable<Follow>}
+   */
+  getFollow( id:string ) : Observable<Follow> {
+    const url = environment.arreev_api_host + '/follow?id='+id;
+    const observable = this.http
+      .get<FollowResponse>( url )
+      .concatMap( r => {
+        return Observable.of( r.follow );
+      } );
+
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} ownerid
+   * @param {string} fleetid
+   * @param {string} transporterid
+   * @returns {Observable<Follow>}
+   */
+  getFollows( ownerid:string,fleetid:string,transporterid:string ) : Observable<Follow> {
+    const url = environment.arreev_api_host + '/follows?ownerid='+ownerid+'&fleetid='+fleetid+'&transporterid='+transporterid;
+
+    const observable = this.http
+      .get<FollowsResponse>( url )
+      .concatMap( r => {
+        return Observable.from( r.follows );
+      } );
+
+    return observable;
+  }
+
+  /**
+   * in body, if follow.id != null, then it affects an update ... if follow.id == null, then affects a create
+   * to create, must also pass a fleetid and transporterid
+   *
+   * @param {string} ownerid
+   * @param {string} fleetid
+   * @param {string} transporterid
+   * @param {Follow} follow
+   * @returns {Observable<Follow>}
+   */
+  postFollow( ownerid:string,fleetid:string,transporterid:string,follow:Follow ) : Observable<Follow> {
+    const body = JSON.stringify( follow );
+
+    const url = environment.arreev_api_host + '/follow?ownerid='+ownerid +
+      (fleetid != null ? '&fleetid='+fleetid : '') +
+      (transporterid != null ? '&transporterid='+transporterid : '');
+
+    const observable = this.http
+      .post<FollowResponse>( url,body )
+      .concatMap( r => {
+        return Observable.of( r.follow );
       } );
 
     return observable;

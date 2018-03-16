@@ -18,5 +18,17 @@ export interface Transporter extends Entity
   longitude?: number;
   diatribe?: string;
 
+  inservice?: boolean;
+
   status?: string;
+}
+
+export function dumpTransporter( transporter:Transporter ) :string {
+  let dump = null;
+
+  if ( transporter != null ) {
+    dump = 'Transporter<' + transporter.name + ',' + transporter.type + ',' + transporter.category + '>';
+  }
+
+  return dump;
 }

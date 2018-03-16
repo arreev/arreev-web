@@ -5,6 +5,7 @@ import { Action } from '@ngrx/store';
 export const ACCOUNT_POST           = 'ACCOUNT_POST';
 export const ACCOUNT_FETCH          = 'ACCOUNT_FETCH';
 export const ACCOUNT_FETCHED        = 'ACCOUNT_FETCHED';
+export const ACCOUNT_RESET          = 'ACCOUNT_RESET';
 
 export class AccountPostAction implements Action
 {
@@ -24,4 +25,10 @@ export class AccountFetchedAction implements Action
   constructor( public account:Account ) {}
 }
 
-export type All = AccountPostAction | AccountFetchAction | AccountFetchedAction;
+export class AccountResetAction implements Action
+{
+  readonly type = ACCOUNT_RESET;
+  constructor() {}
+}
+
+export type All = AccountPostAction | AccountFetchAction | AccountFetchedAction | AccountResetAction;

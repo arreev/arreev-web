@@ -98,7 +98,7 @@ export class FleetNewComponent implements OnInit,OnDestroy
             /*
              * 2. upload file to storage, with fleet.id in the name
              */
-            const uploadtask = firebase.storage().ref().child( 'fleet/fleet.imageURL.'+f.id ).put( file );
+            const uploadtask = firebase.storage().ref().child('fleet/fleet.imageURL.'+f.id ).put( file );
             uploadtask.on( firebase.storage.TaskEvent.STATE_CHANGED,
               (snapshot) => {},
               e => { this.onError( e ); },

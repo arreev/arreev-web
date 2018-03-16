@@ -6,10 +6,10 @@
     <ng-template pTemplate="header">
       <tr>
         <th style="width: 2.25em"></th>
-        <th>name</th>
-        <th style="width: 6em;">number</th>
+        <th pSortableColumn="name">name<p-sortIcon field="name"></p-sortIcon></th>
+        <th pSortableColumn="number">number<p-sortIcon field="number"></p-sortIcon></th>
         <th>marquee</th>
-        <th style="width: 8em;">type</th>
+        <th>type</th>
         <th>category</th>
         <th>description</th>
       </tr>
@@ -23,37 +23,37 @@
         </td>
         <td pEditableColumn>
           <p-cellEditor>
-            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.name"></ng-template>
+            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.name" (ngModelChange)="update(rowData)"></ng-template>
             <ng-template pTemplate="output"><div class="fleet-transporters-cell">{{rowData.name}}</div></ng-template>
           </p-cellEditor>
         </td>
         <td pEditableColumn>
           <p-cellEditor>
-            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.number"></ng-template>
+            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.number" (ngModelChange)="update(rowData)"></ng-template>
             <ng-template pTemplate="output"><div class="fleet-transporters-cell">{{rowData.number}}</div></ng-template>
           </p-cellEditor>
         </td>
         <td pEditableColumn>
           <p-cellEditor>
-            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.marquee"></ng-template>
+            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.marquee" (ngModelChange)="update(rowData)"></ng-template>
             <ng-template pTemplate="output"><div class="fleet-transporters-cell">{{rowData.marquee}}</div></ng-template>
           </p-cellEditor>
         </td>
         <td pEditableColumn>
           <p-cellEditor>
-            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.type"></ng-template>
+            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.type" (ngModelChange)="update(rowData)"></ng-template>
             <ng-template pTemplate="output"><div class="fleet-transporters-cell">{{rowData.type}}</div></ng-template>
           </p-cellEditor>
         </td>
         <td pEditableColumn>
           <p-cellEditor>
-            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.category"></ng-template>
+            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.category" (ngModelChange)="update(rowData)"></ng-template>
             <ng-template pTemplate="output"><div class="fleet-transporters-cell">{{rowData.category}}</div></ng-template>
           </p-cellEditor>
         </td>
         <td pEditableColumn>
           <p-cellEditor>
-            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.description"></ng-template>
+            <ng-template pTemplate="input"><input type="text" [(ngModel)]="rowData.description" (ngModelChange)="update(rowData)"></ng-template>
             <ng-template pTemplate="output"><div class="fleet-transporters-cell">{{rowData.description}}</div></ng-template>
           </p-cellEditor>
         </td>
@@ -62,8 +62,26 @@
     <ng-template pTemplate="rowexpansion" let-rowData>
       <tr>
         <td [attr.colspan]="7">
-          <div>
-            <img src="{{rowData.imageURL}}" width="96px" height="96px" style="object-fit:cover;"/>
+          <div style="">
+            <input #inputFile hidden type="file" (change)="onInputFile()">
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+              <div class="ui-grid-row">
+                <div>
+                  <img src="{{rowData.imageURL}}" width="112px" height="92px" class="fleet-transporters-image" (click)="onTransporterImage(rowData)"/>
+                </div>
+                <div class="ui-grid-col-8">
+                  <span class="fleet-transporters-label">information</span>
+                  <textarea pInputTextarea [(ngModel)]="rowData.diatribe" rows="4" (ngModelChange)="pending(rowData)" (blur)="updatePending()" style="resize:none;overflow:auto;"></textarea>
+                </div>
+                <div class="ui-grid-col-4">
+                  <div style="margin-top:3px;"><p-checkbox [(ngModel)]="rowData.inservice" (ngModelChange)="update(rowData)" label="in-service" binary="true"></p-checkbox></div>
+                  <div style="margin-top:5px;">
+                    <span class="fleet-transporters-label">status</span>
+                    <input type="text" [(ngModel)]="rowData.status" (ngModelChange)="update(rowData)" style="width:100%;">
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </td>
       </tr>

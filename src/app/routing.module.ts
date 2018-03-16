@@ -19,6 +19,7 @@ import { AccountComponent } from './content/account.component';
 import { LoginComponent } from './login.component';
 import { ForbiddenComponent } from './forbidden.component';
 import { PageNotFoundComponent } from './pagenotfound.component';
+import { UnderConstructionComponent } from './under-construction.component';
 
 const routes: Routes = [
   { path:'',redirectTo:'/home',pathMatch:'full' },
@@ -26,12 +27,12 @@ const routes: Routes = [
   { path:'home',component:HomeComponent,canActivate:[SecureGuard] },
 
   { path:'fleet',component:FleetComponent,canActivate:[SecureGuard,AuthGuard] },
-  { path:'routes',component:RoutesComponent,canActivate:[SecureGuard,AuthGuard] },
-  { path:'times',component:TimesComponent,canActivate:[SecureGuard,AuthGuard] },
-  { path:'events',component:EventsComponent,canActivate:[SecureGuard,AuthGuard] },
-  { path:'people',component:PeopleComponent,canActivate:[SecureGuard,AuthGuard] },
+  { path:'routes',component:UnderConstructionComponent,canActivate:[SecureGuard,AuthGuard] },
+  { path:'times',component:UnderConstructionComponent,canActivate:[SecureGuard,AuthGuard] },
+  { path:'events',component:UnderConstructionComponent,canActivate:[SecureGuard,AuthGuard] },
+  { path:'people',component:UnderConstructionComponent,canActivate:[SecureGuard,AuthGuard] },
   { path:'follow',component:FollowComponent,canActivate:[SecureGuard,AuthGuard] },
-  { path:'utrack',component:UTrackComponent,canActivate:[SecureGuard,AuthGuard] },
+  { path:'utrack',component:UnderConstructionComponent,canActivate:[SecureGuard,AuthGuard] },
 
   { path:'account',component:AccountComponent,canActivate:[SecureGuard,AuthGuard] },
   { path:'login',component:LoginComponent,canActivate:[SecureGuard] },

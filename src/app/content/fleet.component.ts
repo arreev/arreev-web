@@ -83,6 +83,9 @@ export class FleetComponent implements OnInit,OnDestroy
   }
 
   onFleet( fleet:FleetVM ) {
+    if ( this.selectedfleet === fleet ) {
+      return;
+    }
     if ( this.selectedfleet != null ) {
       this.selectedfleet.state = 'inactive';
     }
@@ -118,6 +121,7 @@ export class FleetComponent implements OnInit,OnDestroy
         f.type = fleet.type;
         f.category = fleet.category;
         f.description = fleet.description;
+        f.imageURL = fleet.imageURL;
         break;
       }
     }

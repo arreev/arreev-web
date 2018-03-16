@@ -15,7 +15,7 @@ import {
   MessagesModule,FileUploadModule,RadioButtonModule,PanelModule,DropdownModule,CheckboxModule,ProgressSpinnerModule,
   DataTableModule,CalendarModule,MultiSelectModule,SelectButtonModule,TabViewModule,InputTextareaModule,OverlayPanelModule,
   DataListModule,DataGridModule,ConfirmDialogModule,GrowlModule,OrderListModule,InplaceModule,FieldsetModule,CarouselModule,
-  ChipsModule,TerminalModule,DragDropModule,ToggleButtonModule,SidebarModule,CardModule
+  ChipsModule,TerminalModule,DragDropModule,ToggleButtonModule,SidebarModule,CardModule,EditorModule,GMapModule,InputSwitchModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 
@@ -36,9 +36,13 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { AccountEffects } from './store/account-effects.service';
 import { FleetEffects } from './store/fleet-effects.service';
+import { TransporterEffects } from './store/transporter-effects.service';
+import { FollowEffects } from './store/follow-effects.service';
 
 import { accountReducer } from './store/account.reducer';
 import { fleetReducer } from './store/fleet.reducer';
+import { transporterReducer } from './store/transporter.reducer';
+import { followReducer } from './store/follow.reducer';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav.component';
@@ -60,6 +64,7 @@ import { LoginComponent } from './login.component';
 import { AccountComponent } from './content/account.component';
 import { ForbiddenComponent } from './forbidden.component';
 import { PageNotFoundComponent } from './pagenotfound.component';
+import { UnderConstructionComponent } from './under-construction.component';
 import { TestComponent } from './test.component';
 
 import { AngularFireModule } from 'angularfire2';
@@ -94,6 +99,7 @@ import { StepsModule } from 'primeng/steps';
     AccountComponent,
     ForbiddenComponent,
     PageNotFoundComponent,
+    UnderConstructionComponent
   ],
   imports: [
     BrowserModule,
@@ -143,6 +149,9 @@ import { StepsModule } from 'primeng/steps';
     TableModule,
     StepsModule,
     CardModule,
+    EditorModule,
+    GMapModule,
+    InputSwitchModule,
 
     AngularFireModule.initializeApp( environment.firebase ),
     AngularFirestoreModule,
@@ -150,8 +159,8 @@ import { StepsModule } from 'primeng/steps';
 
     AgmCoreModule.forRoot({ apiKey:environment.google_api_key } ),
 
-    StoreModule.forRoot({ account:accountReducer,fleet:fleetReducer } ),
-    EffectsModule.forRoot([ AccountEffects,FleetEffects ] ),
+    StoreModule.forRoot({ account:accountReducer,fleet:fleetReducer,transporter:transporterReducer,follow:followReducer } ),
+    EffectsModule.forRoot([ AccountEffects,FleetEffects,TransporterEffects,FollowEffects ] ),
 
     environment.imports
   ],

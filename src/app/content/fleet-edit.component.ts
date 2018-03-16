@@ -1,13 +1,15 @@
 
-import { AfterViewInit,Component,Input,OnDestroy,OnInit,ViewEncapsulation } from '@angular/core';
+import { AfterViewInit,Component,Input,OnDestroy,OnInit,ViewChild,ViewEncapsulation } from '@angular/core';
 import { AccountState,FleetState } from '../app.state';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { dumpFleet,Fleet } from '../model/fleet';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import * as FleetActions from '../store/fleet.actions';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
+import * as firebase from 'firebase';
 
 class FleetVM
 {
@@ -34,6 +36,8 @@ export class FleetEditComponent implements OnInit,AfterViewInit,OnDestroy
 
   fleetvm: FleetVM = new FleetVM();
 
+  @ViewChild( 'inputFile' ) inputFile; // bit of a dom hack ?
+
   private readonly _uichange = new BehaviorSubject<void>( null );
   private readonly uichange:Observable<void> = this._uichange.asObservable();
   private uiSubscription: Subscription;
@@ -54,6 +58,19 @@ export class FleetEditComponent implements OnInit,AfterViewInit,OnDestroy
     this.subscribeUI();
   }
 
+  onImage() {
+    this.inputFile.nativeElement.click(); // bit of a dom hack ?
+  }
+
+  onInputFile() {
+    try {
+      const file = this.inputFile.nativeElement.files[ 0 ];
+      this.uploadImage( file );
+    } catch ( x ) {
+      console.log( x );
+    }
+  }
+
   update() {
     this._uichange.next(null );
   }
@@ -68,7 +85,7 @@ export class FleetEditComponent implements OnInit,AfterViewInit,OnDestroy
 
   private subscribeUI() {
     this.unSubscribeUI();
-    this.uiSubscription = this.uichange.skip( 1 ).debounceTime( 250 ).subscribe(() => { this.toFleetStore(); } );
+    this.uiSubscription = this.uichange.skip( 1 ).debounceTime( 750 ).subscribe(() => { this.toFleetStore(); } );
   }
 
   private unSubscribeUI() {
@@ -114,5 +131,22 @@ export class FleetEditComponent implements OnInit,AfterViewInit,OnDestroy
     this.fleetvm.imageURL = fleet.imageURL;
     this.fleetvm.thumbnailURL = fleet.thumbnailURL;
     this.fleetvm.status = fleet.status;
+  }
+
+  private uploadImage( file:File ) {
+    const fleetid = this.fleetid;
+    const uploadtask = firebase.storage().ref().child('fleet/fleet.imageURL.'+fleetid ).put( file );
+    uploadtask.on( firebase.storage.TaskEvent.STATE_CHANGED,
+      (snapshot) => {},
+      e => { this.onError( e ); },
+      () => {
+        this.fleetvm.imageURL = uploadtask.snapshot.downloadURL;
+        this.toFleetStore();
+      }
+    );
+  }
+
+  private onError( e ) {
+    console.log( e );
   }
 }

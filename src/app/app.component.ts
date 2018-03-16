@@ -19,6 +19,8 @@ import 'rxjs/add/operator/skip';
 import * as firebase from 'firebase';
 
 import { environment } from '../environments/environment';
+import { isUndefined } from 'util';
+import { isBlank } from './util';
 
 @Component({
   selector: 'app-root',
@@ -80,6 +82,7 @@ export class AppComponent implements OnInit,OnDestroy
 
   onLogout() {
     this.authentication.logout();
+    this.accountstore.dispatch( new AccountActions.AccountResetAction() );
     this.loggedin = ( this.authentication.isAuthorized() === true );
     this.avataravailable = false;
     this.router.navigate([ 'login' ] );
@@ -96,8 +99,19 @@ export class AppComponent implements OnInit,OnDestroy
   }
 
   private fromAccountStore( account?:Account ) {
+    this.avataravailable = false;
+
     if ( account === null ) { return; }
-    this.avataravailable = ( account.imageURL != null );
+
+    if ( isUndefined( account.id ) ) {
+      console.log( 'bad account' );
+      this.authentication.logout();
+      this.router.navigate([ 'login' ] );
+      return;
+    }
+
+    console.log( 'account: ' + account.id + ' ' + account.email );
+    this.avataravailable = !isBlank( account.imageURL  );
     this.avatarURL$ = Observable.of( account.imageURL );
   }
 }

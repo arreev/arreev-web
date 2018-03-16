@@ -15,10 +15,28 @@
   overflow: hidden;
 }
 
+.fleet-transporters-image {
+  object-fit:cover;
+  border:2px solid #CCCCCC;
+  border-radius: 5px;
+  margin-top:3px;
+  cursor:pointer;
+}
+
 .ui-table .ui-table-thead > tr > th {
   background: #FFFFFF;
   color: cornflowerblue;
   padding-top: 6px;
   padding-bottom: 6px;
+  font-weight: normal;
+  border-color: #AABBCC;
 }
+
+.ui-table .ui-table-tbody > tr > td {
+  background: #F2F2F8;
+  border-color: #AABBCC;
+}
+
+
+
 

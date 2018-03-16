@@ -1,9 +1,128 @@
 
 .follow-container {
+  flex-grow: 1;
   font-size: .85em;
   margin: 10px;
+}
+
+.follow-workspace {
+  display: flex;
+}
+
+.follow-follow {
+  background: transparent;
+  padding-left: 8px;
+  padding-right: 8px;
+  width: 200px;
+}
+
+.follow-panel {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
+  box-shadow: 3px 3px 5px rgba( 100,100,100,.25 );
+  border-radius: 5px;
+  border: 2px solid #BBBBBB;
+
+  margin: 8px;
+
+  cursor: pointer;
+}
+
+.follow-panel:hover {
+  border: 2px solid #8899DD;
+}
+
+.follow-map-container {
+  flex: 1;
+  border: 2px solid #AAAABB;
+}
+
+.follow-tab {
+  background: rgba( 255,255,255, .35 );
+
+  width: 195px;
+
+  border: 2px solid #AAAABB;
+  border-radius: 5px;
+
+  padding: 5px;
+}
+
+.follow-tab-header {
+}
+
+.follow-tab-tab {
+}
+
+.follow-tab-top {
+}
+
+.follow-item {
+  color: black;
+  margin-top: 3px;
+  border: 1px solid #DEDEDE;
+}
+
+.follow-transporter-image {
+  border: 2px solid #888899;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+
+.follow-item:hover {
+  border: 1px solid #BEBEBE;
+}
+
+.follow-item-text {
+  display: block;
+  text-overflow: clip;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.follow-label {
+  color: cornflowerblue;
+  font-weight: normal;
+  font-style: italic;
 }
 
 agm-map {
   height: 512px;
 }
+
+.ui-toolbar {
+  border: none;
+  background: linear-gradient( to right, transparent,#8095C5 );
+}
+
+.ui-datalist-content {
+  margin-bottom: 5px;
+  background: transparent;
+  border: none;
+}
+
+.ui-datalist-data {
+  height: 128px;
+  overflow: auto;
+}
+
+.ui-datagrid {
+  background: transparent;
+  border: none;
+}
+.ui-datagrid-header {
+  background: transparent;
+  border: none;
+}
+.ui-datagrid-footer {
+  background: transparent;
+  border: none;
+}
+.ui-datagrid-content {
+  background: transparent;
+  border: none;
+}
+

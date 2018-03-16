@@ -53,6 +53,9 @@ import 'web-animations-js';  // Run `npm install --save web-animations-js`.<br>
 <u>and install web animations api:</u><br>
 npm install --save web-animations-js<br>
 
+<u>google maps types</u><br>
+npm install @types/googlemaps --save --dev
+
 # Tools
 https://github.com/ngrx/store-devtools<br>
 https://blog.schwarty.com/using-ngrx-store-devtools-with-the-angular-cli-a3b5f88f12e9
@@ -61,4 +64,5 @@ https://blog.schwarty.com/using-ngrx-store-devtools-with-the-angular-cli-a3b5f88
 https://cloud.google.com/appengine/docs/standard/java/getting-started/hosting-a-static-website<br>
 1. ng build --prod
 2. copy /dist contents to www.arreev.com/www 
-3. gcloud app deploy --project arreev-web
+3. cd /arreev/www.arreev.com
+4. gcloud app deploy --project arreev-web
