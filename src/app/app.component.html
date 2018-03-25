@@ -1,11 +1,17 @@
 
 <div class="app-container">
 
+  <p-confirmDialog header="Confirmation" icon="fa fa-exclamation-triangle" width="350" appendTo="body"></p-confirmDialog>
+
   <div class="app-header">
     <div class="app-header-bar">
-      <div class="app-header-icon"><i class="fa fa-bars animated bounce" style="cursor:pointer;" (click)="sidenav.toggle()"></i></div>
-      <img src="assets/arreev-icon.png" style="margin-left:15px;cursor:pointer;" (click)="onArreev()">
-      <span (click)="onArreev()" style="cursor:pointer;margin-left:-5px;font-weight:bold;font-size:24pt;color:white;text-shadow: 2px 2px rgba( 0,0,0,.5 );">arreev</span>
+      <!--<div class="app-header-icon"><i class="fa fa-bars animated bounce" style="cursor:pointer;" (click)="sidenav.toggle()"></i></div>-->
+      <div class="app-header-icon" style="margin-left:0px;"><i class="fa fa-caret-square-o-left" (click)="sidenav.toggle()" [@sidenav-animation]="sidenavstate"></i></div>
+      <img src="assets/arreev-lite-icon.png" style="margin-left:25px;cursor:pointer;" height="36px">
+      <!--<span (click)="onArreev()" style="cursor:pointer;margin-left:-5px;font-weight:bold;font-size:24pt;color:white;text-shadow: 2px 2px rgba( 0,0,0,.5 );">arreev</span>-->
+      <div (click)="onArreev()" style="cursor:pointer;">
+        <img *ngFor="let letter of letters" src="assets/{{letter}}.png" height="22px" style="margin-left:2px;">
+      </div>
       <span class="spacer"></span>
       <div class="ui-inputgroup" style="font-size:9pt;">
         <input type="text" pInputText placeholder="" size="30">
@@ -27,27 +33,27 @@
 
       <!-- TODO: why build --prod this animation fails -->
       <!-- <div class="app-header-icon" [@app-component-yellow]="void" (click)="sidebar.toggle()"><i class="fa fa-ellipsis-v"></i></div> -->
-      <div class="app-header-icon" (click)="sidebar.toggle()"><i class="fa fa-ellipsis-v"></i></div>
+      <div class="app-header-icon" (click)="sidebar.toggle()" [@sidebar-animation]="sidebarstate"><i class="fa fa-caret-square-o-left"></i></div>
     </div>
   </div>
 
   <mat-sidenav-container class="app-content">
-    <mat-sidenav #sidenav mode="side" opened="true" position="start" class="app-sidenav">
+    <mat-sidenav #sidenav mode="side" opened="true" position="start" class="app-sidenav" (openedStart)="openedSidenavStart()" (closedStart)="closedSidenavStart()">
       <app-nav></app-nav>
     </mat-sidenav>
     <div class="app-editor">
       <router-outlet></router-outlet>
     </div>
-    <mat-sidenav #sidebar mode="side" opened="true" position="end" class="app-sidebar">
+    <mat-sidenav #sidebar mode="side" opened="false" position="end" class="app-sidebar" (openedStart)="openedSidebarStart()" (closedStart)="closedSidebarStart()">
       <app-bar></app-bar>
     </mat-sidenav>
   </mat-sidenav-container>
 
   <div class="app-footer">
     <div class="app-footer-bar">
-      <span style="font-size:10pt;color:white;">copyright arreev</span>
+      <span style="font-size:10pt;color:white;font-weight:normal;">&copy; arreev.com All rights reserved.</span>
       <span class="spacer"></span>
-      <img src="assets/arreev-icon.png" style="width:24px;height:20px;">
+      <img src="assets/arreev-lite-icon.png" height="18">
     </div>
   </div>
 

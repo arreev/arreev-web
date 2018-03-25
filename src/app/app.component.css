@@ -15,14 +15,17 @@
   width: 100%;
   height: 48px;
 
-  box-shadow: 0px 4px 15px #888888;
-  border-bottom: 1px solid #666677;
-  z-index: 2;
+  box-shadow: 0px 2px 2px #CCCCCC;
+  border-bottom: 1px solid #7090B0;
+  z-index: 1;
 
-  background: #7085B5;
-  background-position: left;
-  background-repeat: no-repeat;
-  background-image: url( "/assets/header.png" );
+  background: #80A0C0;
+
+  /*background: linear-gradient( to right, #7898B8,#88A8C8 );*/
+
+  /*background-position: left;*/
+  /*background-repeat: no-repeat;*/
+  /*background-image: url( "/assets/header.png" );*/
 }
 
 .app-header-bar {
@@ -36,11 +39,11 @@
 }
 
 .app-header-icon {
-  color:#FFFFFF;
+  color:#F0F0F0;
 
-  font-size: 1.5em;
+  font-size: 16pt;
   font-weight: normal;
-  text-shadow: 2px 2px #555555;
+  /*text-shadow: 2px 2px #555555;*/
 
   cursor: pointer;
 
@@ -48,11 +51,11 @@
 }
 
 .app-header-icon:hover {
-  color: #F2F2FF;
+  color: #FFFFFF;
 }
 
 .app-header-icon:active {
-  color: cyan;
+  /*color: cyan;*/
 }
 
 .app-content {
@@ -62,22 +65,26 @@
   height: 100vh;
 
   background: transparent;
+  /*background-size: auto;*/
+  /*background-repeat: repeat; */
+  /*background-image: url( "/assets/content-background.png" );*/
 }
 
 .app-sidenav {
   width: 217px;
 
-  padding: 8px;
-  padding-top: 12px;
+  /*padding: 8px;*/
+  /*padding-top: 12px;*/
 
   z-index: 2;
 
   box-shadow: 0px 0px 15px #AAAAAA;
-  border-right: 1px solid #BBBBBB;
+  /*border-right: 1px solid #BBBBBB;*/
 
-  background-size: cover;
-  background-repeat: repeat-y;
-  background-image: url( "/assets/sidebar-background.png" );
+  background: linear-gradient( to bottom, #80A0C0,#FFFFFF,#FFFFFF,#FFFFFF,#FFFFFF );
+  /*background-size: cover;*/
+  /*background-repeat: repeat-y;*/
+  /*background-image: url( "/assets/sidebar-background.png" );*/
 }
 
 .app-editor {

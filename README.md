@@ -63,6 +63,6 @@ https://blog.schwarty.com/using-ngrx-store-devtools-with-the-angular-cli-a3b5f88
 # Deploy
 https://cloud.google.com/appengine/docs/standard/java/getting-started/hosting-a-static-website<br>
 1. ng build --prod
-2. copy /dist contents to www.arreev.com/www 
-3. cd /arreev/www.arreev.com
+2. copy /dist contents to my.arreev.com/www 
+3. cd /arreev/my.arreev.com
 4. gcloud app deploy --project arreev-web

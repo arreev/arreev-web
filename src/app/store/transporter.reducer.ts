@@ -14,6 +14,10 @@ export function transporterReducer( state:Transporter=defaultTransporterState,ac
       return state;
     case TransporterActions.TRANSPORTER_FETCHED:
       return Object.assign({},state,action.transporter ); // builds left-to-right, will take only non-nulls from transporter.action and these will override {} and state
+    case TransporterActions.TRANSPORTER_DELETE:
+      return state;
+    case TransporterActions.TRANSPORTER_DELETED:
+      return defaultTransporterState;
     default:
       return state;
   }

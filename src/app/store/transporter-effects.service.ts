@@ -8,7 +8,10 @@ import { Injectable } from '@angular/core';
 import { Action,Store } from '@ngrx/store';
 import { API } from '../api.service';
 
-import { TRANSPORTER_FETCH,TRANSPORTER_POST,TransporterFetchAction,TransporterPostAction } from './transporter.actions';
+import {
+  TRANSPORTER_DELETE,TRANSPORTER_FETCH,TRANSPORTER_POST,TRANSPORTER_DELETED,
+  TransporterDeleteAction,TransporterFetchAction,TransporterPostAction,TransporterDeletedAction
+} from './transporter.actions';
 import * as TransporterActions from './transporter.actions';
 
 @Injectable()
@@ -37,6 +40,13 @@ export class TransporterEffects
   @Effect( { dispatch:false } )
   transporter$: Observable<Action> = this.actions$.ofType<TransporterPostAction>( TRANSPORTER_POST ).do( action => { this._post.next( action.ownerid ); } );
 
+  /**
+   * TODO: should dispatch an Action
+   * @type {Observable<any>}
+   */
+  @Effect( { dispatch:false } )
+  transporterdelete$: Observable<Action> = this.actions$.ofType<TransporterDeleteAction>( TRANSPORTER_DELETE ).do( action => { this.delete( action.ownerid,action.id ); } );
+
   /*
    *
    */
@@ -57,6 +67,16 @@ export class TransporterEffects
         e => { console.log( e ); }
       );
     } );
+  }
+
+  /*
+   *
+   */
+  private delete( ownerid:string,id:string ) {
+    this.api.deleteTransporter( ownerid,id ).subscribe(
+      b => { this.transporterStore.dispatch( new TransporterActions.TransporterDeletedAction() ); },
+      e => { console.log( e ); }
+    );
   }
 }
 

@@ -2,7 +2,9 @@
 import { Component,OnInit,OnDestroy,ViewEncapsulation } from '@angular/core';
 import * as AccountActions from '../store/account.actions';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import * as FleetActions from '../store/fleet.actions';
 import { AccountState,FleetState } from '../app.state';
+import { ConfirmationService } from 'primeng/api';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { Fleet } from '../model/fleet';
@@ -48,7 +50,6 @@ interface FleetVM extends Fleet
     ] )
   ],
   encapsulation: ViewEncapsulation.None
-
 })
 export class FleetComponent implements OnInit,OnDestroy
 {
@@ -62,7 +63,8 @@ export class FleetComponent implements OnInit,OnDestroy
 
   private fleetSubscription: Subscription;
 
-  constructor( private api:API,private accountstore:Store<AccountState>,private fleetstore:Store<FleetState> ) {}
+  constructor( private api:API,private accountstore:Store<AccountState>,private fleetstore:Store<FleetState>,
+               private confirmationService:ConfirmationService ) {}
 
   ngOnInit(): void {
     this.fetch();
@@ -71,6 +73,11 @@ export class FleetComponent implements OnInit,OnDestroy
 
   onAddFleet() {
     this.showfleetnew = true;
+  }
+
+  onDeleteFleet() {
+    const name = this.selectedfleet.name;
+    this.confirmationService.confirm({ message:`Are you sure you want to delete ${name} ?`,accept: () => { this.deleteFleet( this.selectedfleet ); } } );
   }
 
   onAddTransporter() {
@@ -177,6 +184,18 @@ export class FleetComponent implements OnInit,OnDestroy
     }
 
     return fleetvm;
+  }
+
+  private deleteFleet( fleet:Fleet ) {
+    this.accountstore.select('account' ).take( 1 ).subscribe(
+      a => {
+        const ownerid = a.id;
+        this.selectedfleet = null;
+        const _fleets: Fleet[] = this.fleets.filter(f => ( f.id !== fleet.id ) );
+        this.fleets = _fleets;
+        this.fleetstore.dispatch( new FleetActions.FleetDeleteAction( ownerid,fleet.id ) );
+      }
+    );
   }
 
   private onError( e )  {

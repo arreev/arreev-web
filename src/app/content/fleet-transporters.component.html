@@ -74,7 +74,11 @@
                   <textarea pInputTextarea [(ngModel)]="rowData.diatribe" rows="4" (ngModelChange)="pending(rowData)" (blur)="updatePending()" style="resize:none;overflow:auto;"></textarea>
                 </div>
                 <div class="ui-grid-col-4">
-                  <div style="margin-top:3px;"><p-checkbox [(ngModel)]="rowData.inservice" (ngModelChange)="update(rowData)" label="in-service" binary="true"></p-checkbox></div>
+                  <div style="margin-top:3px;display:flex;flex-direction:row;">
+                    <p-checkbox [(ngModel)]="rowData.inservice" (ngModelChange)="update(rowData)" label="in-service" binary="true"></p-checkbox>
+                    <div class="spacer"></div>
+                    <button pButton type="button" icon="fa-times" (click)="onDeleteTransporter(rowData)" class="ui-button-secondary" style="color:maroon;width:32px;"></button>
+                  </div>
                   <div style="margin-top:5px;">
                     <span class="fleet-transporters-label">status</span>
                     <input type="text" [(ngModel)]="rowData.status" (ngModelChange)="update(rowData)" style="width:100%;">

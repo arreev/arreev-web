@@ -4,6 +4,7 @@ import { AccountState,TransporterState } from '../app.state';
 import * as AccountActions from '../store/account.actions';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Transporter } from '../model/transporter';
+import { ConfirmationService } from 'primeng/api';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { API } from '../api.service';
@@ -15,6 +16,8 @@ import * as TransporterActions from '../store/transporter.actions';
 import * as firebase from 'firebase';
 
 import 'rxjs/add/operator/observeOn';
+import { TransporterDeleteAction } from '../store/transporter.actions';
+
 
 interface TransporterVM extends Transporter
 {
@@ -47,7 +50,8 @@ export class FleetTransportersComponent implements OnInit,AfterViewInit,OnDestro
 
   private transporterSubscription: Subscription;
 
-  constructor( private api:API,private accountstore:Store<AccountState>,private transporterstore:Store<TransporterState> ) {}
+  constructor( private api:API,private accountstore:Store<AccountState>,private transporterstore:Store<TransporterState>,
+               private confirmationService: ConfirmationService ) {}
 
   ngOnInit(): void {
     this.refreshSubscription = this.refresh.subscribe(v => { this.fetch(); } );
@@ -85,6 +89,11 @@ export class FleetTransportersComponent implements OnInit,AfterViewInit,OnDestro
     } catch ( x ) {
       console.log( x );
     }
+  }
+
+  onDeleteTransporter( transporter:Transporter ) {
+    const name = transporter.name;
+    this.confirmationService.confirm({ message:`Are you sure you want to delete ${name} ?`,accept: () => { this.deleteTransporter( transporter ); } } );
   }
 
   ngOnDestroy(): void {
@@ -224,6 +233,18 @@ export class FleetTransportersComponent implements OnInit,AfterViewInit,OnDestro
             break;
           }
         }
+      }
+    );
+  }
+
+  private deleteTransporter( transporter:Transporter ) {
+    const id = transporter.id;
+    this.accountstore.select('account' ).take( 1 ).subscribe(
+      a => {
+        const ownerid  = a.id;
+        const _transporters = this.transporters.filter( t => ( t.id !== id ) );
+        this.transporters = _transporters;
+        this.transporterstore.dispatch( new TransporterActions.TransporterDeleteAction( ownerid,id ) );
       }
     );
   }

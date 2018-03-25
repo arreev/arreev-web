@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
 import { Account } from './model/account';
 import { Follow } from './model/follow';
 import { JWTToken } from './jwt-token';
+import { Route } from './model/route';
 import { Fleet } from './model/fleet';
 
 import { environment } from '../environments/environment';
@@ -28,6 +29,8 @@ class FleetsResponse extends APIResponse { fleets?: Fleet[] = null; }
 class FleetResponse extends APIResponse { fleet?: Fleet = null; }
 class TransportersResponse extends APIResponse { transporters?: Transporter[] = null; }
 class TransporterResponse extends APIResponse { transporter?: Transporter = null; }
+class RoutesResponse extends APIResponse { routes?: Route[] = null; }
+class RouteResponse extends APIResponse { route?: Route = null; }
 class FollowResponse extends APIResponse { follow?: Follow = null; }
 class FollowsResponse extends APIResponse { follows?: Follow[] = null; }
 
@@ -132,6 +135,21 @@ export class API
 
   /**
    *
+   * @param {string} ownerid
+   * @param {string} id
+   * @returns {Observable<Boolean>}
+   */
+  deleteFleet( ownerid:string,id:string ) : Observable<Boolean> {
+    const observable = this.http
+      .delete<FleetResponse>(environment.arreev_api_host + '/fleet?ownerid=' + ownerid + '&id=' + id )
+      .concatMap( r => {
+        return Observable.of( true );
+      } );
+    return observable;
+  }
+
+  /**
+   *
    * @param {string} id
    * @returns {Observable<Transporter>}
    */
@@ -183,6 +201,85 @@ export class API
         return Observable.of( r.transporter );
       } );
 
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} ownerid
+   * @param {string} id
+   * @returns {Observable<Boolean>}
+   */
+  deleteTransporter( ownerid:string,id:string ) : Observable<Boolean> {
+    const observable = this.http
+      .delete<TransporterResponse>(environment.arreev_api_host + '/transporter?ownerid=' + ownerid + '&id=' + id )
+      .concatMap( r => {
+        return Observable.of( true );
+      } );
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Observable<Route>}
+   */
+  getRoute( id:string ) : Observable<Route> {
+    const observable = this.http
+      .get<RouteResponse>(environment.arreev_api_host + '/route?id=' + id )
+      .concatMap( r => {
+        return Observable.of( r.route );
+      } );
+
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} ownerid
+   * @returns {Observable<Route>}
+   */
+  getRoutes( ownerid:string ) : Observable<Route> {
+    const observable = this.http
+      .get<RoutesResponse>(environment.arreev_api_host + '/routes?ownerid=' + ownerid )
+      .concatMap( r => {
+        return Observable.from( r.routes );
+      } );
+
+    return observable;
+  }
+
+  /**
+   * in body, if route.id != null, then it affects an update ... if route.id == null, then affects a create
+   *
+   * @param {string} ownerid
+   * @param {Route} route
+   * @returns {Observable<Route>}
+   */
+  postRoute( ownerid:string,route:Route ) : Observable<Route> {
+    const body = JSON.stringify( route );
+
+    const observable = this.http
+      .post<RouteResponse>(environment.arreev_api_host + '/route?ownerid=' + ownerid,body )
+      .concatMap( r => {
+        return Observable.of( r.route );
+      } );
+
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} ownerid
+   * @param {string} id
+   * @returns {Observable<Boolean>}
+   */
+  deleteRoute( ownerid:string,id:string ) : Observable<Boolean> {
+    const observable = this.http
+      .delete<RouteResponse>(environment.arreev_api_host + '/route?ownerid=' + ownerid + '&id=' + id )
+      .concatMap( r => {
+        return Observable.of( true );
+      } );
     return observable;
   }
 

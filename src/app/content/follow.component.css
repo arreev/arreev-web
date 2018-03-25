@@ -42,7 +42,7 @@
 .follow-tab {
   background: rgba( 255,255,255, .35 );
 
-  width: 195px;
+  width: 190px;
 
   border: 2px solid #AAAABB;
   border-radius: 5px;
@@ -95,7 +95,8 @@ agm-map {
 
 .ui-toolbar {
   border: none;
-  background: linear-gradient( to right, transparent,#8095C5 );
+  background-color: #DDDDEE;
+  /*background: linear-gradient( to right, transparent,#8095C5 );*/
 }
 
 .ui-datalist-content {

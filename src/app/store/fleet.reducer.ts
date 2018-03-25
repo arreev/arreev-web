@@ -14,6 +14,10 @@ export function fleetReducer( state:Fleet=defaultFleetState,action:Action ) {
       return state;
     case FleetActions.FLEET_FETCHED:
       return Object.assign({},state,action.fleet ); // builds left-to-right, will take only non-nulls from fleet.action and these will override {} and state
+    case FleetActions.FLEET_DELETE:
+      return state;
+    case FleetActions.FLEET_DELETED:
+      return defaultFleetState;
     default:
       return state;
   }

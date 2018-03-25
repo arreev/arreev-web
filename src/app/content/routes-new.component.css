@@ -1,0 +1,12 @@
+
+.routes-new-container {
+  width: 512px;
+  font-size: .85em;
+  margin: 10px;
+}
+
+.routes-new-label {
+  color: cornflowerblue;
+  font-weight: bold;
+  font-style: italic;
+}

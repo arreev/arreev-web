@@ -5,6 +5,8 @@ import { Action } from '@ngrx/store';
 export const TRANSPORTER_POST           = 'TRANSPORTER_POST';
 export const TRANSPORTER_FETCH          = 'TRANSPORTER_FETCH';
 export const TRANSPORTER_FETCHED        = 'TRANSPORTER_FETCHED';
+export const TRANSPORTER_DELETE         = 'TRANSPORTER_DELETE';
+export const TRANSPORTER_DELETED        = 'TRANSPORTER_DELETED';
 
 export class TransporterPostAction implements Action
 {
@@ -24,4 +26,16 @@ export class TransporterFetchedAction implements Action
   constructor( public transporter:Transporter ) {}
 }
 
-export type All = TransporterPostAction | TransporterFetchAction | TransporterFetchedAction;
+export class TransporterDeleteAction implements Action
+{
+  readonly type = TRANSPORTER_DELETE;
+  constructor( public ownerid:string,public id:string ) {}
+}
+
+export class TransporterDeletedAction implements Action
+{
+  readonly type = TRANSPORTER_DELETED;
+  constructor() {}
+}
+
+export type All = TransporterPostAction | TransporterFetchAction | TransporterFetchedAction | TransporterDeleteAction | TransporterDeletedAction;

@@ -42,7 +42,8 @@
     </div>
     <div class="ui-toolbar-group-right">
       <span>&nbsp;</span>
-      <i *ngIf="validated && !working" class="fa fa-plus-circle" style="cursor:pointer;" pTooltip="add new fleet" showDelay="750" (click)="onAdd()"></i>
+      <!--<i *ngIf="validated && !working" class="fa fa-plus-circle" style="cursor:pointer;" pTooltip="add new fleet" showDelay="750" (click)="onAdd()"></i>-->
+      <button *ngIf="validated && !working" pButton type="button" label="add this fleet" icon="fa-plus-circle" (click)="onAdd()"></button>
     </div>
   </p-toolbar>
 

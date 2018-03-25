@@ -24,21 +24,21 @@ export class BarComponent implements OnInit,OnDestroy,AfterViewInit
   constructor( private localeService:LocaleService ) {}
 
   ngOnInit(): void {
-    this.weathersubscription = this.localeService.weather.subscribe( wu => { this.weatherUpdate( wu ); } );
-    this.localeService.ping();
-
-    this.pingsubscription = Observable.interval( 30000 ).subscribe(n => { this.ping(); } );
+    // this.weathersubscription = this.localeService.weather.subscribe( wu => { this.weatherUpdate( wu ); } );
+    // this.localeService.ping();
+    //
+    // this.pingsubscription = Observable.interval( 30000 ).subscribe(n => { this.ping(); } );
   }
 
   ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
-    this.pingsubscription.unsubscribe();
-    this.weathersubscription.unsubscribe();
+    // this.pingsubscription.unsubscribe();
+    // this.weathersubscription.unsubscribe();
   }
 
   private ping() {
-    this.localeService.ping();
+    // this.localeService.ping();
   }
 
   private weatherUpdate( wu?:WeatherUpdate ) {

@@ -1,12 +1,35 @@
 
 <div class="follow-container">
 
+  <!--
   <p-toolbar>
     <div class="ui-toolbar-group-left">
     </div>
 
     <div class="ui-toolbar-group-right">
       <i class="fa fa-refresh" style="cursor:pointer;" (click)="onRefresh()"></i>
+    </div>
+  </p-toolbar>
+  -->
+
+  <p-toolbar>
+    <div class="ui-toolbar-group-left">
+      <!--
+      <span style="cursor:pointer;color:#6688AA;font-weight:normal;" (click)="showall=true">
+        <i *ngIf="showall" class="fa fa-circle"></i>
+        <i *ngIf="!showall" class="fa fa-circle-o"></i>
+        show all transporters
+      </span>
+      <span style="cursor:pointer;color:#6688AA;margin-left:15px;font-weight:normal;" (click)="showall=false">
+        <i *ngIf="!showall" class="fa fa-circle"></i>
+        <i *ngIf="showall" class="fa fa-circle-o"></i>
+        show only selected transporter
+      </span>
+      -->
+    </div>
+    <div class="ui-toolbar-group-right">
+      <button pButton type="button" label="communicate" icon="fa-comments"></button>
+      <i class="fa fa-refresh" style="cursor:pointer;margin-left:5px;" (click)="onRefresh()"></i>
     </div>
   </p-toolbar>
 
@@ -51,7 +74,9 @@
       </p-gmap>
     </div>
     <div *ngIf="showfollow" [@follower] class="follow-follow">
-      <div style="height:2px;background:#AAAABB;margin-bottom:8px;"></div>
+      <div style="border:2px solid #AAAABB;background:rgba(255,255,255,.5);margin-bottom:8px;text-align:center;padding:5px;">
+        <span style="color:cornflowerblue;font-weight:bold;">following</span>
+      </div>
 
       <div><img [src]="selectedtransporter.imageURL" width="75" height="50" class="follow-transporter-image"></div>
       <div><span style="font-weight:bold;">{{selectedtransporter.name}}</span></div>
@@ -79,7 +104,7 @@
         </div>
       </div>
 
-      <div style="margin-left:4px;margin-top:8px;color:maroon;cursor:pointer;">
+      <div style="font-size:1.25em;margin-left:4px;margin-top:8px;color:maroon;cursor:pointer;">
         <i class="fa fa-close" (click)="onHideFollow()"></i>
       </div>
     </div>

@@ -1,19 +1,63 @@
 
-.routes-root {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.routes-top {
-  height: 128px;
-}
-
-.routes-middle {
+.routes-container {
   flex-grow: 1;
-  background: pink;
+  font-size: .85em;
+  margin: 10px;
 }
 
-.routes-bottom {
-  height: 195px;
+.routes-panel {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
+  width:172px;
+
+  box-shadow: 3px 3px 5px rgba( 100,100,100,.25 );
+  border-radius: 5px;
+  border: 2px solid #BBBBBB;
+
+  margin: 8px;
+
+  cursor: pointer;
 }
+.routes-panel:hover {
+  border: 2px solid #8899DD;
+}
+
+.routes-text {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.routes-workspace {
+  display: flex;
+}
+
+.routes-map-container {
+  flex: 1;
+  border: 2px solid #AAAABB;
+}
+
+.ui-toolbar {
+  border: none;
+  background-color: #DDDDEE;
+}
+
+.ui-datagrid {
+  background: transparent;
+  border: none;
+}
+.ui-datagrid-header {
+  background: transparent;
+  border: none;
+}
+.ui-datagrid-footer {
+  background: transparent;
+  border: none;
+}
+.ui-datagrid-content {
+  background: transparent;
+  border: none;
+}
+

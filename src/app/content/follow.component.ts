@@ -71,6 +71,7 @@ export class FollowComponent implements OnInit,AfterViewInit,OnDestroy
   overlays: any[];
   showfollow = false;
   follow?: Follow;
+  showall = true;
 
   // lat = 34.052234;
   // lng = -118.243685;

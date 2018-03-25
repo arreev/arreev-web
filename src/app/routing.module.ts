@@ -27,7 +27,7 @@ const routes: Routes = [
   { path:'home',component:HomeComponent,canActivate:[SecureGuard] },
 
   { path:'fleet',component:FleetComponent,canActivate:[SecureGuard,AuthGuard] },
-  { path:'routes',component:UnderConstructionComponent,canActivate:[SecureGuard,AuthGuard] },
+  { path:'routes',component:RoutesComponent,canActivate:[SecureGuard,AuthGuard] },
   { path:'times',component:UnderConstructionComponent,canActivate:[SecureGuard,AuthGuard] },
   { path:'events',component:UnderConstructionComponent,canActivate:[SecureGuard,AuthGuard] },
   { path:'people',component:UnderConstructionComponent,canActivate:[SecureGuard,AuthGuard] },

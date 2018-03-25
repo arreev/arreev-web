@@ -1,3 +1,40 @@
 
-<div>routes</div>
+<div class="routes-container">
 
+  <p-toolbar>
+    <div class="ui-toolbar-group-left">
+      <input #search type="text" pInputText placeholder="where" style="" (keyup.enter)="onSearch(search.value)">
+    </div>
+    <div class="ui-toolbar-group-right">
+      <button pButton type="button" label="add a route" icon="fa-arrows" (click)="onAddRoute()"></button>
+      <button pButton type="button" label="delete route" icon="fa-bus" (click)="onDeleteRoute()" *ngIf="selectedroute != null" class="ui-button-secondary" style="color:maroon;"></button>
+      <button pButton type="button" label="add a waypoint" icon="fa-truck" (click)="onAddWaypoint()" *ngIf="selectedroute != null"></button>
+      <i class="fa fa-refresh" style="cursor:pointer;margin-left:5px;" (click)="onRefresh()"></i>
+    </div>
+  </p-toolbar>
+
+  <p-dataGrid [value]="routes" emptyMessage="&nbsp;" [rows]="1" [hidden]="routes.length === 0" [@grid-animation]="routes.length">
+    <ng-template let-route pTemplate="item">
+      <p-panel [header]="route.name" styleClass="routes-panel" (click)="onRoute(route)" [@route-state]="route.state">
+        <img *ngIf="(route.imageURL != null) && (route.imageURL.length > 0)" src="{{route.imageURL}}" width="75" height="50" style="object-fit: cover;">
+        <div class="routes-text">{{route.type}}</div>
+      </p-panel>
+    </ng-template>
+  </p-dataGrid>
+
+  <div class="routes-workspace">
+    <div class="routes-map-container">
+      <p-gmap [options]="options" [overlays]="overlays"
+              (onMapReady)="onMapReady($event)" (onMapClick)="onMapClick($event)" (onOverlayClick)="onOverlayClick($event)"
+              [style]="{'width':'100%','height':'580px'}">
+      </p-gmap>
+    </div>
+  </div>
+</div>
+
+<p-dialog [(visible)]="showroutesnew" [modal]="true" [resizable]="true" appendTo="body">
+  <p-header>
+    add a new route
+  </p-header>
+  <app-routes-new *ngIf="showroutesnew" (finished)="onFinishedRoutesNew()"></app-routes-new>
+</p-dialog>

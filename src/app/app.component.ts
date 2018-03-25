@@ -28,18 +28,31 @@ import { isBlank } from './util';
   styleUrls: ['./app.component.css'],
   animations: [
     appFade,
-    trigger('app-component-yellow',[
-      state('void',style({ color:'yellow' }) ),
-      transition('void <=> *',animate(2500 ) ) // or can use aliases ':enter,:leave'
-    ] )
+    /*
+     * https://angular.io/guide/animations
+     * https://angular.io/api/animations/state
+     */
+    trigger('sidenav-animation',[
+      state('open', style({ transform:'rotate( 0deg)' } ) ),
+      state('close',style({ transform:'rotate(180deg)' } ) ),
+      transition('* => *',animate('200ms' ) )
+    ]),
+    trigger('sidebar-animation',[
+      state('open', style({ transform:'rotate(180deg)' } ) ),
+      state('close',style({ transform:'rotate(  0deg)' } ) ),
+      transition('* => *',animate('200ms' ) )
+    ])
   ]
 })
 export class AppComponent implements OnInit,OnDestroy
 {
+  letters: string[] = [ 'a','r','r','e','e','v' ];
   loggedin = false;
   avataravailable = false;
   avatarURL$?:Observable<string>;
   showinfo?: boolean;
+  sidenavstate = 'open';
+  sidebarstate = 'close';
 
   private accountStoreSubscription: Subscription;
   private account$: Observable<Account>;
@@ -64,6 +77,12 @@ export class AppComponent implements OnInit,OnDestroy
       this.accountstore.dispatch( new AccountActions.AccountFetchAction() );
     }
   }
+
+  openedSidenavStart() { this.sidenavstate = 'open'; }
+  closedSidenavStart() { this.sidenavstate = 'close'; }
+
+  openedSidebarStart() { this.sidebarstate = 'open'; }
+  closedSidebarStart() { this.sidebarstate = 'close'; }
 
   onArreev() {
     this.router.navigate( [ 'home' ] ).catch( error => console.log( error ) );

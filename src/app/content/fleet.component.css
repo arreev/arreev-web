@@ -46,7 +46,8 @@
 
 .ui-toolbar {
   border: none;
-  background: linear-gradient( to right, transparent,#8095C5 );
+  background-color: #DDDDEE;
+  /*background: linear-gradient( to right, transparent,#8095C5 );*/
 }
 
 .ui-datagrid {

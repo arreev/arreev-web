@@ -18,6 +18,9 @@ import {
   ChipsModule,TerminalModule,DragDropModule,ToggleButtonModule,SidebarModule,CardModule,EditorModule,GMapModule,InputSwitchModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
+import { StepsModule } from 'primeng/steps';
+
+import { ConfirmationService } from 'primeng/api';
 
 import { Authentication } from './authentication.service';
 import { SecureGuard } from './secure-guard.service';
@@ -36,11 +39,13 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { AccountEffects } from './store/account-effects.service';
 import { FleetEffects } from './store/fleet-effects.service';
+import { RouteEffects } from './store/route-effects.service';
 import { TransporterEffects } from './store/transporter-effects.service';
 import { FollowEffects } from './store/follow-effects.service';
 
 import { accountReducer } from './store/account.reducer';
 import { fleetReducer } from './store/fleet.reducer';
+import { routeReducer } from './store/route.reducer';
 import { transporterReducer } from './store/transporter.reducer';
 import { followReducer } from './store/follow.reducer';
 
@@ -54,6 +59,7 @@ import { FleetEditComponent } from './content/fleet-edit.component';
 import { FleetTransportersComponent } from './content/fleet-transporters.component';
 import { FleetTransporterNewComponent } from './content/fleet-transporter-new.component';
 import { RoutesComponent } from './content/routes.component';
+import { RoutesNewComponent } from './content/routes-new.component';
 import { TimesComponent } from './content/times.component';
 import { EventsComponent } from './content/events.component';
 import { DevicesComponent } from './content/devices.component';
@@ -74,7 +80,6 @@ import { AngularFireStorageModule } from 'angularfire2/storage';
 import { AgmCoreModule } from '@agm/core';
 
 import { environment } from '../environments/environment';
-import { StepsModule } from 'primeng/steps';
 
 @NgModule({
   declarations: [
@@ -88,6 +93,7 @@ import { StepsModule } from 'primeng/steps';
     FleetTransportersComponent,
     FleetTransporterNewComponent,
     RoutesComponent,
+    RoutesNewComponent,
     TimesComponent,
     EventsComponent,
     DevicesComponent,
@@ -152,6 +158,7 @@ import { StepsModule } from 'primeng/steps';
     EditorModule,
     GMapModule,
     InputSwitchModule,
+    ConfirmDialogModule,
 
     AngularFireModule.initializeApp( environment.firebase ),
     AngularFirestoreModule,
@@ -159,13 +166,15 @@ import { StepsModule } from 'primeng/steps';
 
     AgmCoreModule.forRoot({ apiKey:environment.google_api_key } ),
 
-    StoreModule.forRoot({ account:accountReducer,fleet:fleetReducer,transporter:transporterReducer,follow:followReducer } ),
-    EffectsModule.forRoot([ AccountEffects,FleetEffects,TransporterEffects,FollowEffects ] ),
+    StoreModule.forRoot({ account:accountReducer,fleet:fleetReducer,route:routeReducer,transporter:transporterReducer,follow:followReducer } ),
+    EffectsModule.forRoot([ AccountEffects,FleetEffects,RouteEffects,TransporterEffects,FollowEffects ] ),
 
     environment.imports
   ],
   providers: [
     { provide:RouteReuseStrategy,useClass:AppRouteReuseStrategy },
+
+    ConfirmationService,
 
     Authentication,
     SecureGuard,

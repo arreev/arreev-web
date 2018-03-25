@@ -8,7 +8,9 @@ import { dumpFleet } from '../model/fleet';
 import { FleetState } from '../app.state';
 import { API } from '../api.service';
 
-import { FLEET_FETCH,FLEET_POST,FleetFetchAction,FleetPostAction } from './fleet.actions';
+import {
+  FLEET_DELETE,FLEET_FETCH,FLEET_POST,FLEET_DELETED,
+  FleetDeleteAction,FleetFetchAction,FleetPostAction,FleetDeletedAction } from './fleet.actions';
 import * as FleetActions from './fleet.actions';
 
 @Injectable()
@@ -37,6 +39,13 @@ export class FleetEffects
   @Effect( { dispatch:false } )
   fleet$: Observable<Action> = this.actions$.ofType<FleetPostAction>( FLEET_POST ).do( action => { this._post.next( action.ownerid ); } );
 
+  /**
+   * TODO: should dispatch an Action
+   * @type {Observable<any>}
+   */
+  @Effect( { dispatch:false } )
+  fleetdelete$: Observable<Action> = this.actions$.ofType<FleetDeleteAction>( FLEET_DELETE ).do( action => { this.delete( action.ownerid,action.id ); } );
+
   /*
    *
    */
@@ -57,6 +66,16 @@ export class FleetEffects
         e => { console.log( e ); }
       );
     } );
+  }
+
+  /*
+   *
+   */
+  private delete( ownerid:string,id:string ) {
+    this.api.deleteFleet( ownerid,id ).subscribe(
+      b => { this.fleetStore.dispatch( new FleetActions.FleetDeletedAction() ); },
+      e => { console.log( e ); }
+    );
   }
 }
 
