@@ -13,5 +13,20 @@ export interface Waypoint extends Entity
   imageURL?: string;
   thumbnailURL?: string;
 
+  address?: string;
+  latitude?: number;
+  longitude?: number;
+  index?: number;
+
   status?: string;
+}
+
+export function dumpWaypoint( waypoint:Waypoint ) :string {
+  let dump = null;
+
+  if ( waypoint != null ) {
+    dump = 'Waypoint<' + waypoint.name + ',' + waypoint.type + ',' + waypoint.latitude + ',' + waypoint.longitude + '>';
+  }
+
+  return dump;
 }

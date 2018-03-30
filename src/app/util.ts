@@ -17,3 +17,20 @@ export function isBlank( s:string ) : boolean {
   }
   return true;
 }
+
+/*
+ * returns distance between two latlng objects using haversine formula
+ */
+export function distanceBetween( p1:google.maps.LatLng,p2:google.maps.LatLng ) : number {
+  const R = 6371000; // Radius of the Earth in m
+  const dLat = (p2.lat() - p1.lat()) * Math.PI / 180;
+  const dLon = (p2.lng() - p1.lng()) * Math.PI / 180;
+
+  const a =
+    Math.sin(dLat / 2 ) * Math.sin(dLat / 2 ) +
+    Math.cos(p1.lat() * Math.PI / 180 ) * Math.cos(p2.lat() * Math.PI / 180 ) * Math.sin(dLon / 2) * Math.sin(dLon / 2 );
+  const c = 2 * Math.atan2( Math.sqrt( a ), Math.sqrt(1 - a ) );
+  const d = R * c;
+
+  return d;
+}

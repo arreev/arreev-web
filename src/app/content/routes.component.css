@@ -30,6 +30,17 @@
   white-space: nowrap;
 }
 
+.routes-addresses {
+  width: 100%;
+  padding: 4px;
+}
+
+.routes-label {
+  font-size: 9pt;
+  font-weight: bold;
+  color: cornflowerblue;
+}
+
 .routes-workspace {
   display: flex;
 }
@@ -38,6 +49,45 @@
   flex: 1;
   border: 2px solid #AAAABB;
 }
+
+.routes-chip-item {
+  font-size: 10pt;
+
+  background-color: inherit;
+  border-radius: 5px;
+  border: 1px solid #5566AA;
+
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 6px;
+  padding-right: 6px;
+
+  cursor: pointer;
+}
+
+.routes-chip-item-x {
+  color: #EEDDEE;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+.routes-chip-item-x:hover {
+  color: #FFDDEE;
+}
+
+/*.routes-chip-banner {*/
+  /*cursor: pointer;*/
+  /*color: #FFFFFF;*/
+/*}*/
+/*.routes-chip-banner:hover { color: #FFFFFF; }*/
+/*.routes-chip-banner:active { color: #EEFFFF; }*/
+
+/*.routes-chip-remove {*/
+  /*color: #EEDDEE;*/
+  /*margin-right:5px;*/
+  /*cursor: pointer;*/
+/*}*/
+/*.routes-chip-remove:hover { color: pink; }*/
+/*.routes-chip-remove:active { color: #FFD2DA; }*/
 
 .ui-toolbar {
   border: none;
@@ -60,4 +110,45 @@
   background: transparent;
   border: none;
 }
+
+.ui-chips {
+}
+.ui-chips > ul {
+  border: none;
+  box-shadow: none;
+  background: none;
+  color: orange;
+}
+.ui-chips > ul.ui-inputtext:focus {
+  border: none;
+  box-shadow: none;
+  background: none;
+}
+.ui-chips > ul:not(.ui-state-disablde).ui-state-focus {
+  border: none;
+  box-shadow: none;
+  background: none;
+}
+.ui-chips-token {
+  padding: 0;
+  margin: 5px;
+  background-color: #7788CC;
+}
+.ui-chips-token:hover {
+  background-color: #6677BB;
+}
+.ui-chips-token:active {
+  background-color: #6677BB;
+}
+
+.ui-chips-token-icon {
+  visibility: hidden;
+}
+
+/*
+ * hack to remove x close button on InfoWindow
+ * https://stackoverflow.com/questions/18933367/gmaps-v3-infowindow-disable-the-close-x-button
+ */
+.gm-style-iw + div { display:none; }
+.gm-style-iw { text-align:center; }
 

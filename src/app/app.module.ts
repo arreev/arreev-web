@@ -40,12 +40,14 @@ import { EffectsModule } from '@ngrx/effects';
 import { AccountEffects } from './store/account-effects.service';
 import { FleetEffects } from './store/fleet-effects.service';
 import { RouteEffects } from './store/route-effects.service';
+import { WaypointEffects } from './store/waypoint-effects.service';
 import { TransporterEffects } from './store/transporter-effects.service';
 import { FollowEffects } from './store/follow-effects.service';
 
 import { accountReducer } from './store/account.reducer';
 import { fleetReducer } from './store/fleet.reducer';
 import { routeReducer } from './store/route.reducer';
+import { waypointReducer } from './store/waypoint.reducer';
 import { transporterReducer } from './store/transporter.reducer';
 import { followReducer } from './store/follow.reducer';
 
@@ -60,6 +62,8 @@ import { FleetTransportersComponent } from './content/fleet-transporters.compone
 import { FleetTransporterNewComponent } from './content/fleet-transporter-new.component';
 import { RoutesComponent } from './content/routes.component';
 import { RoutesNewComponent } from './content/routes-new.component';
+import { RoutesWaypointNewComponent } from './content/routes-waypoint-new.component';
+import { RoutesWaypointEditComponent } from './content/routes-waypoint-edit.component';
 import { TimesComponent } from './content/times.component';
 import { EventsComponent } from './content/events.component';
 import { DevicesComponent } from './content/devices.component';
@@ -94,6 +98,8 @@ import { environment } from '../environments/environment';
     FleetTransporterNewComponent,
     RoutesComponent,
     RoutesNewComponent,
+    RoutesWaypointNewComponent,
+    RoutesWaypointEditComponent,
     TimesComponent,
     EventsComponent,
     DevicesComponent,
@@ -166,8 +172,8 @@ import { environment } from '../environments/environment';
 
     AgmCoreModule.forRoot({ apiKey:environment.google_api_key } ),
 
-    StoreModule.forRoot({ account:accountReducer,fleet:fleetReducer,route:routeReducer,transporter:transporterReducer,follow:followReducer } ),
-    EffectsModule.forRoot([ AccountEffects,FleetEffects,RouteEffects,TransporterEffects,FollowEffects ] ),
+    StoreModule.forRoot({ account:accountReducer,fleet:fleetReducer,route:routeReducer,waypoint:waypointReducer,transporter:transporterReducer,follow:followReducer } ),
+    EffectsModule.forRoot([ AccountEffects,FleetEffects,RouteEffects,WaypointEffects,TransporterEffects,FollowEffects ] ),
 
     environment.imports
   ],

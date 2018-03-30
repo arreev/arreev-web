@@ -1,0 +1,12 @@
+
+.routes-waypoint-edit-container {
+  width: 512px;
+  font-size: .85em;
+  margin: 10px;
+}
+
+.routes-waypoint-edit-label {
+  color: cornflowerblue;
+  font-weight: bold;
+  font-style: italic;
+}

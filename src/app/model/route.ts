@@ -13,6 +13,9 @@ export interface Route extends Entity
   imageURL?: string;
   thumbnailURL?: string;
 
+  begAddress?: string;
+  endAddress?: string;
+
   status?: string;
 }
 
@@ -20,7 +23,7 @@ export function dumpRoute( route:Route ) :string {
   let dump = null;
 
   if ( route != null ) {
-    dump = 'Route<' + route.name + ',' + route.type + ',' + route.category + '>';
+    dump = 'Route<' + route.name + ',' + route.type + ',' + route.category + ',' + route.begAddress + ',' + route.endAddress + '>';
   }
 
   return dump;

@@ -1,0 +1,12 @@
+
+.home-container {
+  font-size: .85em;
+  margin: 10px;
+}
+
+.home-text {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+

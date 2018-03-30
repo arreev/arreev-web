@@ -408,7 +408,7 @@ export class FollowComponent implements OnInit,AfterViewInit,OnDestroy
       transportervm.marker.setPosition( { lat:transporter.latitude,lng:transporter.longitude } );
       transportervm.marker.setTitle( transporter.name );
       transportervm.marker.setClickable( true );
-      transportervm.marker.setIcon( { url:'/assets/marker.png' } );
+      transportervm.marker.setIcon( { url:'/assets/transporter.png' } );
 
       transportervm.state = 'inactive';
     }

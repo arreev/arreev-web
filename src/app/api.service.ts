@@ -3,6 +3,7 @@ import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Authentication } from './authentication.service';
 import { Transporter } from './model/transporter';
 import { Observable } from 'rxjs/Observable';
+import { Waypoint } from './model/waypoint';
 import { Injectable } from '@angular/core';
 import { Account } from './model/account';
 import { Follow } from './model/follow';
@@ -31,6 +32,8 @@ class TransportersResponse extends APIResponse { transporters?: Transporter[] = 
 class TransporterResponse extends APIResponse { transporter?: Transporter = null; }
 class RoutesResponse extends APIResponse { routes?: Route[] = null; }
 class RouteResponse extends APIResponse { route?: Route = null; }
+class WaypointsResponse extends Response { waypoints?: Waypoint [] = null; }
+class WaypointResponse extends Response { waypoint?: Waypoint = null; }
 class FollowResponse extends APIResponse { follow?: Follow = null; }
 class FollowsResponse extends APIResponse { follows?: Follow[] = null; }
 
@@ -277,6 +280,71 @@ export class API
   deleteRoute( ownerid:string,id:string ) : Observable<Boolean> {
     const observable = this.http
       .delete<RouteResponse>(environment.arreev_api_host + '/route?ownerid=' + ownerid + '&id=' + id )
+      .concatMap( r => {
+        return Observable.of( true );
+      } );
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Observable<Waypoint>}
+   */
+  getWaypoint( id:string ) : Observable<Waypoint> {
+    const observable = this.http
+      .get<WaypointResponse>(environment.arreev_api_host + '/waypoint?id=' + id )
+      .concatMap( r => {
+        return Observable.of( r.waypoint );
+      } );
+
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} ownerid
+   * @param {string} routeid
+   * @returns {Observable<Waypoint>}
+   */
+  getWaypoints( ownerid:string,routeid:string ) : Observable<Waypoint> {
+    const observable = this.http
+      .get<WaypointsResponse>(environment.arreev_api_host + '/waypoints?ownerid=' + ownerid + '&routeid=' + routeid )
+      .concatMap( r => {
+        return Observable.from( r.waypoints );
+      } );
+
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} ownerid
+   * @param {string} routeid
+   * @param {Waypoint} waypoint
+   * @returns {Observable<Waypoint>}
+   */
+  postWaypoint( ownerid:string,routeid:string,waypoint:Waypoint ) : Observable<Waypoint> {
+    const body = JSON.stringify( waypoint );
+
+    const observable = this.http
+      .post<WaypointResponse>(environment.arreev_api_host + '/waypoint?ownerid=' + ownerid + '&routeid=' + routeid,body )
+      .concatMap( r => {
+        return Observable.of( r.waypoint );
+      } );
+
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} ownerid
+   * @param {string} id
+   * @returns {Observable<Boolean>}
+   */
+  deleteWaypoint( ownerid:string,id:string ) : Observable<Boolean> {
+    const observable = this.http
+      .delete<WaypointResponse>(environment.arreev_api_host + '/waypoint?ownerid=' + ownerid + '&id=' + id )
       .concatMap( r => {
         return Observable.of( true );
       } );

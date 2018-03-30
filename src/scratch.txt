@@ -1,55 +1,108 @@
+  private getPlace( latitude:number,longitude:number ) {
+    const request = {
+      location: { lat:latitude,lng:longitude },
+      radius: 25,
+      rankBy: google.maps.places.RankBy.DISTANCE
+    };
+
+    this.places.nearbySearch( request,( results,status ) => {
+      console.log( 'nearbySearch ' + latitude + ',' + longitude + ' ' + Math.sqrt(latitude*latitude + longitude*longitude ) );
+      let _showwaypointnewname = null;
+      let _showwaypointnewaddress = null;
+      if ( status === google.maps.places.PlacesServiceStatus.OK ) {
+        let distance = 100000.0;
+        for ( const r of results ) {
+          const lat = r.geometry.location.lat();
+          const lng = r.geometry.location.lng();
+          if ( (lat === latitude) && (lng === longitude) ) { console.log( 'skip ' + r.name ); continue; }
+          const d = Math.sqrt( lat*lat + lng*lng );
+          console.log( r.name + ' ' + d );
+          if ( d < distance ) {
+            _showwaypointnewname = r.name;
+            _showwaypointnewaddress = r.vicinity;
+            distance = d;
+          }
+        }
+      }
+      setTimeout(() => {
+        console.log( 'SHOW IT!' );
+        this.showwaypointnewname = _showwaypointnewname;
+        this.showwaypointnewaddress = _showwaypointnewaddress;
+        this.showwaypointnewlat = latitude;
+        this.showwaypointnewlng = longitude;
+        this.showwaypointnew = true;
+        this.changedetector.detectChanges();
+      },100 );
+    } );
+  }
 
 
-      transition('void => *',[ style({ transform:'translateX(-100%)' } ),animate(100 ) ] ),
-      transition('* => void',[ style({ transform:'translateX(+100%)' } ),animate(100 ) ] )
+
+  // private markersBegEndFor( routevm:RouteVM ) {
+  //   this.overlays = [];
+  //
+  //   const _overlays: any[] = [];
+  //
+  //   /*
+  //    * begAddress
+  //    */
+  //   const begrequest = { query: routevm.begAddress };
+  //   this.places.textSearch( begrequest,( begresults,begstatus ) => {
+  //     if ( begstatus === google.maps.places.PlacesServiceStatus.OK ) {
+  //       for ( const r of begresults ) {
+  //         const marker = new google.maps.Marker();
+  //         marker.setPosition( { lat:r.geometry.location.lat(),lng:r.geometry.location.lng() } );
+  //         marker.setTitle( r.name );
+  //         marker.setClickable( true );
+  //         _overlays.push( marker );
+  //         routevm.begAddressMarker = marker;
+  //         break;
+  //       }
+  //       /*
+  //        * endAddress
+  //        */
+  //       const endrequest = { query: routevm.endAddress };
+  //       this.places.textSearch( endrequest,( endresults,endstatus ) => {
+  //         if ( endstatus === google.maps.places.PlacesServiceStatus.OK ) {
+  //           for ( const r of endresults ) {
+  //             const marker = new google.maps.Marker();
+  //             marker.setPosition( { lat:r.geometry.location.lat(),lng:r.geometry.location.lng() } );
+  //             marker.setTitle( r.name );
+  //             marker.setClickable( true );
+  //             _overlays.push( marker );
+  //             routevm.endAddressMarker = marker;
+  //             break;
+  //           }
+  //           const bounds = new google.maps.LatLngBounds();
+  //           _overlays.forEach(marker => {
+  //             const position = marker.getPosition();
+  //             const lat = position.lat();
+  //             const lng = position.lng();
+  //             if ( (lat !== 0) && (lng !== 0) ) {
+  //               bounds.extend( position );
+  //             }
+  //           } );
+  //           // _overlays.push(
+  //           //   new google.maps.Polyline( { path: [ routevm.begAddressMarker.getPosition(),routevm.endAddressMarker.getPosition() ], geodesic: true, strokeColor: '#FF0000', strokeOpacity: 0.5, strokeWeight: 2 } )
+  //           // );
+  //           this.overlays = _overlays;
+  //           setTimeout(() => { this.map.fitBounds( bounds ); },250 );
+  //         }
+  //       } );
+  //     }
+  //   } );
+  // }
 
 
+  <app-routes-waypoint-new *ngIf="showwaypointnew"
+                           [index]=waypoints.length"
+                           [routeid]="selectedroute.id"
+                           [name]="showwaypointnewname"
+                           [type]="showwaypointnewtype"
+                           [address]="showwaypointnewaddress"
+                           [lat]="showwaypointnewlat"
+                           [lng]="showwaypointnewlng"
 
-"../node_modules/primeng/resources/themes/flick/theme.css",
+                           [places]="places"
 
-"../node_modules/primeng/resources/themes/start/theme.css",
-"assets/theme/jquery-ui.theme.css",
-
-
-
-
-
-
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
-
-/*
- * https://fonts.google.com/
- */
-/* @import url('https://fonts.googleapis.com/css?family=Anton'); */
-/* @import url('https://fonts.googleapis.com/css?family=Bitter'); */
-/* @import url('https://fonts.googleapis.com/css?family=Indie+Flower'); */
-
-/*
---arreevblue: #7B9AC1;
---arreevliteblue: #9CAEC4
---arreevlitegray: #F5F5FC
---arreevliteoffwhite: #FBFBFB
- */
-
-html,body {
-  margin: 0;
-
-  width: 100%;
-  height: 100%;
-
-  font-size: 1em !important;
-  font-family: Roboto,sans-serif !important;
-  /* font-family: 'Bitter',serif !important; */
-  /* font-family: 'Anton',sans-serif !important; */
-  /* font-family: 'Indie Flower',cursive !important; */
-
-
-  /* background-color: #F5F5FC; */
-  background: #F0F2F4;
-}
-
-.spacer {
-  flex: 1 1 auto;
-}
-
-
+                           (finished)="onFinishedWaypointNew($event)"></app-routes-waypoint-new>
