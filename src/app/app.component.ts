@@ -54,6 +54,8 @@ export class AppComponent implements OnInit,OnDestroy
   sidenavstate = 'open';
   sidebarstate = 'close';
 
+  accountpending = false;
+
   private accountStoreSubscription: Subscription;
   private account$: Observable<Account>;
 
@@ -71,9 +73,11 @@ export class AppComponent implements OnInit,OnDestroy
      */
     firebase.initializeApp( environment.firebase );
 
+    this.accountpending = false;
     this.avataravailable = false;
 
     if ( this.loggedin ) {
+      this.accountpending = true;
       this.accountstore.dispatch( new AccountActions.AccountFetchAction() );
     }
   }
@@ -118,6 +122,8 @@ export class AppComponent implements OnInit,OnDestroy
   }
 
   private fromAccountStore( account?:Account ) {
+    this.accountpending = false;
+
     this.avataravailable = false;
 
     if ( account === null ) { return; }
@@ -129,7 +135,6 @@ export class AppComponent implements OnInit,OnDestroy
       return;
     }
 
-    console.log( 'account: ' + account.id + ' ' + account.email );
     this.avataravailable = !isBlank( account.imageURL  );
     this.avatarURL$ = Observable.of( account.imageURL );
   }

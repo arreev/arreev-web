@@ -13,7 +13,7 @@ import { API } from '../api.service';
 import { Store } from '@ngrx/store';
 import { isBlank } from '../util';
 
-import { animate,query,stagger,state,style,transition,trigger } from '@angular/animations';
+import { animate,state,style,transition,trigger } from '@angular/animations';
 
 import * as firebase from 'firebase';
 
@@ -42,13 +42,6 @@ interface FollowVM extends Follow
   templateUrl: './follow.component.html',
   styleUrls: ['./follow.component.css'],
   animations: [
-    trigger( 'grid-animation',[
-      transition('* => *',[
-        query(':enter',[
-          style({ opacity:0 } ),stagger(100,animate('.75s',style({ opacity:.75 } ) ) )
-        ],{ optional:true } )
-      ] )
-    ] ),
     trigger('fleet-state',[
       state('inactive',style({ opacity:'.5',transform:'scale(1)' } ) ),
       state('active',style({ opacity:'1',transform:'scale(1.025)' } ) ),
@@ -349,6 +342,9 @@ export class FollowComponent implements OnInit,AfterViewInit,OnDestroy
           return 0;
         } );
         this.fleets = _fleets;
+        if ( this.fleets.length > 0 ) {
+          this.onFleet( this.fleets[ 0 ] );
+        }
       }
     );
   }
@@ -456,7 +452,7 @@ export class FollowComponent implements OnInit,AfterViewInit,OnDestroy
       _overlays.push( transporter.marker );
     }
     _overlays.forEach(marker => {
-      const position = marker.getPosition();
+      const position = marker.getPosition()
       const lat = position.lat();
       const lng = position.lng();
       if ( (lat !== 0) && (lng !== 0) ) {

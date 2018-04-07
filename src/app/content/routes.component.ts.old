@@ -4,9 +4,7 @@ import { AccountState,RouteState,WaypointState } from '../app.state';
 import * as AccountActions from '../store/account.actions';
 import * as RouteActions from '../store/route.actions';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Transporter } from '../model/transporter';
 import { ConfirmationService } from 'primeng/api';
-import { Assignment } from '../model/assignment';
 import { Subscription } from 'rxjs/Subscription';
 import { dumpRoute,Route } from '../model/route';
 import { Observable } from 'rxjs/Observable';
@@ -14,14 +12,9 @@ import { Waypoint } from '../model/waypoint';
 import { API } from '../api.service';
 import { Store } from '@ngrx/store';
 
-import { trigger,stagger,transition,query,style,animate,state } from '@angular/animations';
 import { capitalizeFirstLetter,distanceBetween,isBlank,isEmpty } from '../util';
 
-/*
- * FYI
- * when use debounceTime, and observable is related to a distinct item, can make use of distinctUntilChanged()
- * ... if used on event or some class instance, eg.next(event),next(route) , maybe can make use of pluck() eg. pluck( 'name' )
- */
+import { trigger,stagger,transition,query,style,animate,state } from '@angular/animations';
 
 interface RouteVM extends Route
 {
@@ -105,7 +98,6 @@ export class RoutesComponent implements OnInit,AfterViewInit,AfterViewChecked,On
   selectedroute?: RouteVM = null;
   routes: RouteVM[] = [];
   waypoints: Waypoint[] = [];
-  focusedwaypoint?: Waypoint = null;
 
   map: google.maps.Map;
   places: google.maps.places.PlacesService;
@@ -115,14 +107,9 @@ export class RoutesComponent implements OnInit,AfterViewInit,AfterViewChecked,On
   waypointTemplate?: WaypointTemplate = null;
   showroutesnew = false;
   showwaypointnew = false;
-  showassignmentnew = false;
 
   showwaypointeditid?: string = null;
   showwaypointedit = false;
-
-  assignments: Assignment[] = [];
-  showassignmenteditid?: string = null;
-  showassignmentedit = false;
 
   private readonly _uichange = new BehaviorSubject<void>( null );
   private readonly uichange:Observable<void> = this._uichange.asObservable();
@@ -172,7 +159,6 @@ export class RoutesComponent implements OnInit,AfterViewInit,AfterViewChecked,On
     this.waypoints = [];
 
     this.selectedroute = null;
-    this.focusedwaypoint = null;
     this.viewready = false;
 
     this.fetchRoutes();
@@ -183,6 +169,7 @@ export class RoutesComponent implements OnInit,AfterViewInit,AfterViewChecked,On
 
   ngAfterViewInit(): void {
     this.viewready = true;
+    // this.defaultRoute();
     this.subscribeUI();
   }
 
@@ -219,7 +206,6 @@ export class RoutesComponent implements OnInit,AfterViewInit,AfterViewChecked,On
   }
 
   onWaypoint( waypoint:Waypoint ) {
-    this.focusedwaypoint = waypoint;
     this.focusWaypoint( waypoint );
   }
 
@@ -243,6 +229,9 @@ export class RoutesComponent implements OnInit,AfterViewInit,AfterViewChecked,On
     this.showwaypointeditid = null;
   }
 
+  onBegAddress( address:string ) {}
+  onEndAddress( address:string ) {}
+
   onBlur() { this._uichange.next(null ); }
   update() { this._uichange.next(null ); }
 
@@ -255,14 +244,10 @@ export class RoutesComponent implements OnInit,AfterViewInit,AfterViewChecked,On
     this.confirmationService.confirm({ message:`Are you sure you want to delete ${name} ?`,accept: () => { this.deleteRoute( this.selectedroute ); } } );
   }
 
-  onZoomMapToRoute() {
-    this.zoomMapToRoute( this.selectedroute );
-  }
-
   onToggleAllInfoWindows() {
     let someopened = false;
 
-    // const center = this.map.getCenter();
+    const center = this.map.getCenter();
 
     this.overlays.filter(( o ) => (o instanceof google.maps.Marker) ).forEach(m => {
       const tiw : ToggleableInfoWindow = m.get( 'infowindow' );
@@ -280,12 +265,11 @@ export class RoutesComponent implements OnInit,AfterViewInit,AfterViewChecked,On
       }
     } );
 
-    // setTimeout(() => { this.map.setCenter( center ); },200 ); // hack fix for now, map losing center/zoom when reopen all ?
+    setTimeout(() => { this.map.setCenter( center ); },250 ); // hack fix for now, map losing center/zoom when reopen all ?
   }
 
   onRefresh() {
     this.selectedroute = null;
-    this.focusedwaypoint = null;
     this.fetchRoutes();
   }
 
@@ -304,7 +288,6 @@ export class RoutesComponent implements OnInit,AfterViewInit,AfterViewChecked,On
         this.selectedroute.state = 'active';
         this.waypoints = [];
         this.routestore.dispatch( new RouteActions.RouteFetchAction( this.selectedroute.id ) );
-        this.fetchAssignments( this.selectedroute );
       }
     );
   }
@@ -314,29 +297,6 @@ export class RoutesComponent implements OnInit,AfterViewInit,AfterViewChecked,On
     Observable.timer( 500 ).subscribe(
       n => { this.fetchRoutes(); }
     );
-  }
-
-  onAddAssignment() {
-    this.showassignmentnew = true;
-  }
-
-  onRemoveAssignment( assignment:Assignment ) {
-    this.confirmationService.confirm({ message:`Are you sure you want to delete transporter ?`,accept: () => { this.removeAssignment( assignment ); } } );
-  }
-
-  onFinishedAssignmentNew() {
-    this.showassignmentnew = false;
-    this.fetchAssignments( this.selectedroute );
-  }
-
-  onAssignment( assignment:Assignment ) {
-    this.showassignmenteditid = assignment.id;
-    this.showassignmentedit = true;
-  }
-
-  onFinishedAssignmentEdit( refresh:boolean ) {
-    this.showassignmentedit = false;
-    this.showassignmenteditid = null;
   }
 
   /*
@@ -463,8 +423,18 @@ export class RoutesComponent implements OnInit,AfterViewInit,AfterViewChecked,On
       e => { this.onError( e ); },
       () => {
         this.routes = _routes;
+        this.defaultRoute();
       }
     );
+  }
+
+  private defaultRoute() {
+    if ( !this.viewready || (this.selectedroute != null) ) { return; }
+
+    const me = this;
+    setTimeout(() => {
+      if ( me.routes.length > 0 ) { me.onRoute( me.routes[0] ); }
+      },500 );
   }
 
   private asRouteVM( route:Route ) {
@@ -644,7 +614,6 @@ export class RoutesComponent implements OnInit,AfterViewInit,AfterViewChecked,On
       const infowindow = new ToggleableInfoWindow();
       infowindow.setContent( c );
       infowindow.setZIndex( 1 );
-      infowindow.setOptions( { disableAutoPan:true } );
       infowindow.open( this.map,marker );
       marker.setValues( { 'waypointid':w.id,'infowindow':infowindow } );
 
@@ -680,13 +649,13 @@ export class RoutesComponent implements OnInit,AfterViewInit,AfterViewChecked,On
   }
 
   private zoomMapToRouteActual( route:Route ) {
-    this.focusedwaypoint = null;
-
     const bounds = new google.maps.LatLngBounds();
     this.waypoints.forEach(w => {
-      bounds.extend({ lat:w.latitude,lng:w.longitude } );
+      bounds.extend( { lat:w.latitude,lng:w.longitude } );
     } );
-    this.map.fitBounds( bounds );
+    setTimeout(() => {
+      this.map.fitBounds( bounds );
+    },250 );
   }
 
   private updateWaypoint( waypoint:Waypoint ) {
@@ -814,55 +783,6 @@ export class RoutesComponent implements OnInit,AfterViewInit,AfterViewChecked,On
         o.get( 'infowindow' ).setZIndex( 1 );
       }
     } );
-  }
-
-  private fetchAssignments( route:Route ) {
-    const routeid = route.id;
-    this.accountstore.select('account' ).take( 1 ).subscribe(
-      a => {
-        if ( !isBlank( a.id ) ) {
-          this.getAssignments( a.id,routeid,0,100 );
-        } else {
-          let accountSubscription = null;
-          accountSubscription = this.accountstore.select('account' ).subscribe(
-            aa => { this.getAssignments( aa.id,routeid,0,100 ); },
-            e => { this.onError( e ); accountSubscription.unsubscribe(); },
-            () => { accountSubscription.unsubscribe(); }
-          );
-          this.accountstore.dispatch( new AccountActions.AccountFetchAction() );
-        }
-      },
-      e => { this.onError( e ); },
-      () => {}
-    );
-  }
-
-  /*
-   * TODO: support paging
-   * TODO: assert account is valid ? (logged in?)
-   */
-  private getAssignments( ownerid:string,routeid:string,start:number,count:number ) {
-    const _assignments: Assignment[] = [];
-    this.api.getAssignments( ownerid,'route',routeid ).subscribe(
-      a => { _assignments.push( a ); },
-      e => { this.onError( e ); },
-      () => {
-        this.assignments = _assignments;
-      }
-    );
-  }
-
-  private removeAssignment( assignment:Assignment ) {
-    this.accountstore.select('account' ).take( 1 ).subscribe(
-      a => {
-        const ownerid = a.id;
-        this.api.deleteAssignment( ownerid,assignment.id ).subscribe(
-          b => {},
-          e => { this.onError( e ); },
-          () => { this.fetchAssignments( this.selectedroute ); }
-        );
-      }
-    );
   }
 
   private onError( e ) { console.log(e ); }

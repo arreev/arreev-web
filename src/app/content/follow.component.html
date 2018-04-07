@@ -37,7 +37,7 @@
     <div class="ui-grid-row">
       <div class="ui-grid-col-6">
         <p-dataGrid [value]="fleets" emptyMessage="&nbsp;" [rows]="1"
-                    [hidden]="fleets.length === 0">
+                    [hidden]="fleets.length === 0" [@grid-animation]="fleets.length">
           <ng-template let-fleet pTemplate="item">
             <p-panel [header]="fleet.name" styleClass="follow-panel" (click)="onFleet(fleet)" [@fleet-state]="fleet.state">
               <div style="text-align:center;">
@@ -47,7 +47,7 @@
           </ng-template>
         </p-dataGrid>
       </div>
-      <div class="ui-grid-col-6">
+      <div *ngIf="selectedfleet != null" class="ui-grid-col-6">
         <p-dataList [value]="transporters" emptyMessage="...">
           <ng-template let-transporter pTemplate="item">
             <div class="follow-item" (click)="onTransporter(transporter,true)" [@transporter-state]="transporter.state">
@@ -66,7 +66,7 @@
     </div>
   </div>
 
-  <div class="follow-workspace">
+  <div *ngIf="selectedfleet != null" class="follow-workspace">
     <div class="follow-map-container">
       <p-gmap [options]="options" [overlays]="overlays"
               (onMapReady)="onMapReady($event)" (onMapClick)="onMapClick($event)" (onOverlayClick)="onOverlayClick($event)"

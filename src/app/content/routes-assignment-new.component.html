@@ -1,0 +1,38 @@
+
+<div class="routes-assignment-new-container">
+
+  <p-dataGrid [value]="fleets" emptyMessage="&nbsp;" [rows]="2"
+              [hidden]="fleets.length === 0">
+    <ng-template let-fleet pTemplate="item">
+      <p-panel [header]="fleet.name" styleClass="routes-assignment-new-fleet-panel" (click)="onFleet(fleet)">
+        <div style="text-align:center;">
+          <img src="{{fleet.imageURL}}" width="64" height="48" style="object-fit:cover;">
+        </div>
+      </p-panel>
+    </ng-template>
+  </p-dataGrid>
+
+  <p-dataGrid [value]="transporters" emptyMessage="&nbsp;" [rows]="2"
+              [hidden]="transporters.length === 0">
+    <ng-template let-transporter pTemplate="item">
+      <p-panel [header]="transporter.name" styleClass="routes-assignment-new-transporter-panel" (click)="onTransporter(transporter)">
+        <div style="text-align:center;">
+          <img src="{{transporter.imageURL}}" width="58" height="42" style="object-fit:cover;">
+          <span>{{transporter.number}}</span>
+        </div>
+      </p-panel>
+    </ng-template>
+  </p-dataGrid>
+
+<!--
+  <p-dataScroller [value]="transporters" [rows]="10" [inline]="true" scrollHeight="312px" [style]="{'min-height':'312px'}">
+    <ng-template let-transporter pTemplate="item">
+      <div>
+        <img src="{{transporter.imageURL}}" width="64" style="object-fit:cover;">
+        {{transporter.name}}
+      </div>
+    </ng-template>
+  </p-dataScroller>
+  -->
+
+</div>

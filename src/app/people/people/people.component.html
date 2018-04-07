@@ -1,0 +1,79 @@
+
+<div class="content-container">
+
+  <p-toolbar>
+    <div class="ui-toolbar-group-left">
+      <img *ngIf="working" src="assets/working.gif">
+    </div>
+    <div class="ui-toolbar-group-right">
+      <button pButton type="button" label="add a group" icon="fa-users" (click)="onAddGroup()"></button>
+      <i class="fa fa-refresh" style="cursor:pointer;margin-left:5px;" (click)="onRefresh()"></i>
+    </div>
+  </p-toolbar>
+
+  <!--
+  When there is no content, this component draws rectangle with blue border and white background ... could not figure out how to style this out.
+  So, i noticed in /node-modules/primeng/components/datagrid/datagrid.d.ts there is exported methid isEmpty() ... thus i hacked in #datagrid and [hidden]="datagrid.isEmpty()"
+  -->
+  <p-dataGrid #datagrid [value]="groups" emptyMessage="&nbsp;" [rows]="1" [hidden]="datagrid.isEmpty()" [@grid-animation]="groups.length">
+    <ng-template let-group pTemplate="item">
+      <div class="card" [style.border]="cardBorder(group)" (click)="onGroup(group)" [@active-state]="group.state">
+        <img class="card-image" src="{{group.imageURL}}">
+        <div class="card-footer">
+          <div class="card-title">{{group.name}}</div>
+          <div style="flex:1;"></div>
+          <div class="card-x" (click)="onDeleteGroup(group)"><i class="fa fa-remove"></i></div>
+        </div>
+      </div>
+    </ng-template>
+  </p-dataGrid>
+
+  <!-- using the observable and async pipe ...
+  <div *ngFor="let group of groups$ | async">
+    <div class="people-component-group-item" style="width:164px;">
+      <img class="people-component-group-item-image" src="{{group.imageURL}}" (click)="onGroup(group)">
+      <div class="people-component-group-item-footer">
+        <span>{{group.name}}</span>
+        <div style="flex:1;"></div>
+        <span class="people-component-group-item-x" (click)="onDeleteGroup(group)"><i class="fa fa-remove"></i></span>
+      </div>
+    </div>
+  </div>
+  -->
+
+  <div *ngIf="selectedgroup != null" class="form" [@scale-in]>
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+          <div class="field">
+            <div class="field-label"><span class="field-spacer"></span><span class="field-name">name:&nbsp;</span></div>
+            <input pInputText type="text" [(ngModel)]="selectedgroup.name" (ngModelChange)="ngModelChange(selectedgroup)"/>
+          </div>
+        </div>
+        <div class="ui-grid-col-6">
+          <div class="field">
+            <div class="field-label"><span class="field-spacer"></span><span class="field-name">description:&nbsp;</span></div>
+            <input pInputText type="text" [(ngModel)]="selectedgroup.description" (ngModelChange)="ngModelChange(selectedgroup)"/>
+          </div>
+        </div>
+        <div class="ui-grid-col-6">
+          <div class="field">
+            <div class="field-label"><span class="field-spacer"></span><span class="field-name">category:&nbsp;</span></div>
+            <input pInputText type="text" [(ngModel)]="selectedgroup.category" (ngModelChange)="ngModelChange(selectedgroup)"/>
+          </div>
+        </div>
+        <div class="action-icon">
+          <i class="fa fa-picture-o" (click)="onImage()"></i>
+          <input #inputFile hidden type="file" (change)="onInputFile(selectedgroup)">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p-dialog [(visible)]="shows.showpeoplenew" [modal]="true" [resizable]="true" appendTo="body">
+  <p-header>add a group</p-header>
+  <app-people-new *ngIf="shows.showpeoplenew" (finished)="onPeopleNewFinished()"></app-people-new>
+</p-dialog>
+

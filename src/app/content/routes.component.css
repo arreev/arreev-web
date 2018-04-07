@@ -24,6 +24,35 @@
   border: 2px solid #8899DD;
 }
 
+.routes-assignment {
+  position: relative;
+  border-radius: 5px;
+  border: 2px solid #BBBBBB;
+  text-align: right;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+.routes-assignment-image {
+  object-fit: cover;
+  width: 74px;
+  height: 62px;
+  cursor: pointer;
+}
+.routes-assignment-x {
+  position: absolute;
+  color: #EEDDEE;
+  border-top-left-radius: 5px;
+  background-color: #BBBBBB;
+  padding: 2px;
+  padding-left: 4px;
+  right: 0px;
+  bottom: 0px;
+  cursor: pointer;
+}
+.routes-assignment-x:hover {
+  color: #FFDDEE;
+}
+
 .routes-text {
   text-overflow: ellipsis;
   overflow: hidden;
@@ -73,21 +102,6 @@
 .routes-chip-item-x:hover {
   color: #FFDDEE;
 }
-
-/*.routes-chip-banner {*/
-  /*cursor: pointer;*/
-  /*color: #FFFFFF;*/
-/*}*/
-/*.routes-chip-banner:hover { color: #FFFFFF; }*/
-/*.routes-chip-banner:active { color: #EEFFFF; }*/
-
-/*.routes-chip-remove {*/
-  /*color: #EEDDEE;*/
-  /*margin-right:5px;*/
-  /*cursor: pointer;*/
-/*}*/
-/*.routes-chip-remove:hover { color: pink; }*/
-/*.routes-chip-remove:active { color: #FFD2DA; }*/
 
 .ui-toolbar {
   border: none;

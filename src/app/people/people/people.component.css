@@ -1,0 +1,18 @@
+
+.ui-toolbar {
+  border: none;
+  background-color: #DDDDEE;
+}
+
+.ui-datagrid {
+  border: none;
+  background: transparent;
+}
+.ui-datagrid-content {
+  border: none;
+  background: transparent;
+}
+.ui-datagrid-content-empty {
+  border: none;
+  background: transparent;
+}

@@ -11,7 +11,8 @@ import { RoutesComponent } from './content/routes.component';
 import { TimesComponent } from './content/times.component';
 import { EventsComponent } from './content/events.component';
 import { DevicesComponent } from './content/devices.component';
-import { PeopleComponent } from './content/people.component';
+// import { PeopleComponent } from './content/people.component';
+import { PeopleComponent } from './people/people/people.component';
 import { FollowComponent } from './content/follow.component';
 import { UTrackComponent } from './content/utrack.component';
 
@@ -30,7 +31,7 @@ const routes: Routes = [
   { path:'routes',component:RoutesComponent,canActivate:[SecureGuard,AuthGuard] },
   { path:'times',component:UnderConstructionComponent,canActivate:[SecureGuard,AuthGuard] },
   { path:'events',component:UnderConstructionComponent,canActivate:[SecureGuard,AuthGuard] },
-  { path:'people',component:UnderConstructionComponent,canActivate:[SecureGuard,AuthGuard] },
+  { path:'people',component:PeopleComponent,canActivate:[SecureGuard,AuthGuard] },
   { path:'follow',component:FollowComponent,canActivate:[SecureGuard,AuthGuard] },
   { path:'utrack',component:UnderConstructionComponent,canActivate:[SecureGuard,AuthGuard] },
 

@@ -15,18 +15,18 @@
 
     <div class="ui-grid-row">
       <div class="ui-grid-col-6">
-        <span class="routes-waypoint-edit--label">type</span>
+        <span class="routes-waypoint-edit-label">type</span>
         <input pInputText type="text" [(ngModel)]="waypoint.type" (ngModelChange)="modelChange()"/>
       </div>
       <div class="ui-grid-col-6">
-        <span class="routes-waypoint-edit--label">category</span>
+        <span class="routes-waypoint-edit-label">category</span>
         <input pInputText type="text" [(ngModel)]="waypoint.category" (ngModelChange)="modelChange()"/>
       </div>
     </div>
 
     <div class="ui-grid-row">
       <div class="ui-grid-col-12">
-        <span class="routes-waypoint-edit--label">address</span>
+        <span class="routes-waypoint-edit-label">address</span>
         <div style="display:flex;flex-direction:row;">
           <input pInputText type="text" [(ngModel)]="waypoint.address" (ngModelChange)="modelChange()" style="flex:1;"/>
           <!--<i class="fa fa-globe" (click)="onSearchAddress()" style="color:blue;cursor:pointer;font-size:15pt;margin-left:5px;"></i>-->
@@ -36,11 +36,11 @@
 
     <div class="ui-grid-row">
       <div class="ui-grid-col-6">
-        <span class="routes-waypoint-edit--label">latitude</span>
+        <span class="routes-waypoint-edit-label">latitude</span>
         <input pInputText type="number" [(ngModel)]="waypoint.latitude" (ngModelChange)="modelChange()"/>
       </div>
       <div class="ui-grid-col-6">
-        <span class="routes-waypoint-edit--label">longitude</span>
+        <span class="routes-waypoint-edit-label">longitude</span>
         <input pInputText type="number" [(ngModel)]="waypoint.longitude" (ngModelChange)="modelChange()"/>
       </div>
     </div>

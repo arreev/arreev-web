@@ -15,7 +15,8 @@ import {
   MessagesModule,FileUploadModule,RadioButtonModule,PanelModule,DropdownModule,CheckboxModule,ProgressSpinnerModule,
   DataTableModule,CalendarModule,MultiSelectModule,SelectButtonModule,TabViewModule,InputTextareaModule,OverlayPanelModule,
   DataListModule,DataGridModule,ConfirmDialogModule,GrowlModule,OrderListModule,InplaceModule,FieldsetModule,CarouselModule,
-  ChipsModule,TerminalModule,DragDropModule,ToggleButtonModule,SidebarModule,CardModule,EditorModule,GMapModule,InputSwitchModule
+  ChipsModule,TerminalModule,DragDropModule,ToggleButtonModule,SidebarModule,CardModule,EditorModule,GMapModule,InputSwitchModule,
+  DataScrollerModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import { StepsModule } from 'primeng/steps';
@@ -41,15 +42,19 @@ import { AccountEffects } from './store/account-effects.service';
 import { FleetEffects } from './store/fleet-effects.service';
 import { RouteEffects } from './store/route-effects.service';
 import { WaypointEffects } from './store/waypoint-effects.service';
+import { AssignmentEffects } from './store/assignment-effects.service';
 import { TransporterEffects } from './store/transporter-effects.service';
 import { FollowEffects } from './store/follow-effects.service';
+import { GroupEffects } from './store/group-effects.serivce';
 
 import { accountReducer } from './store/account.reducer';
 import { fleetReducer } from './store/fleet.reducer';
 import { routeReducer } from './store/route.reducer';
 import { waypointReducer } from './store/waypoint.reducer';
+import { assignmentReducer } from './store/assignment.reducer';
 import { transporterReducer } from './store/transporter.reducer';
 import { followReducer } from './store/follow.reducer';
+import { groupReducer } from './store/group.reducer';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav.component';
@@ -64,10 +69,11 @@ import { RoutesComponent } from './content/routes.component';
 import { RoutesNewComponent } from './content/routes-new.component';
 import { RoutesWaypointNewComponent } from './content/routes-waypoint-new.component';
 import { RoutesWaypointEditComponent } from './content/routes-waypoint-edit.component';
+import { RoutesAssignmentNewComponent } from './content/routes-assignment-new.component';
+import { RoutesAssignmentEditComponent } from './content/routes-assignment-edit.component';
 import { TimesComponent } from './content/times.component';
 import { EventsComponent } from './content/events.component';
 import { DevicesComponent } from './content/devices.component';
-import { PeopleComponent } from './content/people.component';
 import { FollowComponent } from './content/follow.component';
 import { UTrackComponent } from './content/utrack.component';
 import { LoginComponent } from './login.component';
@@ -83,7 +89,10 @@ import { AngularFireStorageModule } from 'angularfire2/storage';
 
 import { AgmCoreModule } from '@agm/core';
 
+import { PeopleModule } from './people/people.module';
+
 import { environment } from '../environments/environment';
+
 
 @NgModule({
   declarations: [
@@ -100,10 +109,11 @@ import { environment } from '../environments/environment';
     RoutesNewComponent,
     RoutesWaypointNewComponent,
     RoutesWaypointEditComponent,
+    RoutesAssignmentNewComponent,
+    RoutesAssignmentEditComponent,
     TimesComponent,
     EventsComponent,
     DevicesComponent,
-    PeopleComponent,
     FollowComponent,
     UTrackComponent,
     TestComponent,
@@ -165,6 +175,9 @@ import { environment } from '../environments/environment';
     GMapModule,
     InputSwitchModule,
     ConfirmDialogModule,
+    DataScrollerModule,
+
+    PeopleModule,
 
     AngularFireModule.initializeApp( environment.firebase ),
     AngularFirestoreModule,
@@ -172,8 +185,11 @@ import { environment } from '../environments/environment';
 
     AgmCoreModule.forRoot({ apiKey:environment.google_api_key } ),
 
-    StoreModule.forRoot({ account:accountReducer,fleet:fleetReducer,route:routeReducer,waypoint:waypointReducer,transporter:transporterReducer,follow:followReducer } ),
-    EffectsModule.forRoot([ AccountEffects,FleetEffects,RouteEffects,WaypointEffects,TransporterEffects,FollowEffects ] ),
+    StoreModule.forRoot({ account:accountReducer,fleet:fleetReducer,route:routeReducer,waypoint:waypointReducer,
+      assignment:assignmentReducer,transporter:transporterReducer,follow:followReducer,
+      group:groupReducer } ),
+
+    EffectsModule.forRoot([ AccountEffects,FleetEffects,RouteEffects,WaypointEffects,AssignmentEffects,TransporterEffects,FollowEffects,GroupEffects ] ),
 
     environment.imports
   ],

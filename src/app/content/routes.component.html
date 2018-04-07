@@ -3,24 +3,44 @@
 
   <p-toolbar>
     <div class="ui-toolbar-group-left">
-      <input #search type="text" pInputText placeholder="where" style="" (keyup.enter)="onSearch(search.value)">
+      <input *ngIf="selectedroute != null" #search type="text" pInputText placeholder="where" (keyup.enter)="onSearch(search.value)">
     </div>
     <div class="ui-toolbar-group-right">
       <button pButton type="button" label="add a route" icon="fa-arrows" (click)="onAddRoute()"></button>
-      <button pButton type="button" label="delete route" icon="fa-bus" (click)="onDeleteRoute()" *ngIf="selectedroute != null" class="ui-button-secondary" style="color:maroon;"></button>
-      <button pButton type="button" label="add a waypoint" icon="fa-truck" (click)="onAddWaypoint()" *ngIf="selectedroute != null"></button>
+      <button pButton type="button" label="delete route" icon="fa-arrows" (click)="onDeleteRoute()" *ngIf="selectedroute != null" class="ui-button-secondary" style="color:maroon;"></button>
+      <button pButton type="button" label="add a waypoint" icon="fa-map-marker" (click)="onAddWaypoint()" *ngIf="selectedroute != null"></button>
+      <button pButton type="button" label="add a transporter" icon="fa-truck" (click)="onAddAssignment()" *ngIf="selectedroute != null"></button>
+
+      <i *ngIf="selectedroute != null" class="fa fa-compress" style="cursor:pointer;margin-left:5px;margin-right:5px;" (click)="onZoomMapToRoute()"></i>
+      <i *ngIf="selectedroute != null" class="fa fa-window-restore" style="cursor:pointer;margin-left:5px;margin-right:5px;" (click)="onToggleAllInfoWindows()"></i>
       <i class="fa fa-refresh" style="cursor:pointer;margin-left:5px;" (click)="onRefresh()"></i>
     </div>
   </p-toolbar>
 
-  <p-dataGrid [value]="routes" emptyMessage="&nbsp;" [rows]="1" [hidden]="routes.length === 0" [@grid-animation]="routes.length">
-    <ng-template let-route pTemplate="item">
-      <p-panel [header]="route.name" styleClass="routes-panel" (click)="onRoute(route)" [@route-state]="route.state">
-        <img *ngIf="(route.imageURL != null) && (route.imageURL.length > 0)" src="{{route.imageURL}}" width="75" height="50" style="object-fit: cover;">
-        <div class="routes-text">{{route.type}}</div>
-      </p-panel>
-    </ng-template>
-  </p-dataGrid>
+  <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-9">
+        <p-dataGrid [value]="routes" emptyMessage="&nbsp;" [rows]="1" [hidden]="routes.length === 0" [@grid-animation]="routes.length">
+          <ng-template let-route pTemplate="item">
+            <p-panel [header]="route.name" styleClass="routes-panel" (click)="onRoute(route)" [@route-state]="route.state">
+              <img *ngIf="(route.imageURL != null) && (route.imageURL.length > 0)" src="{{route.imageURL}}" width="75" height="50" style="object-fit: cover;">
+              <div class="routes-text">{{route.type}}</div>
+            </p-panel>
+          </ng-template>
+        </p-dataGrid>
+      </div>
+      <div class="ui-grid-col-3">
+        <p-dataGrid [value]="assignments" emptyMessage="&nbsp;" [rows]="1" [hidden]="assignments.length === 0" [@grid-animation]="assignments.length" [style]="{'float':'right'}">
+          <ng-template let-assignment pTemplate="item">
+            <div class="routes-assignment">
+              <img class="routes-assignment-image" src="{{assignment.imageURL}}" (click)="onAssignment(assignment)">
+              <span class="routes-assignment-x" (click)="onRemoveAssignment(assignment)"><i class="fa fa-remove"></i></span>
+            </div>
+          </ng-template>
+        </p-dataGrid>
+      </div>
+    </div>
+  </div>
 
   <div *ngIf="selectedroute != null" [@route-edit]>
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
@@ -64,37 +84,17 @@
           <i *ngIf="waypoint.index === (waypoints.length-1)" class="fa fa-stop-circle" style="color:pink;"></i>
 
           <span *ngIf="(waypoint.index > 0) && (waypoint.index < (waypoints.length-1))" style="color:#BBBBCC;">{{waypoint.index}}</span>
-          {{waypoint.name}}
+          <span [style.color]="focusedwaypoint === waypoint ? '#FFFFFF' : '#F4F4F4'"
+                [style.font-size.pt]="focusedwaypoint === waypoint ? '11' : '10'">
+            {{waypoint.name}}
+          </span>
 
           <span class="routes-chip-item-x" (click)="onRemoveWaypointFromChips(waypoint)"><i class="fa fa-remove"></i></span>
           <i *ngIf="!isEndpoint(waypoint)" class="fa fa-arrow-right"></i>
         </div>
       </ng-template>
     </p-chips>
-
-    <!--
-    <p-chips [(ngModel)]="waypoints" [addOnTab]="true" (onAdd)="onAddWaypointFromChips($event.value)">
-      <ng-template let-waypoint let-i="index" pTemplate="item">
-          <span class="routes-chip-banner" (click)="onWaypoint(waypoint)" (dblclick)="onEditWaypoint(waypoint)" pDraggable="chipdragdrop">
-            <i *ngIf="waypoint.index === 0" class="fa fa-play-circle" style="color:lightgreen;">&nbsp;</i>
-            <i *ngIf="waypoint.index === (waypoints.length-1)" class="fa fa-stop-circle" style="color:pink;">&nbsp;</i>
-            <span *ngIf="(waypoint.index > 0) && (waypoint.index < (waypoints.length-1))" style="color:#BBBBCC;">{{waypoint.index}} &nbsp;</span>
-            <span style="margin-right:8px;">{{waypoint.name}}</span>
-          </span>
-        <span class="routes-chip-remove" (click)="onRemoveWaypointFromChips(waypoint)"><i class="fa fa-remove"></i></span>
-        <i *ngIf="!isEndpoint(waypoint)" class="fa fa-arrow-right" style="margin-right:5px;"></i>
-      </ng-template>
-    </p-chips>
   </div>
-  -->
-
-  <!--
-  <div *ngIf="selectedroute != null" class="routes-addresses">
-    <span class="routes-label">FROM </span><input #begaddress type="text" [(ngModel)]="selectedroute.begAddress" pInputText placeholder="start address" size=45 (ngModelChange)="update()" (blur)="onBlur()" (keyup.enter)="onBegAddress(search.value)">
-    <span class="routes-label"><i class="fa fa-arrow-right" style="margin-left:10px;margin-right:10px;"></i></span>
-    <span class="routes-label">TO </span><input #ebdaddress type="text" [(ngModel)]="selectedroute.endAddress" pInputText placeholder="destination address" size=45 (ngModelChange)="update()" (blur)="onBlur()" (keyup.enter)="onEndAddress(search.value)">
-  </div>
-  -->
 
   <div style="height:5px;"></div>
 
@@ -110,19 +110,16 @@
       </p-gmap>
     </div>
   </div>
+
 </div>
 
 <p-dialog [(visible)]="showroutesnew" [modal]="true" [resizable]="true" appendTo="body">
-  <p-header>
-    add a new route
-  </p-header>
+  <p-header>add a new route</p-header>
   <app-routes-new *ngIf="showroutesnew" (finished)="onFinishedRoutesNew()"></app-routes-new>
 </p-dialog>
 
 <p-dialog [(visible)]="showwaypointnew" [modal]="true" [resizable]="true" appendTo="body">
-  <p-header>
-    add a new waypoint
-  </p-header>
+  <p-header>add a new waypoint</p-header>
   <app-routes-waypoint-new *ngIf="showwaypointnew && (waypointTemplate !== null) && (waypointTemplate.routeid !== null)"
                            [index]="waypointTemplate.index"
                            [routeid]="waypointTemplate.routeid"
@@ -134,14 +131,31 @@
 
                            [places]="places"
 
-                           (finished)="onFinishedWaypointNew($event)"></app-routes-waypoint-new>
+                           (finished)="onFinishedWaypointNew($event)">
+  </app-routes-waypoint-new>
 </p-dialog>
 
 <p-dialog [(visible)]="showwaypointedit" [modal]="true" [resizable]="true" appendTo="body">
-  <p-header>
-    edit waypoint
-  </p-header>
+  <p-header>edit waypoint</p-header>
   <app-routes-waypoint-edit *ngIf="showwaypointedit"
                             [id]="showwaypointeditid"
-                            (finished)="onFinishedWaypointEdit()"></app-routes-waypoint-edit>
+                            (finished)="onFinishedWaypointEdit()">
+  </app-routes-waypoint-edit>
 </p-dialog>
+
+<p-dialog [(visible)]="showassignmentnew" [modal]="true" [resizable]="true" appendTo="body">
+  <p-header>add a transporter</p-header>
+  <app-routes-assignment-new *ngIf="showassignmentnew"
+                            [routeid]="selectedroute.id"
+                            (finished)="onFinishedAssignmentNew()">
+  </app-routes-assignment-new>
+</p-dialog>
+
+<p-dialog [(visible)]="showassignmentedit" [modal]="true" [resizable]="true" appendTo="body">
+  <p-header>assigned transporter</p-header>
+  <app-routes-assignment-edit *ngIf="showassignmentedit"
+                         [id]="showassignmenteditid"
+                         (finished)="onFinishedAssignmentEdit()">
+  </app-routes-assignment-edit>
+</p-dialog>
+

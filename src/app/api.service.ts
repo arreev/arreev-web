@@ -2,6 +2,7 @@
 import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Authentication } from './authentication.service';
 import { Transporter } from './model/transporter';
+import { Assignment } from './model/assignment';
 import { Observable } from 'rxjs/Observable';
 import { Waypoint } from './model/waypoint';
 import { Injectable } from '@angular/core';
@@ -9,6 +10,7 @@ import { Account } from './model/account';
 import { Follow } from './model/follow';
 import { JWTToken } from './jwt-token';
 import { Route } from './model/route';
+import { Group } from './model/group';
 import { Fleet } from './model/fleet';
 
 import { environment } from '../environments/environment';
@@ -34,8 +36,12 @@ class RoutesResponse extends APIResponse { routes?: Route[] = null; }
 class RouteResponse extends APIResponse { route?: Route = null; }
 class WaypointsResponse extends Response { waypoints?: Waypoint [] = null; }
 class WaypointResponse extends Response { waypoint?: Waypoint = null; }
+class AssignmentsResponse extends APIResponse { assignments?: Assignment[] = null; }
+class AssignmentResponse extends APIResponse { assignment?: Assignment = null; }
 class FollowResponse extends APIResponse { follow?: Follow = null; }
 class FollowsResponse extends APIResponse { follows?: Follow[] = null; }
+class GroupsResponse extends APIResponse { groups?: Group[] = null; }
+class GroupResponse extends APIResponse { group?: Group = null; id?: string = null; }
 
 class StorageMetadata
 {
@@ -353,6 +359,72 @@ export class API
 
   /**
    *
+   * @param {string} ownerid
+   * @param {string} type
+   * @param {string} routeid
+   * @returns {Observable<string>}
+   */
+  getAssignments( ownerid:string,type:string,routeid:string ) : Observable<Assignment> {
+    const observable = this.http
+      .get<AssignmentsResponse>(environment.arreev_api_host + '/assignments?ownerid=' + ownerid + '&type=' + type + '&routeid=' + routeid )
+      .concatMap( r => {
+        return Observable.from( r.assignments );
+      } );
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Observable<Assignment>}
+   */
+  getAssignment( id:string ) : Observable<Assignment> {
+    const observable = this.http
+      .get<AssignmentResponse>(environment.arreev_api_host + '/assignment?id=' + id )
+      .concatMap( r => {
+        return Observable.of( r.assignment );
+      } );
+
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} ownerid
+   * @param {Assignment} assignment
+   * @returns {Observable<Assignment>}
+   */
+  postAssignment( ownerid:string,assignment:Assignment ) : Observable<Assignment> {
+    const body = JSON.stringify( assignment );
+
+    const url = environment.arreev_api_host + '/assignment?ownerid='+ownerid;
+
+    const observable = this.http
+      .post<AssignmentResponse>( url,body )
+      .concatMap( r => {
+        return Observable.of( r.assignment );
+      } );
+
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} ownerid
+   * @param {string} id
+   * @returns {Observable<Boolean>}
+   */
+  deleteAssignment( ownerid:string,id:string ) : Observable<Boolean> {
+    const observable = this.http
+      .delete<WaypointResponse>(environment.arreev_api_host + '/assignment?ownerid=' + ownerid + '&id=' + id )
+      .concatMap( r => {
+        return Observable.of( true );
+      } );
+    return observable;
+  }
+
+  /**
+   *
    * @param {string} id
    * @returns {Observable<Follow>}
    */
@@ -409,6 +481,71 @@ export class API
         return Observable.of( r.follow );
       } );
 
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} ownerid
+   * @param {string} type
+   * @returns {Observable<Group>}
+   */
+  getGroups( ownerid:string,type:string ) : Observable<Group> {
+    const observable = this.http
+      .get<GroupsResponse>(environment.arreev_api_host + '/groups?ownerid=' + ownerid + '&type=' + type )
+      .concatMap( r => {
+        return Observable.from( r.groups );
+      } );
+
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} ownerid
+   * @param {string} type
+   * @returns {Observable<Group[]>}
+   */
+  getGroupsArray( ownerid:string,type:string ) : Observable<Group[]> {
+    const observable = this.http
+      .get<GroupsResponse>(environment.arreev_api_host + '/groups?ownerid=' + ownerid + '&type=' + type )
+      .concatMap( r => {
+        return Observable.of( r.groups );
+      } );
+
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} ownerid
+   * @param {Group} group
+   * @returns {Observable<Group>}
+   */
+  postGroup( ownerid:string,group:Group ) : Observable<Group> {
+    const body = JSON.stringify( group );
+
+    const observable = this.http
+      .post<GroupResponse>(environment.arreev_api_host + '/group?ownerid=' + ownerid,body )
+      .concatMap( r => {
+        return Observable.of( r.group );
+      } );
+
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} ownerid
+   * @param {string} id
+   * @returns {Observable<Boolean>}
+   */
+  deleteGroup( ownerid:string,id:string ) : Observable<string> {
+    const observable = this.http
+      .delete<GroupResponse>(environment.arreev_api_host + '/group?ownerid=' + ownerid + '&id=' + id )
+      .concatMap( r => {
+        return Observable.of( r.id );
+      } );
     return observable;
   }
 }

@@ -43,6 +43,8 @@ npm install --save-dev @types/node<br>
 npm install --save-dev webpack json-loader<br>
 npm install --save amazon-cognito-identity-js<br>
 
+also: ngrx/store,ngrs/entity,...
+
 ## Notes
 <u>tsconfig.app.json file add:<br></u>
 "types": ["node"]<br>
@@ -55,6 +57,9 @@ npm install --save web-animations-js<br>
 
 <u>google maps types</u><br>
 npm install @types/googlemaps --save --dev
+
+<u>feature mmodules</u><br>
+https://angular.io/guide/feature-modules
 
 # Tools
 https://github.com/ngrx/store-devtools<br>
