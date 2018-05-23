@@ -13,6 +13,9 @@ import {
   FleetDeleteAction,FleetFetchAction,FleetPostAction,FleetDeletedAction } from './fleet.actions';
 import * as FleetActions from './fleet.actions';
 
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/take';
+
 @Injectable()
 export class FleetEffects
 {
@@ -62,7 +65,7 @@ export class FleetEffects
   private post( ownerid:string ) {
     this.fleetStore.select( 'fleet' ).take( 1 ).subscribe( fleet => {
       this.api.postFleet( ownerid,fleet ).subscribe(
-        f => { console.log( 'FROM SERVER ' + dumpFleet( f ) ); },
+        f => { },
         e => { console.log( e ); }
       );
     } );

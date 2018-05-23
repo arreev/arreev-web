@@ -1,0 +1,16 @@
+
+.card-image {
+  width: 120px;
+  height: 80px;
+}
+.card-title {
+  width: 100%;
+}
+
+.follow-map-container {
+  margin: 8px;
+  margin-right: 4px;
+  border: 2px solid #8888AA;
+  padding: 2px;
+  border-radius: 8px;
+}

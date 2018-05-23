@@ -1,0 +1,36 @@
+
+<div style="width:640px;">
+
+  <p-dataGrid [value]="fleets" emptyMessage="&nbsp;" [rows]="2" [hidden]="fleets.length === 0">
+    <ng-template let-fleet pTemplate="item">
+      <div class="card" [style.border]="cardBorder(fleet)" (click)="onFleet(fleet)" [@active-state]="fleet.state">
+        <img class="card-image" src="{{fleet.imageURL}}">
+        <div class="card-footer">
+          <div class="card-title">{{fleet.name}}</div>
+          <div style="flex:1;"></div>
+        </div>
+      </div>
+    </ng-template>
+  </p-dataGrid>
+
+  <div style="height:15px;"></div>
+
+  <p-dataGrid [value]="transporters" emptyMessage="&nbsp;" [rows]="2" [hidden]="transporters.length === 0">
+    <ng-template let-transporter pTemplate="item">
+      <div class="mini">
+        <img class="mini-image" src="{{transporter.imageURL}}" (click)="onTransporter(transporter)">
+      </div>
+    </ng-template>
+  </p-dataGrid>
+
+  <div style="height:20px;"></div>
+
+  <p-toolbar>
+    <div class="ui-toolbar-group-left">
+      <img *ngIf="working" src="assets/working.gif">
+    </div>
+    <div class="ui-toolbar-group-right">
+    </div>
+  </p-toolbar>
+
+</div>

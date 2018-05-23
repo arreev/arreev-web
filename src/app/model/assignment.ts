@@ -5,6 +5,7 @@ export interface Assignment extends Entity
 {
   ownerid?: string;
 
+  name?: string;
   type?: string;
   routeid?: string;
   transporterid?: string;
@@ -12,6 +13,8 @@ export interface Assignment extends Entity
   thumbnailURL?: string;
 
   status?: string;
+
+  state?: string; // internal use
 }
 
 export function dumpAssignment( assignment:Assignment ) :string {

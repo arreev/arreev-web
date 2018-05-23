@@ -19,6 +19,8 @@ export interface Waypoint extends Entity
   index?: number;
 
   status?: string;
+
+  state?: string; // for internal use
 }
 
 export function dumpWaypoint( waypoint:Waypoint ) :string {

@@ -61,6 +61,11 @@ npm install @types/googlemaps --save --dev
 <u>feature mmodules</u><br>
 https://angular.io/guide/feature-modules
 
+<u>PrimeNG CHANGE:</u><br>
+in /node_modules/primeng/components/chips/chips.js - comment out backspace delete code:<br>
+...Chips.prototype.onKeydown<br>
+...case 8:
+  
 # Tools
 https://github.com/ngrx/store-devtools<br>
 https://blog.schwarty.com/using-ngrx-store-devtools-with-the-angular-cli-a3b5f88f12e9

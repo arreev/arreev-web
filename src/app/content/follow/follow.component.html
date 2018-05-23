@@ -1,0 +1,45 @@
+
+<div class="content-container">
+
+  <p-toolbar>
+    <div class="ui-toolbar-group-left">
+      <img src="assets/working.gif" [style.opacity]="working ? .5 : 0">
+    </div>
+    <div class="ui-toolbar-group-right">
+      <i *ngIf="selectedfleet != null" class="fa fa-compress" style="cursor:pointer;margin-left:5px;margin-right:5px;" (click)="onZoomMapToFleet()"></i>
+      <i class="fa fa-refresh" style="cursor:pointer;margin-left:5px;" (click)="onRefresh()"></i>
+    </div>
+  </p-toolbar>
+
+  <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-9">
+        <p-dataGrid #followdatagrid [value]="fleets" emptyMessage="&nbsp;" [rows]="1" [hidden]="followdatagrid.isEmpty()" [@grid-animation]="fleets.length">
+          <ng-template let-fleet pTemplate="item">
+            <div class="card" [style.border]="cardBorder(fleet)" (click)="onFleet(fleet)" [@active-state]="fleet.state">
+              <img class="card-image" src="{{fleet.imageURL}}">
+              <div class="card-footer">
+                <div class="card-title">{{fleet.name}}</div>
+              </div>
+            </div>
+          </ng-template>
+        </p-dataGrid>
+      </div>
+
+      <div class="ui-grid-col-3">
+        <div *ngIf="selectedfleet != null">
+          <app-follow-transporters  [ownerid]="ownerid" [fleetid]="selectedfleet.id" (transporterselection)="onTransporterSelection($event)"></app-follow-transporters>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="follow-map-container" [@hide-show]="followmaphideshow">
+    <p-gmap [options]="options"
+            (onMapReady)="onMapReady($event)"
+            [style]="{'width':'100%','height':'580px'}">
+    </p-gmap>
+    <app-follow-map *ngIf="selectedfleet != null" [map]="map" [ownerid]="ownerid" [fleetid]="selectedfleet.id" [transporterid]="selectedtransporterid"></app-follow-map>
+  </div>
+
+</div>

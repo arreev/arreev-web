@@ -1,0 +1,19 @@
+
+<div>
+
+  <p-dataGrid #datagridpersons [value]="persons" emptyMessage="&nbsp;" [rows]="4" [hidden]="datagridpersons.isEmpty()" [@grid-animation]="persons.length">
+    <ng-template let-person pTemplate="item">
+      <div class="badge">
+        <img class="badge-image" src="{{person.imageURL}}" alt="" (click)="onPerson( person )">
+        <div>{{person.name}}</div>
+      </div>
+    </ng-template>
+  </p-dataGrid>
+
+</div>
+
+<p-dialog [(visible)]="showpersonedit" [modal]="true" [resizable]="true" appendTo="body">
+  <p-header>person</p-header>
+  <app-person-edit *ngIf="showpersonedit" [ownerid]="ownerid" [person]="editperson" (finished)="onFinishedPersonEdit()"></app-person-edit>
+</p-dialog>
+

@@ -13,6 +13,8 @@ export interface Fleet extends Entity
   thumbnailURL?: string;
 
   status?: string;
+
+  state?: string; // internal use
 }
 
 export function dumpFleet( fleet:Fleet ) :string {

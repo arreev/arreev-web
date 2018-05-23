@@ -1,0 +1,12 @@
+
+/*
+ * override assets/theme.lite/theme.css for ui-inputtext
+ */
+.ui-inputtext {
+  border: 2px solid #CCDDEE;
+  border-radius: 5px;
+}
+.ui-inputtext:hover {
+  border: 2px solid #C0D0E0;
+  border-radius: 5px;
+}

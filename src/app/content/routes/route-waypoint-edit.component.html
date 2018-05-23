@@ -1,0 +1,72 @@
+
+<div style="width:512px;">
+
+  <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">name:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="waypoint.name" (ngModelChange)="modelChanged()"/>
+        </div>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-6">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">type:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="waypoint.type" (ngModelChange)="modelChanged()"/>
+        </div>
+      </div>
+      <div class="ui-grid-col-6">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">category:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="waypoint.category" (ngModelChange)="modelChanged()"/>
+        </div>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">description:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="waypoint.description" (ngModelChange)="modelChanged()"/>
+        </div>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">address:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="waypoint.address" (ngModelChange)="modelChanged()"/>
+          <i class="fa fa-globe" *ngIf="waypoint.address" (click)="onSearchAddress()" style="color:blue;cursor:pointer;font-size:15pt;margin-left:5px;"></i>
+        </div>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-6">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">latitude:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="waypoint.latitude" (ngModelChange)="modelChanged()"/>
+        </div>
+      </div>
+      <div class="ui-grid-col-6">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">longitude:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="waypoint.longitude" (ngModelChange)="modelChanged()"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:20px;"></div>
+
+  <p-toolbar>
+    <div class="ui-toolbar-group-left">
+      <img *ngIf="working" src="assets/working.gif">
+    </div>
+    <div class="ui-toolbar-group-right">
+      <span>&nbsp;</span>
+      <button *ngIf="validated && !working" pButton type="button" label="ok" (click)="onOK()"></button>
+    </div>
+  </p-toolbar>
+
+</div>

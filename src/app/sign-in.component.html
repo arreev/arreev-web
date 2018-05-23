@@ -1,0 +1,23 @@
+
+<div class="content-container">
+
+  <div class="sign-in-area">
+    <div style="height: 20px;"></div>
+    <span class="ui-float-label">
+      <input id="email" type="email" size="30" pInputText [(ngModel)]="email">
+      <label for="email">e-mail</label>
+    </span>
+    <div style="height: 40px;"></div>
+    <span class="ui-float-label">
+      <input id="password" type="password" size="30" pInputText [(ngModel)]="password">
+      <label for="password">password</label>
+    </span>
+    <div style="height: 30px;"></div>
+    <p-button icon="fa fa-fw fa-user-circle-o" label="sign-in" (onClick)="onSignIn()"></p-button>
+  </div>
+
+  <div>
+    <span class="sign-in-message">{{message}}</span>
+  </div>
+
+</div>

@@ -1,0 +1,34 @@
+
+<div style="width:512px;">
+
+  <div>{{follow.name}}</div>
+
+  <div style="height:15px;"></div>
+
+  <div *ngIf="ready" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-6">
+        <div><p-checkbox [(ngModel)]="follow.notifyWhenArrive" binary="true" label="Notify when arrives." (onChange)="update()"></p-checkbox></div>
+        <div><p-checkbox [(ngModel)]="follow.notifyWhenDepart" binary="true" label="Notify when departs." (onChange)="update()"></p-checkbox></div>
+        <div><p-checkbox [(ngModel)]="follow.notifyWhenDelayed" binary="true" label="Notify when delayed." (onChange)="update()"></p-checkbox></div>
+      </div>
+      <div class="ui-grid-col-6">
+        <div><p-checkbox [(ngModel)]="follow.subscribeToMessages" binary="true" label="Receive messages." (onChange)="update()"></p-checkbox></div>
+          <div><p-checkbox [(ngModel)]="follow.subscribeToWarnings" binary="true" label="Receive warnings." (onChange)="update()"></p-checkbox></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:15px;"></div>
+
+  <p-toolbar>
+    <div class="ui-toolbar-group-left">
+      <img *ngIf="working" src="assets/working.gif">
+    </div>
+    <div class="ui-toolbar-group-right">
+      <span>&nbsp;</span>
+      <button *ngIf="!working" pButton type="button" label="ok" icon="" (click)="onOK()"></button>
+    </div>
+  </p-toolbar>
+
+</div>

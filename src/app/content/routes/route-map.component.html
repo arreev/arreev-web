@@ -1,0 +1,5 @@
+
+<p-dialog [(visible)]="showwaypointedit" [modal]="true" [resizable]="true" appendTo="body">
+  <p-header>waypoint</p-header>
+  <app-route-waypoint-edit *ngIf="showwaypointedit" [(ownerid)]="ownerid" [(routeid)]="route.id" [(waypoint)]="selectedwaypoint" [places]="places" (finished)="onFinishedWaypointEdit()"></app-route-waypoint-edit>
+</p-dialog>

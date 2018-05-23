@@ -1,0 +1,10 @@
+
+<p-dialog [(visible)]="showfollowedit" [modal]="true" [resizable]="true" appendTo="body">
+  <p-header>follow</p-header>
+  <app-follow-edit *ngIf="showfollowedit"
+                   [ownerid]="ownerid"
+                   [fleetid]="fleetid"
+                   [follow]="editfollow"
+                   (finished)="onFinishedFollowEdit()">
+  </app-follow-edit>
+</p-dialog>

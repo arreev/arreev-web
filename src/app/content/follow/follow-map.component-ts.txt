@@ -1,0 +1,276 @@
+
+import {
+  Component,EventEmitter,Input,OnChanges,OnDestroy,OnInit,Output,SimpleChanges,
+  ViewEncapsulation
+} from '@angular/core';
+import * as followsActions from '../../store/follows.actions';
+import * as fromFollows from '../../store/follows.reducer';
+import { Transporter } from '../../model/transporter';
+import { Subscription } from 'rxjs/Subscription';
+import { FollowState } from '../../app.state';
+import { Follow } from '../../model/follow';
+import { API } from '../../api.service';
+import { Store } from '@ngrx/store';
+import {} from '@types/googlemaps';
+
+import * as firebase from 'firebase';
+
+/**
+ *
+ */
+class TransporterMarker extends google.maps.Marker
+{
+  readonly transporterid: string;
+
+  constructor( transporter: Transporter ) {
+    super();
+    this.transporterid = transporter.id;
+
+    const offx = 16 - (transporter.name.length / 2);
+    this.setPosition( { lat:transporter.latitude,lng:transporter.longitude } );
+    this.setTitle( transporter.name );
+    this.setClickable( true );
+    this.setLabel( null );
+    this.setLabel( {
+      color:'#4466AA',
+      fontSize:'10pt',
+      fontWeight:'bold',
+      text:transporter.name
+    } );
+    this.setIcon( {
+      url:'/assets/transporter.gif',
+      labelOrigin:new google.maps.Point( offx,-2 ),
+      scaledSize: new google.maps.Size( 20,20 )
+    } );
+  }
+}
+
+@Component({
+  selector: 'app-follow-map',
+  templateUrl: './follow-map.component.html',
+  styleUrls: ['./follow-map.component.css'],
+  animations: [],
+  encapsulation: ViewEncapsulation.Emulated
+})
+export class FollowMapComponent implements OnInit,OnChanges,OnDestroy
+{
+  @Input() ownerid: string;
+  @Input() fleetid: string;
+  @Input() transporterid?: string;
+  @Input() map: google.maps.Map;
+
+  private infowindow = new google.maps.InfoWindow({ content: contentString });
+  private rootreference?: firebase.database.Reference;
+  private followsSubscription: Subscription;
+  private markers: TransporterMarker[] = [];
+  private transporters: Transporter[] = [];
+  private follows: Follow[] = [];
+
+  constructor( private api:API,private followsstore:Store<FollowState> ) {}
+
+  ngOnInit(): void { this._ngOnInit(); }
+  ngOnChanges( changes: SimpleChanges ): void { this._ngOnChanges( changes ); }
+
+  onZoomMapToFleet() { this._onZoomMapToFleet(); }
+
+  ngOnDestroy(): void { this._ngOnDestroy(); }
+
+  /********************************************************************************************************************/
+
+  private _ngOnInit(): void {
+    this.clearMarkers();
+
+    /*
+     * https://developers.google.com/maps/documentation/javascript/reference/3/#InfoWindow
+     */
+    this.infowindow.addListener('close_click',() => { this.updateFromInfoWindow(); } ); // is too late :(
+    document.addEventListener( 'onFollowMapInfoWindowChange.event',() => { this.updateFromInfoWindow(); } );
+
+    this.rootreference = firebase.database().ref();
+    this.rootreference.on('value',s => { this.updateFromSnapshot( s ); } );
+
+    this.followsSubscription = this.followsstore.select( fromFollows.selectAll ).skip( 1 ).subscribe(
+      (follows:Follow[]) => { this.fromFollowsStore( follows ); },
+      (error:Error) => { this.onError( error ); },
+      () => {}
+    );
+    this.followsstore.dispatch( new followsActions.Query( this.ownerid,this.fleetid ) );
+  }
+
+  private _ngOnChanges( changes: SimpleChanges ): void {
+    for ( const change in changes ) {
+      if ( change === 'map' ) {
+        // add some map listeners ?
+      } else if ( change === 'fleetid' ) {
+        this.fetchTransporters();
+      } else if ( change === 'transporterid' ) {
+        const transporter = this.transporters.find((t:Transporter) => t.id === this.transporterid );
+        this.centerTo( transporter );
+      }
+    }
+  }
+
+  private _onZoomMapToFleet() {
+    this.refreshMarkers();
+  }
+
+  private centerTo( transporter?:Transporter ) {
+    if ( !transporter ) { return; }
+
+    this.updateFromInfoWindow();
+    this.infowindow.close();
+
+    this.markers.forEach(m => m.setMap( null ) ); // need to clear from map before center, else bad thangs happen
+
+    const marker = this.markers.find((m:TransporterMarker) => (m.transporterid === transporter.id) );
+    if ( marker ) {
+      this.map.setCenter( marker.getPosition() );
+      this.map.setZoom( 15 );
+      setTimeout(() => { this.prepareInfoWindow( marker ); },250 );
+    }
+
+    this.markers.forEach(m => m.setMap( this.map ) );
+  }
+
+  private fetchTransporters() {
+    const _transporters: Transporter[] = [];
+    this.api.getTransporters( this.ownerid,this.fleetid ).subscribe(
+      (t:Transporter) => { _transporters.push( t ); },
+      (e:Error) => { this.onError( e ); },
+      () => {
+        this.transporters = _transporters;
+        this.refreshMarkers();
+      }
+    );
+  }
+
+  private refreshMarkers() {
+    this.clearMarkers();
+
+    this.transporters.forEach((transporter:Transporter) => {
+      const marker = new TransporterMarker( transporter );
+      marker.addListener('click',() => {
+        this.prepareInfoWindow( marker );
+      } );
+      marker.setMap( this.map );
+      this.markers.push( marker );
+    } );
+
+    /*
+     * TODO: this not scalable on back end for now ... eventually need to put into different real-time dbs for each fleet?
+     */
+    this.rootreference.once('value',s => {
+      this.updateFromSnapshot( s );
+      this.rebounds();
+    } );
+  }
+
+  private prepareInfoWindow( marker:TransporterMarker ) {
+    this.infowindow.setContent( contentString );
+    this.infowindow.open( this.map,marker );
+    const follow = this.follows.find((f:Follow) => (f.transporterid === marker.transporterid) );
+    setTimeout( () => {
+      const transporter = this.transporters.find( (t:Transporter) => (t.id === marker.transporterid) );
+      const notifications = follow ? follow.notifyWhenArrive : false;
+      const messages = follow ? follow.subscribeToMessages : false;
+      (document.getElementById('infowindow.transporterid' ) as HTMLDivElement ).textContent = marker.transporterid;
+      (document.getElementById('infowindow.transporterimage') as HTMLImageElement ).src = transporter.imageURL;
+      (document.getElementById('infowindow.transportername' ) as HTMLDivElement ).textContent = marker.getLabel().text;
+      (document.getElementById('infowindow.notifications' ) as HTMLInputElement ).checked = notifications;
+      (document.getElementById('infowindow.messages' ) as HTMLInputElement ).checked = messages;
+    },50  );
+  }
+
+  private updateFromSnapshot( snapshot:firebase.database.DataSnapshot ) {
+    this.transporters.forEach((transporter:Transporter) => {
+        const ss = snapshot.child( transporter.id );
+        if ( ss.val() != null ) {
+          const marker = this.markers.find((m:TransporterMarker) => (m.transporterid === transporter.id) );
+          if ( marker ) {
+            const lat = ss.child('lat' ).val();
+            const lng = ss.child('lng' ).val();
+            marker.setPosition( { lat:lat,lng:lng } );
+          }
+        }
+      }
+    );
+  }
+
+  private rebounds() {
+    const bounds = new google.maps.LatLngBounds();
+    this.markers.forEach((m:TransporterMarker) => {
+      const position = m.getPosition();
+      const lat = position.lat();
+      const lng = position.lng();
+      if ( (lat !== 0) && (lng !== 0) ) {
+        bounds.extend( position );
+      }
+    } );
+    setTimeout(() => { this.map.fitBounds( bounds ); },250 );
+  }
+
+  private onError( error:Error ) {
+    console.log( error );
+  }
+
+  private clearMarkers() {
+    this.markers.forEach((m:google.maps.Marker) => { m.setMap( null ); } );
+    this.markers = [];
+  }
+
+  private updateFromInfoWindow() {
+    const available = ( document.getElementById('infowindow.transporterid' ) );
+    if ( available ) {
+      const transporterid = (document.getElementById('infowindow.transporterid' ) as HTMLDivElement ).textContent;
+      const transportername = (document.getElementById('infowindow.transportername' ) as HTMLDivElement ).textContent;
+      const notifications = (document.getElementById('infowindow.notifications' ) as HTMLInputElement ).checked;
+      const messages = (document.getElementById('infowindow.messages' ) as HTMLInputElement ).checked;
+      const follow = this.follows.find((f:Follow) => (f.transporterid === transporterid) );
+      if ( follow ) {
+        follow.notifyWhenArrive = notifications;
+        follow.notifyWhenDepart = notifications;
+        follow.notifyWhenDelayed = notifications;
+        follow.subscribeToMessages = messages;
+        follow.subscribeToWarnings = messages;
+        console.log( 'updateFromInfoWindow dispatch UPDATE ' + follow.name );
+        this.followsstore.dispatch( new followsActions.Update( this.ownerid,this.fleetid,follow ) );
+      } else {
+        const newfollow:Follow = {};
+        newfollow.name = transportername;
+        newfollow.notifyWhenArrive = notifications;
+        newfollow.notifyWhenDepart = notifications;
+        newfollow.notifyWhenDelayed = notifications;
+        newfollow.subscribeToMessages = messages;
+        newfollow.subscribeToWarnings = messages;
+        newfollow.transporterid = transporterid;
+        console.log( 'updateFromInfoWindow dispatch CREATE ' + newfollow.name );
+        this.followsstore.dispatch( new followsActions.Create( this.ownerid,this.fleetid,newfollow ) );
+      }
+    }
+  }
+
+  private fromFollowsStore( follows?:Follow[] ) {
+    console.log( 'fromFollowsStore ' + this.follows.length );
+    this.follows = follows;
+  }
+
+  private _ngOnDestroy(): void {
+    this.followsSubscription.unsubscribe();
+
+    this.updateFromInfoWindow();
+    this.infowindow.close();
+    this.clearMarkers();
+  }
+}
+
+const contentString = `
+<div id="infowindow">
+  <div id="infowindow.transporterid" hidden></div>
+  <img id="infowindow.transporterimage" src="" width="64" height="48" alt="" border="1">
+  <div id="infowindow.transportername" style="font-weight:bold;"></div>
+  <div style="height:10px;"></div>
+  <input type="checkbox" id="infowindow.notifications" onclick="onFollowMapInfoWindowChanged(this)"><label for="infowindow.notifications" style="font-weight:bold;">Get notifications.</label>
+  <div></div>
+  <input type="checkbox" id="infowindow.messages" onclick="onFollowMapInfoWindowChanged(this)"><label for="infowindow.messages" style="font-weight:bold;">Get messages.</label>
+</div>
+  `;

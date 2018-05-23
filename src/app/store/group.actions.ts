@@ -1,5 +1,4 @@
 
-import { Observable } from 'rxjs/Observable';
 import { Group } from '../model/group';
 import { Action } from '@ngrx/store';
 
@@ -41,7 +40,6 @@ export class Update implements Action
 {
   readonly type = UPDATE;
   constructor( public ownerid:string,public id:string,public partial:Partial<Group> ) {
-    console.log( '[UPDATE] ' + id + ' ' + partial.name );
   }
 }
 export class Updated implements Action

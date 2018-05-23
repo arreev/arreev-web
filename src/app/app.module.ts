@@ -6,78 +6,91 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule,HTTP_INTERCEPTORS  } from '@angular/common/http';
 import { FormsModule,ReactiveFormsModule,FormBuilder } from '@angular/forms';
 
-import { RoutingModule } from './routing.module';
-
 import { MatSidenavModule } from '@angular/material';
 
 import {
   ToolbarModule,ButtonModule,BlockUIModule,AccordionModule,SplitButtonModule,SharedModule,DialogModule,TooltipModule,
   MessagesModule,FileUploadModule,RadioButtonModule,PanelModule,DropdownModule,CheckboxModule,ProgressSpinnerModule,
-  DataTableModule,CalendarModule,MultiSelectModule,SelectButtonModule,TabViewModule,InputTextareaModule,OverlayPanelModule,
-  DataListModule,DataGridModule,ConfirmDialogModule,GrowlModule,OrderListModule,InplaceModule,FieldsetModule,CarouselModule,
-  ChipsModule,TerminalModule,DragDropModule,ToggleButtonModule,SidebarModule,CardModule,EditorModule,GMapModule,InputSwitchModule,
-  DataScrollerModule
+  DataTableModule,CalendarModule,MultiSelectModule,SelectButtonModule,TabViewModule,InputTextareaModule,
+  OverlayPanelModule,
+  DataListModule,DataGridModule,ConfirmDialogModule,GrowlModule,OrderListModule,InplaceModule,FieldsetModule,
+  CarouselModule,
+  ChipsModule,TerminalModule,DragDropModule,ToggleButtonModule,SidebarModule,CardModule,EditorModule,GMapModule,
+  InputSwitchModule,
+  DataScrollerModule,InputTextModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import { StepsModule } from 'primeng/steps';
 
 import { ConfirmationService } from 'primeng/api';
 
-import { Authentication } from './authentication.service';
 import { SecureGuard } from './secure-guard.service';
-import { AuthGuard } from './auth-guard.service';
-import { SharedService } from './shared.service';
+import { AccountGuard } from './accountguard';
 import { LocaleService } from './locale.service';
 import { UserService } from './user.service';
+import { MapService } from './map.service';
 import { API } from './api.service';
 
 import { AppRouteReuseStrategy } from './app.route-reuse-strategy';
-import { RouteReuseStrategy } from '@angular/router';
+import { RouteReuseStrategy,RouterModule } from '@angular/router';
 
 import { APIInterceptor } from './api.interceptor';
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { AccountEffects } from './store/account-effects.service';
 import { FleetEffects } from './store/fleet-effects.service';
 import { RouteEffects } from './store/route-effects.service';
-import { WaypointEffects } from './store/waypoint-effects.service';
+import { WaypointsEffects } from './store/waypoints-effects.service';
 import { AssignmentEffects } from './store/assignment-effects.service';
 import { TransporterEffects } from './store/transporter-effects.service';
-import { FollowEffects } from './store/follow-effects.service';
+import { FollowsEffects } from './store/follows-effects.service';
 import { GroupEffects } from './store/group-effects.serivce';
+import { PersonsEffects } from './store/persons-effects.service';
 
-import { accountReducer } from './store/account.reducer';
 import { fleetReducer } from './store/fleet.reducer';
 import { routeReducer } from './store/route.reducer';
+import { waypointsReducer } from './store/waypoints.reducer';
 import { waypointReducer } from './store/waypoint.reducer';
 import { assignmentReducer } from './store/assignment.reducer';
 import { transporterReducer } from './store/transporter.reducer';
-import { followReducer } from './store/follow.reducer';
+import { followsReducer } from './store/follows.reducer';
 import { groupReducer } from './store/group.reducer';
+import { personsReducer } from './store/persons.reducer';
+
+import { routes,RoutingModule } from './routing.module';
+import { routerReducer,StoreRouterConnectingModule,RouterStateSerializer } from '@ngrx/router-store';
+import { CustomSerializer } from './store/router.reducer';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav.component';
 import { BarComponent } from './bar.component';
 import { HomeComponent } from './content/home.component';
-import { FleetComponent } from './content/fleet.component';
-import { FleetNewComponent } from './content/fleet-new.component';
-import { FleetEditComponent } from './content/fleet-edit.component';
-import { FleetTransportersComponent } from './content/fleet-transporters.component';
-import { FleetTransporterNewComponent } from './content/fleet-transporter-new.component';
-import { RoutesComponent } from './content/routes.component';
-import { RoutesNewComponent } from './content/routes-new.component';
-import { RoutesWaypointNewComponent } from './content/routes-waypoint-new.component';
-import { RoutesWaypointEditComponent } from './content/routes-waypoint-edit.component';
-import { RoutesAssignmentNewComponent } from './content/routes-assignment-new.component';
-import { RoutesAssignmentEditComponent } from './content/routes-assignment-edit.component';
-import { TimesComponent } from './content/times.component';
-import { EventsComponent } from './content/events.component';
-import { DevicesComponent } from './content/devices.component';
-import { FollowComponent } from './content/follow.component';
-import { UTrackComponent } from './content/utrack.component';
-import { LoginComponent } from './login.component';
-import { AccountComponent } from './content/account.component';
+import { FleetComponent } from './content/fleet/fleet.component';
+import { FleetNewComponent } from './content/fleet/fleet-new.component';
+import { FleetEditComponent } from './content/fleet/fleet-edit.component';
+import { FleetTransportersComponent } from './content/fleet/fleet-transporters.component';
+import { FleetTransporterNewComponent } from './content/fleet/fleet-transporter-new.component';
+import { FleetTransporterParkComponent } from './content/fleet/fleet-transporter-park.component';
+import { RoutesComponent } from './content/routes/routes.component';
+import { RouteAssignmentsComponent } from './content/routes/route-assignments.component';
+import { RouteEditComponent } from './content/routes/route-edit.component';
+import { RouteNewComponent } from './content/routes/route-new.component';
+import { RouteAssignmentNewComponent } from './content/routes/route-assignment-new.component';
+import { RouteWaypointsComponent } from './content/routes/route-waypoints.component';
+import { RouteWaypointNewComponent } from './content/routes/route-waypoint-new.component';
+import { RouteWaypointEditComponent } from './content/routes/route-waypoint-edit.component';
+import { RouteMapComponent } from './content/routes/route-map.component';
+import { PeopleComponent } from './content/people/people.component';
+import { GroupEditComponent } from './content/people/group-edit.component';
+import { GroupNewComponent } from './content/people/group-new.component';
+import { PersonsComponent } from './content/people/persons.component';
+import { PersonNewComponent } from './content/people/person-new.component';
+import { PersonEditComponent } from './content/people/person-edit.component';
+import { FollowComponent } from './content/follow/follow.component';
+import { FollowTransportersComponent } from './content/follow/follow-transporters.component';
+import { FollowMapComponent } from './content/follow/follow-map.component';
+import { FollowEditComponent } from './content/follow/follow-edit.component';
+import { SignInComponent } from './sign-in.component';
 import { ForbiddenComponent } from './forbidden.component';
 import { PageNotFoundComponent } from './pagenotfound.component';
 import { UnderConstructionComponent } from './under-construction.component';
@@ -89,10 +102,7 @@ import { AngularFireStorageModule } from 'angularfire2/storage';
 
 import { AgmCoreModule } from '@agm/core';
 
-import { PeopleModule } from './people/people.module';
-
 import { environment } from '../environments/environment';
-
 
 @NgModule({
   declarations: [
@@ -105,20 +115,28 @@ import { environment } from '../environments/environment';
     FleetEditComponent,
     FleetTransportersComponent,
     FleetTransporterNewComponent,
+    FleetTransporterParkComponent,
     RoutesComponent,
-    RoutesNewComponent,
-    RoutesWaypointNewComponent,
-    RoutesWaypointEditComponent,
-    RoutesAssignmentNewComponent,
-    RoutesAssignmentEditComponent,
-    TimesComponent,
-    EventsComponent,
-    DevicesComponent,
+    RouteAssignmentsComponent,
+    RouteEditComponent,
+    RouteNewComponent,
+    RouteAssignmentNewComponent,
+    RouteWaypointsComponent,
+    RouteWaypointNewComponent,
+    RouteWaypointEditComponent,
+    RouteMapComponent,
+    PeopleComponent,
+    PersonsComponent,
+    PersonNewComponent,
+    PersonEditComponent,
+    GroupEditComponent,
+    GroupNewComponent,
     FollowComponent,
-    UTrackComponent,
+    FollowTransportersComponent,
+    FollowMapComponent,
+    FollowEditComponent,
     TestComponent,
-    LoginComponent,
-    AccountComponent,
+    SignInComponent,
     ForbiddenComponent,
     PageNotFoundComponent,
     UnderConstructionComponent
@@ -176,8 +194,7 @@ import { environment } from '../environments/environment';
     InputSwitchModule,
     ConfirmDialogModule,
     DataScrollerModule,
-
-    PeopleModule,
+    InputTextModule,
 
     AngularFireModule.initializeApp( environment.firebase ),
     AngularFirestoreModule,
@@ -185,25 +202,47 @@ import { environment } from '../environments/environment';
 
     AgmCoreModule.forRoot({ apiKey:environment.google_api_key } ),
 
-    StoreModule.forRoot({ account:accountReducer,fleet:fleetReducer,route:routeReducer,waypoint:waypointReducer,
-      assignment:assignmentReducer,transporter:transporterReducer,follow:followReducer,
-      group:groupReducer } ),
+    RouterModule.forRoot( routes ),
+    StoreRouterConnectingModule,
 
-    EffectsModule.forRoot([ AccountEffects,FleetEffects,RouteEffects,WaypointEffects,AssignmentEffects,TransporterEffects,FollowEffects,GroupEffects ] ),
+    StoreModule.forRoot({
+      fleet:fleetReducer,
+      route:routeReducer,
+      waypoints:waypointsReducer,
+      waypoint:waypointReducer,
+      persons:personsReducer,
+      assignment:assignmentReducer,
+      transporter:transporterReducer,
+      follows:followsReducer,
+      group:groupReducer,
+      routerReducer: routerReducer
+    } ),
+
+
+    EffectsModule.forRoot([
+      FleetEffects,
+      RouteEffects,
+      WaypointsEffects,
+      AssignmentEffects,
+      TransporterEffects,
+      FollowsEffects,
+      GroupEffects,
+      PersonsEffects
+    ] ),
 
     environment.imports
   ],
   providers: [
     { provide:RouteReuseStrategy,useClass:AppRouteReuseStrategy },
+    { provide:RouterStateSerializer,useClass:CustomSerializer },
 
     ConfirmationService,
 
-    Authentication,
     SecureGuard,
-    AuthGuard,
-    SharedService,
+    AccountGuard,
     LocaleService,
     UserService,
+    MapService,
     API,
 
     // TODO: figure out how to discriminate so that some requests do not result in pre-flight

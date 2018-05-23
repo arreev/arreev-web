@@ -3,12 +3,13 @@ import {
   HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse,
   HttpResponse
 } from '@angular/common/http';
-import { Authentication } from './authentication.service';
+import { environment } from '../environments/environment';
+import { AccountGuard } from './accountguard';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { environment } from '../environments/environment';
+import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
@@ -21,21 +22,12 @@ interface APIResponse
 @Injectable()
 export class APIInterceptor implements HttpInterceptor
 {
-  private accessToken = '';
-  private idToken = '';
-
-  constructor( private authentication:Authentication,private router:Router ) {
-    this.authentication.accessToken.subscribe( next => { this.accessToken = next; } );
-    this.authentication.idToken.subscribe( next => { this.idToken = next; } );
-  }
+  constructor( private router:Router,private accountguard:AccountGuard ) {}
 
   intercept( request:HttpRequest<any>,next:HttpHandler ): Observable<HttpEvent<any>> {
-
-    const token = this.idToken;
-
     request = request.clone({
       setHeaders: {
-        Authorization: token,
+        Authorization: 'TODO',
         'Accept': '*',
         'x-api-key': environment.arreev_api_key
       }
@@ -68,8 +60,7 @@ export class APIInterceptor implements HttpInterceptor
       const httpErrorResponse = response as HttpErrorResponse;
       switch ( httpErrorResponse.status ) {
         case 401:
-          this.authentication.logout();
-          this.router.navigate([ 'login' ] );
+          this.accountguard.signOut();
           break;
       }
     }

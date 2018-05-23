@@ -1,0 +1,18 @@
+
+.sign-in-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 15px;
+  border: 1px solid #AAAAAA;
+  border-radius: 6px;
+  background-color: rgba( 0,0,75, .05 );
+  width: 256px;
+  padding: 25px;
+}
+
+.sign-in-message {
+  font-size: 10pt;
+  color: #EEAA44;
+  margin-left: 25px;
+}

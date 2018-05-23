@@ -1,0 +1,15 @@
+
+.follow-transporter-item {
+  background-color: #CCCCDD;
+  margin-bottom: 2px;
+  padding: 4px;
+  color: #FFFFFF;
+  cursor: pointer;
+  text-shadow: 1px 1px 4px #AAAAAA;
+}
+.follow-transporter-item:hover {
+  background-color: #C0C0D0;
+}
+.follow-transporter-item:active {
+  background-color: #BBBBCC;
+}

@@ -1,3 +1,40 @@
+
+import { AfterViewInit,Component,Input,OnDestroy,OnInit,ViewEncapsulation } from '@angular/core';
+import { Group } from '../../model/group';
+
+@Component({
+  selector: 'app-group-persons',
+  templateUrl: './persons.component.html',
+  styleUrls: ['./persons.component.css'],
+  animations: [],
+  encapsulation: ViewEncapsulation.Emulated
+})
+export class PersonsComponent implements OnInit,AfterViewInit,OnDestroy
+{
+  @Input() ownerid: string;
+  @Input() groupid: string;
+
+  constructor( ) {}
+
+  ngOnInit(): void { this._ngOnInit(); }
+  ngAfterViewInit(): void { this._ngAfterViewInit(); }
+
+  ngOnDestroy(): void { this._ngOnDestroy(); }
+
+  /********************************************************************************************************************/
+
+  private _ngOnInit(): void {
+
+  }
+
+  private _ngAfterViewInit(): void {}
+
+  private _ngOnDestroy(): void {}
+}
+
+
+
+
   private getPlace( latitude:number,longitude:number ) {
     const request = {
       location: { lat:latitude,lng:longitude },

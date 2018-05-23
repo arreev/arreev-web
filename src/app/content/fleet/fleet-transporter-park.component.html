@@ -1,0 +1,37 @@
+
+<div style="width:512px;">
+
+  <div>{{transportername}}</div>
+
+  <div style="height:15px;"></div>
+
+  <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-6">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">latitude&nbsp;</span></div>
+          <input pInputText type="number" [(ngModel)]="latitude"/>
+        </div>
+      </div>
+      <div class="ui-grid-col-6">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">longitude&nbsp;</span></div>
+          <input pInputText type="number" [(ngModel)]="longitude"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:15px;"></div>
+
+  <p-toolbar>
+    <div class="ui-toolbar-group-left">
+      <img *ngIf="working" src="assets/working.gif">
+    </div>
+    <div class="ui-toolbar-group-right">
+      <span>&nbsp;</span>
+      <button *ngIf="!working" pButton type="button" label="park this ride" icon="fa-plus-circle" (click)="onPark()"></button>
+    </div>
+  </p-toolbar>
+
+</div>

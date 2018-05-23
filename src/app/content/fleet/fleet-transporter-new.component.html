@@ -1,0 +1,76 @@
+
+<div style="width:512px;">
+
+  <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-9">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">name:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="transporter.name" (ngModelChange)="validation()"/>
+        </div>
+      </div>
+      <div class="ui-grid-col-3">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">#:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="transporter.number" (ngModelChange)="validation()"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-5">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">type:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="transporter.type" (ngModelChange)="validation()"/>
+        </div>
+      </div>
+      <div class="ui-grid-col-7">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">category:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="transporter.category" (ngModelChange)="validation()"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">marquee:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="transporter.marquee" (ngModelChange)="validation()"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">description:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="transporter.description" (ngModelChange)="validation()"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:10px;"></div>
+
+  <div>
+    <p-fileUpload name="image" accept="image/*" maxFileSize="2097152" customUpload="true" [style]="{'font-size':'.85em'}"
+                  chooseLabel="Image"
+                  [showUploadButton]="false" [showCancelButton]="false"
+                  (onSelect)="onSelectImage($event.files)" (onClear)="onUnSelectImage()" (onRemove)="onUnSelectImage()">
+    </p-fileUpload>
+  </div>
+
+  <div style="height:20px;"></div>
+
+  <p-toolbar>
+    <div class="ui-toolbar-group-left">
+      <img *ngIf="working" src="assets/working.gif">
+    </div>
+    <div class="ui-toolbar-group-right">
+      <span>&nbsp;</span>
+      <button *ngIf="validated && !working" pButton type="button" label="add this ride" icon="fa-plus-circle" (click)="onAdd()"></button>
+    </div>
+  </p-toolbar>
+
+</div>

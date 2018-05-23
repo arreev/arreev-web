@@ -31,8 +31,32 @@
 
   <!-- TODO: how to initialize in code, so that api key is only in environment -->
   <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyDTHK8NJD8lzYl212tvIwfN6vc920gxZps&libraries=places"></script>
+
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+      google_ad_client: "ca-pub-9721214198454765",
+      enable_page_level_ads: true
+    });
+  </script>
 </head>
 <body>
+  <script type="text/javascript">
+    function onFollowMapInfoWindowChanged( element ) {
+      eventtype = "onFollowMapInfoWindowChange.event";
+      if ( document.createEvent ) {
+        event = document.createEvent( "HTMLEvents" );
+        event.initEvent( eventtype,true,true );
+        event.eventName = eventtype;
+        element.dispatchEvent( event );
+      } else {
+        event = document.createEventObject();
+        event.eventType = eventtype;
+        event.eventName = eventtype;
+        element.fireEvent( event );
+      }
+    }
+  </script>
   <app-root>
     <div class="loading">
       <span class="d d1">&middot</span>

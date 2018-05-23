@@ -1,8 +1,48 @@
 
-<div class="home-container">
+<div class="content-container">
 
-  <div>
-    You have 0 messsages.
+  <p-dataGrid #homedatagrid [value]="claims" emptyMessage="&nbsp;" [rows]="1" [hidden]="homedatagrid.isEmpty()" [@grid-animation]="claims.length">
+    <ng-template let-claim pTemplate="item">
+      <div class="card" [style.border]="cardBorder(claim)" (click)="onClaim(claim)" [@active-state]="claim.state">
+        <img class="card-image" src="{{claim.imageURL}}" alt="">
+        <div class="card-footer">
+          <div class="mini-title">{{claim.count}}&nbsp;{{claim.name}}{{claim.count === 1 ? '':'s'}}</div>
+          <div style="flex:1;"></div>
+          <div *ngIf="claim.bookmarked" class="card-bookmark" (click)="onUnBookmarkClaim(claim)"><i class="fa fa-bookmark"></i></div>
+          <div *ngIf="!claim.bookmarked" class="card-bookmark" (click)="onBookmarkClaim(claim)"><i class="fa fa-bookmark-o"></i></div>
+        </div>
+      </div>
+    </ng-template>
+  </p-dataGrid>
+
+  <div style="height:10px;"></div>
+
+  <div class="home-statistics-area">
+    <div class="home-statistic">
+      <i class="fa fa-bullhorn" style="font-size:16pt;"></i>
+      <span>&nbsp;You are actively transmitting location data from 0 rides.</span>
+    </div>
+    <div style="height:15px;"></div>
+    <div class="home-statistic">
+      <i class="fa fa-user" style="font-size:16pt;"></i>
+      <span>&nbsp;You have 0 followers over 0 rides.</span>
+    </div>
   </div>
-  
+
+  <div style="height:20px;"></div>
+
+  <div class="home-messagelabel">send a quick message to all followers</div>
+  <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-11">
+        <div class="home-messagebox">
+          <input type="text" pInputText [(ngModel)]="message" class="home-messagebox-input"/>
+        </div>
+      </div>
+      <div class="ui-grid-col-1">
+        <button pButton type="button" icon="fa-paper-plane" (click)="onSendMessage()"></button>
+      </div>
+    </div>
+  </div>
+
 </div>

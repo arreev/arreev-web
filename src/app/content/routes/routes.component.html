@@ -1,0 +1,70 @@
+
+<div class="content-container">
+
+  <p-toolbar>
+    <div class="ui-toolbar-group-left">
+      <img src="assets/working.gif" style="margin-right:10px;" [style.opacity]="working || workingassignments ? .5 : 0">
+      <input *ngIf="selectedroute != null" #search type="text" pInputText placeholder="where" (keyup.enter)="onSearch(search.value)">
+    </div>
+    <div class="ui-toolbar-group-right">
+      <button pButton type="button" label="add a route" icon="fa-arrows" (click)="onAddRoute()"></button>
+      <button pButton type="button" label="add a waypoint" icon="fa-map-marker" (click)="onAddWaypoint()" *ngIf="selectedroute != null"></button>
+      <button pButton type="button" label="assign a ride" icon="fa-truck" (click)="onAddAssignment()" *ngIf="selectedroute != null"></button>
+
+      <i *ngIf="selectedroute != null" class="fa fa-compress" style="cursor:pointer;margin-left:5px;margin-right:5px;" (click)="onZoomMapToRoute()"></i>
+      <i *ngIf="selectedroute != null" class="fa fa-window-restore" style="cursor:pointer;margin-left:5px;margin-right:5px;" (click)="onToggleAllInfoWindows()"></i>
+      <i class="fa fa-refresh" style="cursor:pointer;margin-left:5px;" (click)="onRefresh()"></i>
+    </div>
+  </p-toolbar>
+
+  <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-7">
+        <p-dataGrid [value]="routes" emptyMessage="&nbsp;" [rows]="1" [hidden]="routes.length === 0" [@grid-animation]="routes.length">
+          <ng-template let-route pTemplate="item">
+            <div class="card" [style.border]="cardBorder(route)" (click)="onRoute(route)" [@active-state]="route.state">
+              <!--<img class="card-image" src="{{route.imageURL}}">-->
+              <div class="card-footer">
+                <div class="card-title">{{route.name}}</div>
+                <div style="flex:1;"></div>
+                <div *ngIf="selectedroute === route" class="card-x" (click)="onDeleteRoute(route)"><i class="fa fa-remove"></i></div>
+              </div>
+            </div>
+          </ng-template>
+        </p-dataGrid>
+      </div>
+      <div class="ui-grid-col-5">
+        <app-route-assignments *ngIf="selectedroute != null" [(ownerid)]="ownerid" [(route)]="selectedroute" [(refresh)]="refreshassignments" (working)="onWorkingAssignments($event)"></app-route-assignments>
+        </div>
+    </div>
+  </div>
+
+  <div *ngIf="editroute != null" [@scale-in]>
+    <app-route-edit [(ownerid)]="ownerid" [(route)]="editroute"></app-route-edit>
+  </div>
+
+  <div *ngIf="editroute != null" [@scale-in]>
+    <app-route-waypoints [(ownerid)]="ownerid" [(route)]="editroute" [places]="places"></app-route-waypoints>
+  </div>
+
+  <div class="routes-map-container" [@hide-show]="maphideshow">
+    <p-gmap [options]="options"
+            [overlays]="overlays"
+            (onMapReady)="onMapReady($event)"
+            (onOverlayClick)="onOverlayClick($event)"
+            [style]="{'width':'100%','height':'580px'}">
+    </p-gmap>
+    <app-route-map *ngIf="editroute != null" [ownerid]="ownerid" [map]="map" [places]="places" [route]="editroute"></app-route-map>
+  </div>
+
+</div>
+
+<p-dialog [(visible)]="showroutenew" [modal]="true" [resizable]="true" appendTo="body">
+  <p-header>add a new route</p-header>
+  <app-route-new *ngIf="showroutenew" [(ownerid)]="ownerid" (finished)="onFinishedRouteNew()"></app-route-new>
+</p-dialog>
+
+<p-dialog [(visible)]="showassignmentnew" [modal]="true" [resizable]="true" appendTo="body">
+  <p-header>assign a ride</p-header>
+  <app-route-assignment-new *ngIf="showassignmentnew" [(ownerid)]="ownerid" [(routeid)]="selectedroute.id" (finished)="onFinishedAssignmentNew()"></app-route-assignment-new>
+</p-dialog>

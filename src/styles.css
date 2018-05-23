@@ -9,13 +9,6 @@
 /* @import url('https://fonts.googleapis.com/css?family=Bitter'); */
 /* @import url('https://fonts.googleapis.com/css?family=Indie+Flower'); */
 
-/*
---arreevblue: #7B9AC1;
---arreevliteblue: #9CAEC4
---arreevlitegray: #F5F5FC
---arreevliteoffwhite: #FBFBFB
- */
-
 html,body {
   margin: 0px;
 
@@ -28,22 +21,15 @@ html,body {
   background: #F2F2F8;
 }
 
-input[type=text]
-{
-  background-color: transparent;
-  border: none;
-  color: #888899;
-  font-size: 11pt;
-  flex: 1;
-  border-bottom:solid 2px #DDDDDD;
-}
-textarea:focus,input:focus{
-  outline: none;
-}
-
 .spacer {
   flex: 1 1 auto;
 }
+
+/*********************************************************/
+/****                                                 ****/
+/****             Arreev Global Styles                ****/
+/****                                                 ****/
+/*********************************************************/
 
 .content-container {
   margin: 8px;
@@ -92,13 +78,80 @@ textarea:focus,input:focus{
 .card-x {
   text-shadow: 1px 1px rgba( 50,50,50,.35 );
   cursor: pointer;
-  color: #FFFFCC;
+  color: #EEDDEE;
 }
 .card-x:hover {
-  color: #FFAAFF;
+  color: #FFDDEE;
+}
+.card-x:active {
+  color: #FFBBFF;
 }
 
-.form {
+.card-bookmark {
+  text-shadow: 1px 1px rgba( 50,50,50,.35 );
+  cursor: pointer;
+  color: #EEDDEE;
+}
+.card-bookmark:hover {
+  color: #FFDDEE;
+}
+.card-bookmark:active {
+  color: #FFBBFF;
+}
+
+.mini {
+  position: relative;
+  border-radius: 5px;
+  border: 2px solid #BBBBBB;
+  text-align: right;
+  margin-top: 5px;
+  margin-left: 5px;
+  background-color: #FFFFFF;
+}
+.mini-image {
+  object-fit: cover;
+  width: 74px;
+  height: 62px;
+  cursor: pointer;
+}
+.mini-x {
+  position: absolute;
+  color: #EEDDEE;
+  border-top-left-radius: 5px;
+  background-color: #BBBBBB;
+  text-shadow: 1px 1px rgba( 50,50,50,.35 );
+  padding: 2px;
+  padding-left: 4px;
+  right: 0px;
+  bottom: 0px;
+  cursor: pointer;
+}
+.mini-x:hover {
+  color: #FFDDEE;
+}
+.mini-x:active {
+  color: #FFBBFF;
+}
+
+.badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 8px;
+}
+
+.badge-image {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+
+  border-radius: 100%;
+  border: 2px solid #A0A0D0;
+
+  cursor: pointer;
+}
+
+.fence {
   border:solid 2px #A0A0D0;
   background-color: #FFFFFF;
   border-radius: 5px;
@@ -121,6 +174,18 @@ textarea:focus,input:focus{
   font-weight: normal;
   font-style: normal;
   margin-bottom: 3px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+
+.table-cell {
+  font-size: 10pt;
+  font-weight: normal;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
 }
 
 .action-icon {
@@ -131,3 +196,105 @@ textarea:focus,input:focus{
 }
 .action-icon:hover { color: #5566DD; }
 .action-icon:active { color: #6688EE; }
+
+.thumbnail {
+  object-fit:cover;
+  border:2px solid #CCCCCC;
+  border-radius: 5px;
+  margin-top:3px;
+  cursor:pointer;
+}
+
+/*********************************************************/
+/****                                                 ****/
+/****          PrimeNG Global Overrides               ****/
+/****                                                 ****/
+/*********************************************************/
+
+.ui-toolbar {
+  border: none;
+  background-color: #DDDDEE;
+}
+
+.ui-datagrid {
+  border: none;
+  background: transparent;
+}
+.ui-datagrid-content {
+  border: none;
+  background: transparent;
+}
+.ui-datagrid-content-empty {
+  border: none;
+  background: transparent;
+}
+
+.ui-inputtext {
+  border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  margin: 0;
+  padding: 2px;
+}
+
+.ui-inputtextarea {
+  border: 1px solid #AA00FF;
+}
+
+.ui-fileupload-buttonbar {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 2px;
+}
+
+.ui-chips {
+  border: none;
+}
+.ui-chips > ul {
+  border: none;
+  box-shadow: none;
+  background: none;
+  color: orange;
+}
+.ui-chips > ul.ui-inputtext:focus {
+  border: none;
+  box-shadow: none;
+  background: none;
+}
+.ui-chips > ul:not(.ui-state-disablde).ui-state-focus {
+  border: none;
+  box-shadow: none;
+  background: none;
+}
+.ui-chips-token {
+  padding: 0;
+  margin: 5px;
+  background-color: transparent;
+}
+.ui-chips-token:hover {
+  background-color: transparent;
+}
+.ui-chips-token:active {
+  background-color: transparent;
+}
+.ui-chips-token-icon {
+  visibility: hidden;
+}
+.ui-chips-input-token {
+  border: 1px solid #BBBBCC;
+  border-radius: 6px;
+  padding: 6px;
+}
+
+.ui-datalist {
+}
+
+.ui-datalist-content {
+  background-color: transparent;
+  border: none;
+}
+.ui-datalist-data {
+  max-height: 212px;
+}

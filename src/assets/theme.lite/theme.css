@@ -31,9 +31,11 @@
 .ui-state-default {
   border: 1px solid #AABBDD;
   background: #f6f6f6;
-  color: #0073ea; }
+  color: #0073ea;
+}
   .ui-state-default a {
-    color: #0073ea; }
+    color: #0073ea;
+  }
 
 .ui-state-active {
   border-color: #dddddd;
@@ -75,19 +77,35 @@
 
 /* Forms */
 .ui-inputtext {
-  background: #ffffff;
-  color: #444444; }
+  color: #666666;
+  background: transparent;
+
+  outline: none;
+  border: none;
+  border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-bottom: 2px solid #CCCCCC;
+}
 
 .ui-inputtext:enabled:hover {
-  border-color: #0073ea; }
+  outline: none;
+  border: none;
+  border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-bottom: 2px solid #CCCCFF;
+}
 
 .ui-inputtext.ui-state-focus,
 .ui-inputtext:focus {
   outline: 0 none;
-  border-color: #0073ea;
-  -moz-box-shadow: 0px 0px 5px #0073ea;
-  -webkit-box-shadow: 0px 0px 5px #0073ea;
-  box-shadow: 0px 0px 5px #0073ea; }
+  border: none;
+  border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-bottom: 2px solid #CCCCFF;
+}
 
 .ui-inputgroup .ui-inputgroup-addon {
   border-color: #dddddd;
@@ -95,16 +113,20 @@
   color: #444444; }
   .ui-inputgroup .ui-inputgroup-addon:first-child {
     border-top-left-radius: 2px;
-    border-bottom-left-radius: 2px; }
+    border-bottom-left-radius: 2px;
+  }
   .ui-inputgroup .ui-inputgroup-addon:last-child {
     border-top-right-radius: 2px;
-    border-bottom-right-radius: 2px; }
+    border-bottom-right-radius: 2px;
+  }
 .ui-inputgroup .ui-button:first-child {
   border-top-left-radius: 2px;
-  border-bottom-left-radius: 2px; }
+  border-bottom-left-radius: 2px;
+}
 .ui-inputgroup .ui-button:last-child {
   border-top-right-radius: 2px;
-  border-bottom-right-radius: 2px; }
+  border-bottom-right-radius: 2px;
+}
 
 .ui-float-label input.ng-dirty.ng-invalid ~ label {
   color: #222222; }
@@ -235,16 +257,20 @@
   color: #0073ea; }
 
 .ui-datatable .ui-rowgroup-header a {
-  color: #444444; }
+  color: #444444;
+}
 .ui-datatable .ui-sortable-column:not(.ui-state-active):hover {
   background: #0073ea;
-  color: #ffffff; }
+  color: #ffffff;
+}
 .ui-datatable .ui-row-toggler {
-  color: #444444; }
+  color: #444444;
+}
 .ui-datatable tbody.ui-datatable-hoverable-rows > tr.ui-widget-content:not(.ui-state-highlight):hover {
   cursor: pointer;
   background: #0073ea;
-  color: #ffffff; }
+  color: #ffffff;
+}
 
 .ui-orderlist .ui-orderlist-item:not(.ui-state-highlight):hover {
   border-color: #0073ea;
@@ -477,31 +503,41 @@
 /* TurboTable */
 .ui-table .ui-table-thead > tr > th,
 .ui-table .ui-table-tfoot > tr > td {
-  background: #dddddd;
-  border: 1px solid #dddddd;
-  color: #444444; }
+  color: #6688AA;
+  font-weight: normal;
+  border-color: #AABBCC;
+}
+.ui-table .ui-table-thead > tr > th {
+  background-color: #E0E0F0;
+  height: 32px;
+  min-height: 32px;
+  font-size: 12pt;
+}
 .ui-table .ui-table-tbody > tr {
   background: #ffffff;
-  color: #444444; }
-  .ui-table .ui-table-tbody > tr > td {
-    border: 1px solid #dddddd;
-    background: inherit; }
-  .ui-table .ui-table-tbody > tr.ui-state-highlight {
-    background-color: #FF0084;
-    color: #FFFFFF; }
-  .ui-table .ui-table-tbody > tr.ui-contextmenu-selected {
-    background-color: #ff66b5;
-    color: #FFFFFF; }
+  color: #444444;
+}
+.ui-table .ui-table-tbody > tr > td {
+  border: 2px solid #F2F2F8;
+  background: inherit;
+}
+.ui-table .ui-table-tbody > tr.ui-state-highlight {
+  color: #5555AA;
+}
+.ui-table .ui-table-tbody > tr.ui-contextmenu-selected {
+  color: #5555AA;
+}
 .ui-table .ui-sortable-column.ui-state-highlight {
-  background-color: #FF0084;
-  color: #FFFFFF; }
+  color: #5555AA;
+}
 .ui-table .ui-sortable-column:not(.ui-state-highlight):hover {
-  background: #0073ea;
-  color: #ffffff; }
+  color: #0073ea;
+}
 .ui-table.ui-table-hoverable-rows .ui-table-tbody > tr:not(.ui-state-highlight):hover {
   cursor: pointer;
   background: #0073ea;
-  color: #ffffff; }
+  color: #ffffff;
+}
 
 @media (max-width: 35em) {
   .ui-table-responsive .ui-table-tbody > tr {

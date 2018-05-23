@@ -1,0 +1,11 @@
+
+<div>
+  <p-dataGrid [value]="assignments" emptyMessage="&nbsp;" [rows]="1" [hidden]="assignments.length === 0" [@grid-animation]="assignments.length" [style]="{'float':'right'}">
+    <ng-template let-assignment pTemplate="item">
+      <div class="mini">
+        <img class="mini-image" src="{{assignment.imageURL}}" (click)="onAssignment(assignment)">
+        <span class="mini-x" (click)="onRemoveAssignment(assignment)"><i class="fa fa-remove"></i></span>
+      </div>
+    </ng-template>
+  </p-dataGrid>
+</div>

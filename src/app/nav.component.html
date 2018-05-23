@@ -1,11 +1,15 @@
 
 <div class="nav-flex">
 
-  <div class="ui-grid ui-grid-responsive ui-fluid" style="max-height:512px;overflow-y:auto;overflow-x:hidden;padding-left:15px;padding-right:5px;margin-top:25px;">
+  <div class="nav-email">
+    <span>{{email}}</span>
+  </div>
+
+  <div class="ui-grid ui-grid-responsive ui-fluid" style="max-height:512px;overflow-y:auto;overflow-x:hidden;padding-left:15px;padding-right:5px;margin-top:10px;">
     <div class="ui-grid-row">
       <div class="ui-grid-col-12">
-        <button *ngIf="currentroute != 'fleet'" pButton type="button" label="fleets" [className]="navbutton" icon="fa-bus" (click)="onContent( 'fleet' )"></button>
-        <button *ngIf="currentroute == 'fleet'" pButton type="button" label="fleets" [className]="navbuttonselected" icon="fa-bus" (click)="onContent( 'fleet' )"></button>
+        <button *ngIf="currentroute != 'fleet'" pButton type="button" label="rides" [className]="navbutton" icon="fa-bus" (click)="onContent( 'fleet' )"></button>
+        <button *ngIf="currentroute == 'fleet'" pButton type="button" label="rides" [className]="navbuttonselected" icon="fa-bus" (click)="onContent( 'fleet' )"></button>
       </div>
     </div>
     <div class="ui-grid-row">

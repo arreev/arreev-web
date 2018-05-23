@@ -1,0 +1,14 @@
+
+<div>
+
+  <p-dataList #followtransporterslist
+              [scrollable]="true"
+              [value]="transporters"  [hidden]="followtransporterslist.isEmpty()" [@list-animation]="transporters.length">
+    <ng-template let-transporter pTemplate="item">
+      <div class="follow-transporter-item" [@transporter-active-state]="transporter.state" (click)="onTransporter(transporter)">
+        &nbsp;&nbsp;{{transporter.name}}
+      </div>
+    </ng-template>
+  </p-dataList>
+
+</div>

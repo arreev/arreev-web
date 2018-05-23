@@ -17,6 +17,8 @@ export interface Route extends Entity
   endAddress?: string;
 
   status?: string;
+
+  state?: string; // for internal use
 }
 
 export function dumpRoute( route:Route ) :string {

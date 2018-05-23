@@ -1,0 +1,53 @@
+
+<div class="content-container">
+
+  <p-toolbar>
+    <div class="ui-toolbar-group-left">
+      <img src="assets/working.gif" [style.opacity]="working ? .5 : 0">
+    </div>
+    <div class="ui-toolbar-group-right">
+      <button pButton type="button" label="add a stable" icon="fa-bus" (click)="onAddFleet()"></button>
+      <!--<button pButton type="button" label="delete fleet" icon="fa-bus" (click)="onDeleteFleet()" *ngIf="selectedfleet != null" class="ui-button-secondary" style="color:maroon;"></button>-->
+      <button pButton type="button" label="add a ride" icon="fa-truck" (click)="onAddTransporter()" *ngIf="selectedfleet != null"></button>
+      <i class="fa fa-refresh" style="cursor:pointer;margin-left:5px;" (click)="onRefresh()"></i>
+    </div>
+  </p-toolbar>
+
+  <p-dataGrid #datagrid [value]="fleets" emptyMessage="&nbsp;" [rows]="1" [hidden]="datagrid.isEmpty()" [@grid-animation]="fleets.length">
+    <ng-template let-fleet pTemplate="item">
+      <div class="card" [style.border]="cardBorder(fleet)" (click)="onFleet(fleet)" [@active-state]="fleet.state">
+        <img class="card-image" src="{{fleet.imageURL}}">
+        <div class="card-footer">
+          <div class="card-title">{{fleet.name}}</div>
+          <div style="flex:1;"></div>
+          <div *ngIf="selectedfleet === fleet" class="card-x" (click)="onDeleteFleet(fleet)"><i class="fa fa-remove"></i></div>
+        </div>
+      </div>
+    </ng-template>
+  </p-dataGrid>
+
+  <div *ngIf="selectedfleet != null" [@scale-in]>
+    <app-fleet-edit [fleetid]="selectedfleet.id" (working)="onEditWorking($event)"></app-fleet-edit>
+  </div>
+
+  <div style="height:10px;"></div>
+
+  <div *ngIf="selectedfleet != null" [@fade-in]>
+    <app-fleet-transporters [fleetid]="selectedfleet.id" [refresh]="refresher"></app-fleet-transporters>
+  </div>
+
+</div>
+
+<p-dialog [(visible)]="showfleetnew" [modal]="true" [resizable]="true" appendTo="body">
+  <p-header>
+    add a new stable
+  </p-header>
+  <app-fleet-new *ngIf="showfleetnew" (finished)="onFinishedFleetNew()"></app-fleet-new>
+</p-dialog>
+
+<p-dialog [(visible)]="showfleettransporternew" [modal]="true" [resizable]="true" appendTo="body">
+  <p-header>
+    add a new ride
+  </p-header>
+  <app-fleet-transporter-new *ngIf="showfleettransporternew" [fleetid]="selectedfleet.id" (finished)="onFinishedFleetTransporterNew()"></app-fleet-transporter-new>
+</p-dialog>

@@ -1,0 +1,48 @@
+
+<div class="content-container">
+
+  <p-toolbar>
+    <div class="ui-toolbar-group-left">
+      <img src="assets/working.gif" [style.opacity]="working || editworking ? .5 : 0">
+    </div>
+    <div class="ui-toolbar-group-right">
+      <button pButton type="button" label="add a group" icon="fa-bus" (click)="onAddGroup()"></button>
+      <button pButton type="button" label="add a person" icon="fa-truck" (click)="onAddPerson()" *ngIf="selectedgroup != null"></button>
+      <i class="fa fa-refresh" style="cursor:pointer;margin-left:5px;" (click)="onRefresh()"></i>
+    </div>
+  </p-toolbar>
+
+  <p-dataGrid #datagrid [value]="groups" emptyMessage="&nbsp;" [rows]="1" [hidden]="datagrid.isEmpty()" [@grid-animation]="groups.length">
+    <ng-template let-group pTemplate="item">
+      <div class="card" [style.border]="cardBorder(group)" (click)="onGroup(group)" [@active-state]="group.state">
+        <img class="card-image" src="{{group.imageURL}}">
+        <div class="card-footer">
+          <div class="card-title">{{group.name}}</div>
+          <div style="flex:1;"></div>
+          <div *ngIf="selectedgroup === group" class="card-x" (click)="onDeleteGroup(group)"><i class="fa fa-remove"></i></div>
+        </div>
+      </div>
+    </ng-template>
+  </p-dataGrid>
+
+  <div *ngIf="editgroup != null" [@scale-in]>
+    <app-group-edit [ownerid]="ownerid" [group]="editgroup" (working)="onEditWorking($event)"></app-group-edit>
+  </div>
+
+  <div style="height:10px;"></div>
+
+  <div *ngIf="editgroup != null" [@fade-in]>
+    <app-group-persons [ownerid]="ownerid" [groupid]="editgroup.id"></app-group-persons>
+  </div>
+
+</div>
+
+<p-dialog [(visible)]="showgroupnew" [modal]="true" [resizable]="true" appendTo="body">
+  <p-header>add a new group</p-header>
+  <app-group-new *ngIf="showgroupnew" [ownerid]="ownerid" (finished)="onFinishedGroupNew()"></app-group-new>
+</p-dialog>
+
+<p-dialog [(visible)]="showgrouppersonnew" [modal]="true" [resizable]="true" appendTo="body">
+  <p-header>add a new person</p-header>
+  <app-person-new *ngIf="showgrouppersonnew" [ownerid]="ownerid" [groupid]="selectedgroup.id" (finished)="onFinishedGroupPersonNew()"></app-person-new>
+</p-dialog>

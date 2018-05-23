@@ -21,6 +21,8 @@ export interface Transporter extends Entity
   inservice?: boolean;
 
   status?: string;
+
+  state?: string; // internal use
 }
 
 export function dumpTransporter( transporter:Transporter ) :string {

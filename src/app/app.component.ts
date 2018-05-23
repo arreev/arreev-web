@@ -1,26 +1,19 @@
 
 import { Component,OnInit,OnDestroy } from '@angular/core';
-import { Authentication } from './authentication.service';
+import { RouterStateUrl } from './store/router.reducer';
+import * as fromRouter from './store/router.reducer';
 import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
-import { AccountState } from './app.state';
-import { Account } from './model/account';
-import { Router } from '@angular/router';
+import { AccountGuard } from './accountguard';
+import { Router,RouterStateSnapshot } from '@angular/router';
 import { Store } from '@ngrx/store';
-
-import * as AccountActions from './store/account.actions';
 
 import { animate,state,style,transition,trigger } from '@angular/animations';
 import { appFade } from './app.animations';
 
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/skip';
-
-import * as firebase from 'firebase';
-
-import { environment } from '../environments/environment';
-import { isUndefined } from 'util';
-import { isBlank } from './util';
+import { RouterReducerState } from '@ngrx/router-store';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-root',
@@ -47,38 +40,39 @@ import { isBlank } from './util';
 export class AppComponent implements OnInit,OnDestroy
 {
   letters: string[] = [ 'a','r','r','e','e','v' ];
-  loggedin = false;
-  avataravailable = false;
-  avatarURL$?:Observable<string>;
   showinfo?: boolean;
   sidenavstate = 'open';
   sidebarstate = 'close';
+  signedin = false;
+  myaccounttooltip = 'sign-in';
 
-  accountpending = false;
+  private accountguardSubscription?: Subscription = null;
 
-  private accountStoreSubscription: Subscription;
-  private account$: Observable<Account>;
-
-  constructor( private router:Router,private authentication:Authentication,
-               private accountstore:Store<AccountState> ) {
-    this.account$ = this.accountstore.select('account' );
-  }
+  constructor( private router:Router,
+               private accountguard:AccountGuard,
+               private routerstore:Store<RouterStateUrl> ) {}
 
   ngOnInit(): void {
-    this.accountStoreSubscription = this.account$.skip( 1 ).subscribe(account => this.fromAccountStore( account ) );
-    this.loggedin = ( this.authentication.isAuthorized() === true );
+    this.accountguardSubscription = this.accountguard.signedin.subscribe((b:boolean) => {
+      this.myaccounttooltip = b ? 'sign-out' : 'sign-in';
+      this.signedin = b;
+    } );
 
-    /*
-     * because AngularFireModule.initializeApp( environment.firebase ) in app.module not work
-     */
-    firebase.initializeApp( environment.firebase );
+    this.routerstore.select( fromRouter.getRouterState ).subscribe( (rs:RouterReducerState<RouterStateUrl>) => {
+      if ( rs ) {
+        const url = !isNullOrUndefined( rs.state.url ) ? rs.state.url : null;
+        const params = !isNullOrUndefined( rs.state.params ) ? rs.state.params : null;
+        const queryParams = !isNullOrUndefined( rs.state.queryParams ) ? rs.state.queryParams : null;
+        console.log( url + ' ' + params + ' ' + queryParams );
+      }
+    } );
+  }
 
-    this.accountpending = false;
-    this.avataravailable = false;
-
-    if ( this.loggedin ) {
-      this.accountpending = true;
-      this.accountstore.dispatch( new AccountActions.AccountFetchAction() );
+  onMyAccount() {
+    if ( this.signedin ) {
+      this.accountguard.signOut();
+    } else {
+      this.router.navigate([ 'sign-in' ] ).catch( error => console.log( error ) );
     }
   }
 
@@ -88,54 +82,21 @@ export class AppComponent implements OnInit,OnDestroy
   openedSidebarStart() { this.sidebarstate = 'open'; }
   closedSidebarStart() { this.sidebarstate = 'close'; }
 
-  onArreev() {
-    this.router.navigate( [ 'home' ] ).catch( error => console.log( error ) );
+  onHome() {
+    this.router.navigate([ 'home' ] ).catch( error => console.log( error ) );
   }
+
+  onArreev() {}
 
   onAccount() {
     this.router.navigate([ 'account' ] );
-  }
-
-  onLogin() {
-    this.authentication.logout();
-    this.loggedin = ( this.authentication.isAuthorized() === true );
-    this.avataravailable = false;
-    this.router.navigate([ 'login' ] );
-  }
-
-  onLogout() {
-    this.authentication.logout();
-    this.accountstore.dispatch( new AccountActions.AccountResetAction() );
-    this.loggedin = ( this.authentication.isAuthorized() === true );
-    this.avataravailable = false;
-    this.router.navigate([ 'login' ] );
   }
 
   onInfo() {
     this.showinfo = true;
   }
 
-  hello() { console.log( 'hello' ); }
-
   ngOnDestroy(): void {
-    this.accountStoreSubscription.unsubscribe();
-  }
-
-  private fromAccountStore( account?:Account ) {
-    this.accountpending = false;
-
-    this.avataravailable = false;
-
-    if ( account === null ) { return; }
-
-    if ( isUndefined( account.id ) ) {
-      console.log( 'bad account' );
-      this.authentication.logout();
-      this.router.navigate([ 'login' ] );
-      return;
-    }
-
-    this.avataravailable = !isBlank( account.imageURL  );
-    this.avatarURL$ = Observable.of( account.imageURL );
+    if ( this.accountguardSubscription ) { this.accountguardSubscription.unsubscribe(); }
   }
 }

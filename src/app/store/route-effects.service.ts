@@ -13,6 +13,8 @@ import {
   RouteDeleteAction,RouteFetchAction,RoutePostAction,RouteDeletedAction } from './route.actions';
 import * as RouteActions from './route.actions';
 
+import 'rxjs/add/operator/take';
+
 @Injectable()
 export class RouteEffects
 {
@@ -62,7 +64,7 @@ export class RouteEffects
   private post( ownerid:string ) {
     this.routeStore.select('route' ).take( 1 ).subscribe( route => {
       this.api.postRoute( ownerid,route ).subscribe(
-        r => { console.log( 'FROM SERVER ' + dumpRoute( r ) ); },
+        r => {},
         e => { console.log( e ); }
       );
     } );

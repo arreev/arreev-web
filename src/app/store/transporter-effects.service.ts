@@ -14,6 +14,8 @@ import {
 } from './transporter.actions';
 import * as TransporterActions from './transporter.actions';
 
+import 'rxjs/add/operator/take';
+
 @Injectable()
 export class TransporterEffects
 {
@@ -63,7 +65,7 @@ export class TransporterEffects
   private post( ownerid:string ) {
     this.transporterStore.select( 'transporter' ).take( 1 ).subscribe(transporter => {
       this.api.postTransporter( ownerid,null,transporter ).subscribe(
-        f => { console.log( 'FROM SERVER ' + dumpTransporter( f ) ); },
+        f => { },
         e => { console.log( e ); }
       );
     } );

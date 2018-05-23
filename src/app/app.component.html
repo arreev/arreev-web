@@ -1,38 +1,30 @@
 
-<div *ngIf="!accountpending" class="app-container">
+<div class="app-container">
 
   <p-confirmDialog header="Confirmation" icon="fa fa-exclamation-triangle" width="350" appendTo="body"></p-confirmDialog>
 
   <div class="app-header">
     <div class="app-header-bar">
-      <!--<div class="app-header-icon"><i class="fa fa-bars animated bounce" style="cursor:pointer;" (click)="sidenav.toggle()"></i></div>-->
       <div class="app-header-icon" style="margin-left:0px;"><i class="fa fa-caret-square-o-left" (click)="sidenav.toggle()" [@sidenav-animation]="sidenavstate"></i></div>
-      <img src="assets/arreev-lite-icon.png" style="margin-left:25px;cursor:pointer;" height="36px">
-      <!--<span (click)="onArreev()" style="cursor:pointer;margin-left:-5px;font-weight:bold;font-size:24pt;color:white;text-shadow: 2px 2px rgba( 0,0,0,.5 );">arreev</span>-->
-      <div (click)="onArreev()" style="cursor:pointer;">
+      <img src="assets/arreev-lite-icon.png" style="margin-left:25px;" (click)="onArreev()" height="36px">
+      <div>
         <img *ngFor="let letter of letters" src="assets/{{letter}}.png" height="22px" style="margin-left:2px;">
       </div>
-      <span class="spacer"></span>
-      <div class="ui-inputgroup" style="font-size:9pt;">
-        <input type="text" pInputText placeholder="" size="30">
+      <i class="fa fa-home" style="cursor:pointer;color:#EEFFFF;font-size:18pt;margin-left:25px;" (click)="onHome()"></i>
+    <span class="spacer"></span>
+      <div class="ui-inputgroup" style="font-size:10pt;margin-right:25px;">
+        <input type="text" pInputText placeholder="search" size="30">
       </div>
 
-      <!-- TODO: why build --prod this animation fails -->
-      <!-- <div class="app-header-icon" [@app-fade]="void" style="margin-left:5px;margin-right:15px;"><i class="fa fa-search"></i></div> -->
-      <div class="app-header-icon" style="margin-left:5px;margin-right:15px;"><i class="fa fa-search"></i></div>
+      <!-- <div class="app-header-icon" style="margin-left:5px;margin-right:15px;"><i class="fa fa-search"></i></div> -->
 
       <div style="width:15px;"></div>
-      <div *ngIf="!avataravailable" class="app-header-icon"><i class="fa fa-user-circle-o" style="cursor:pointer;" (click)="onAccount()" pTooltip="my account" showDelay="750"></i></div>
-      <img *ngIf="avataravailable" src="{{avatarURL$|async}}" border="0" width="28px" style="cursor:pointer;" (click)="onAccount()" pTooltip="my account" showDelay="750"/>
-      <div *ngIf="!loggedin" class="app-header-icon"><i class="fa fa-sign-in" (click)="onLogin()" pTooltip="sign in" showDelay="750"></i></div>
-      <div *ngIf="loggedin" class="app-header-icon"><i class="fa fa-sign-out" (click)="onLogout()" pTooltip="sign out" showDelay="750"></i></div>
+      <div class="app-header-icon"><i class="fa fa-user-circle-o" style="cursor:pointer;" [style.color]="signedin ? '#FFFFFF' : '#DDDDDD'" (click)="onMyAccount()" pTooltip="{{myaccounttooltip}}" showDelay="750"></i></div>
       <div class="app-header-icon"><i class="fa fa-commenting-o" pTooltip="communiques" showDelay="750"></i></div>
       <div class="app-header-icon"><i class="fa fa-cog" pTooltip="settings" showDelay="750"></i></div>
       <div class="app-header-icon"><i class="fa fa-info-circle" pTooltip="info" showDelay="750" (click)="onInfo()"></i></div>
       <div style="width:15px;"></div>
 
-      <!-- TODO: why build --prod this animation fails -->
-      <!-- <div class="app-header-icon" [@app-component-yellow]="void" (click)="sidebar.toggle()"><i class="fa fa-ellipsis-v"></i></div> -->
       <div class="app-header-icon" (click)="sidebar.toggle()" [@sidebar-animation]="sidebarstate"><i class="fa fa-caret-square-o-left"></i></div>
     </div>
   </div>

@@ -1,0 +1,42 @@
+
+<div>
+
+  <p-chips [(ngModel)]="waypoints" [addOnTab]="true" (onAdd)="onAppendWaypoint($event.value)">
+    <ng-template let-waypoint let-i="index" pTemplate="item">
+      <!-- [@active-state]="waypoint.state" -->
+      <div class="chip-item" [style.background-color]="selectedwaypoint === waypoint ? '#8585B5' : ''"
+           pDraggable="chipdragdrop"
+           pDroppable="chipdragdrop"
+
+           (onDragStart)="onDragStart($event,waypoint)"
+           (onDrag)="onDrag($event,waypoint)"
+           (onDragEnd)="onDragEnd($event,waypoint)"
+
+           (onDragEnter)="onDragEnter($event,waypoint)"
+           (onDrop)="onDrop($event,waypoint)"
+           (onDragLeave)="onDragLeave($event,waypoint)"
+
+           (click)="onWaypoint(waypoint)" (dblclick)="onEditWaypoint(waypoint)">
+
+        <i *ngIf="isBeg(waypoint)" class="fa fa-play-circle" style="color:lightgreen;margin-right:3px;"></i>
+        <i *ngIf="isEnd(waypoint)" class="fa fa-stop-circle" style="color:pink;margin-right:3px;"></i>
+
+        <span *ngIf="!isBeg(waypoint) && !isEnd(waypoint)" style="color:#BBCCDD;margin-right:3px;">{{waypoints.indexOf(waypoint)}}</span>
+        <span [style.color]="selectedwaypoint === waypoint ? '#FFFFFF' : '#F5F5F5'"
+              [style.font-size.pt]="selectedwaypoint === waypoint ? '11' : '10'">
+            {{waypoint.name}}
+          </span>
+
+        <span *ngIf="selectedwaypoint == waypoint" class="card-x" (click)="onRemoveWaypoint(waypoint)"><i class="fa fa-remove" style="margin-left:5px;margin-right:2px;"></i></span>
+        <i *ngIf="!isEnd(waypoint)" class="fa fa-arrow-right" style="margin-left:5px;color:#CCCCE0;"></i>
+      </div>
+    </ng-template>
+  </p-chips>
+
+</div>
+
+<p-dialog [(visible)]="showwaypointnew" [modal]="true" [resizable]="true" appendTo="body">
+  <p-header>add a new waypoint</p-header>
+  <app-route-waypoint-new *ngIf="showwaypointnew" [(ownerid)]="ownerid" [(routeid)]="route.id" [(waypoint)]="waypointnew" [places]="places" (finished)="onFinishedWaypointNew()"></app-route-waypoint-new>
+</p-dialog>
+

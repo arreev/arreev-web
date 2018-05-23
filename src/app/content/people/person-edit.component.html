@@ -1,0 +1,47 @@
+
+<div style="width:512px;">
+
+  <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-6">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">name:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="person.name" (ngModelChange)="onModelChange()"/>
+        </div>
+      </div>
+      <div class="ui-grid-col-6">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">category:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="person.category" (ngModelChange)="onModelChange()"/>
+        </div>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">description:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="person.description" (ngModelChange)="onModelChange()"/>
+        </div>
+      </div>
+      <div class="action-icon">
+        <i class="fa fa-picture-o" (click)="onImage()"></i>
+        <input #inputFile hidden type="file" (change)="onInputFile()">
+      </div>
+    </div>
+  </div>
+
+  <button pButton type="button" icon="fa-times" (click)="onDelete()" class="ui-button-secondary" style="color:maroon;width:32px;"></button>
+
+  <div style="height:20px;"></div>
+
+  <p-toolbar>
+    <div class="ui-toolbar-group-left">
+      <img *ngIf="working" src="assets/working.gif">
+    </div>
+    <div class="ui-toolbar-group-right">
+      <span>&nbsp;</span>
+      <button pButton type="button" label="ok" (click)="onOK()"></button>
+    </div>
+  </p-toolbar>
+
+</div>

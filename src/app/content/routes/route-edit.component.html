@@ -1,0 +1,33 @@
+
+<div class="fence">
+  <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-5">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">name:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="route.name" (ngModelChange)="onModelChange()"/>
+        </div>
+      </div>
+      <div class="ui-grid-col-3">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">type:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="route.type" (ngModelChange)="onModelChange()"/>
+        </div>
+      </div>
+      <div class="ui-grid-col-4">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">category:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="route.category" (ngModelChange)="onModelChange()"/>
+        </div>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">
+        <div class="field">
+          <div class="field-label"><span class="field-spacer"></span><span class="field-name">description:&nbsp;</span></div>
+          <input pInputText type="text" [(ngModel)]="route.description" (ngModelChange)="onModelChange()"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

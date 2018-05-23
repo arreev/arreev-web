@@ -11,6 +11,8 @@ import { API } from '../api.service';
 import { ASSIGNMENT_FETCH,ASSIGNMENT_POST,AssignmentFetchAction,AssignmentPostAction } from './assignment.actions';
 import * as AssignmentActions from './assignment.actions';
 
+import 'rxjs/add/operator/take';
+
 @Injectable()
 export class AssignmentEffects
 {
@@ -53,7 +55,7 @@ export class AssignmentEffects
   private post( ownerid:string ) {
     this.assignmentStore.select('assignment' ).take( 1 ).subscribe(assignment => {
       this.api.postAssignment( ownerid,assignment ).subscribe(
-        w => { console.log( 'FROM SERVER ' + dumpAssignment( w ) ); },
+        w => { },
         e => { console.log( e ); }
       );
     } );
