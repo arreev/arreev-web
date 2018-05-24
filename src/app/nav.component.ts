@@ -49,7 +49,15 @@ export class NavComponent implements OnInit,OnDestroy
 
   private routerEvent( event:RouterEvent ) {
     if ( event instanceof NavigationEnd ) {
-      this.currentroute = event.url.replace('/','' );
+      const url = new URL( 'routed:'+event.url );
+      let path = '';
+      if ( url.pathname.startsWith( '/fleet' ) ) { path = 'fleet'; }
+      if ( url.pathname.startsWith( '/routes' ) ) { path = 'routes'; }
+      if ( url.pathname.startsWith( '/times' ) ) { path = 'times'; }
+      if ( url.pathname.startsWith( '/events' ) ) { path = 'events'; }
+      if ( url.pathname.startsWith( '/people' ) ) { path = 'people'; }
+      if ( url.pathname.startsWith( '/follow' ) ) { path = 'follow'; }
+      this.currentroute = path;
     }
   }
 }

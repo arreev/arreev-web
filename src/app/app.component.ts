@@ -16,7 +16,7 @@ import { RouterReducerState } from '@ngrx/router-store';
 import { isNullOrUndefined } from 'util';
 
 @Component({
-  selector: 'app-app',
+  selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   animations: [
@@ -59,7 +59,9 @@ export class AppComponent implements OnInit,OnDestroy
     } );
 
     this.routerstore.select( fromRouter.getRouterState ).subscribe( (rs:RouterReducerState<RouterStateUrl>) => {
-      console.log( rs.state.url  );
+      if ( rs ) {
+        console.log( rs.state.url  );
+      }
     } );
   }
 

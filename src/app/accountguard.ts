@@ -30,10 +30,13 @@ export class AccountGuard implements CanActivate
   private _signinerror = new BehaviorSubject<string>( null );
   readonly signinerror = this._signinerror.asObservable();
 
+  private accountguardunsubscribe = null;
   private virgin = true;
 
   constructor( private router:Router ) {
     console.log( 'AccountGuard' );
+    firebase.initializeApp( environment.firebase );
+    this.subscribe();
   }
 
   /**
@@ -43,14 +46,15 @@ export class AccountGuard implements CanActivate
    * @returns {Observable<boolean> | Promise<boolean> | boolean}
    */
   canActivate( route:ActivatedRouteSnapshot,snapshot:RouterStateSnapshot ) : Observable<boolean> | Promise<boolean> | boolean {
-    // console.log( 'AccountGuard.canActivate ' + (this.virgin ? 'VIRGIN ' : '' ) + snapshot.url );
+    console.log( 'AccountGuard.canActivate ' + (this.virgin ? 'VIRGIN ' : '' ) + snapshot.url );
 
     if ( this.virgin === true ) {
       this.virgin = false;
-      let unsubscribe = null;
+      this.unsubscribe();
+      let localunsubscribe = null;
       return new Promise( resolve => {
-        unsubscribe = firebase.auth().onAuthStateChanged(u => {
-          unsubscribe();
+        localunsubscribe = firebase.auth().onAuthStateChanged(u => {
+          localunsubscribe();
           const _validuser = !isNullOrUndefined( firebase.auth().currentUser );
           if ( !_validuser ) {
             this.reRouteToSignIn( route );
@@ -120,7 +124,11 @@ export class AccountGuard implements CanActivate
   }
 
   private subscribe() {
-    firebase.auth().onAuthStateChanged(user => this.onAuthStateChanged( user ) );
+    this.accountguardunsubscribe = firebase.auth().onAuthStateChanged(user => this.onAuthStateChanged( user ) );
+  }
+
+  private unsubscribe() {
+    if ( this.accountguardunsubscribe ) { this.accountguardunsubscribe(); }
   }
 
   private onAuthStateChanged( user ) {
