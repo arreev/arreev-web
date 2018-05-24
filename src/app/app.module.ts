@@ -61,6 +61,7 @@ import { routes,RoutingModule } from './routing.module';
 import { routerReducer,StoreRouterConnectingModule,RouterStateSerializer } from '@ngrx/router-store';
 import { CustomSerializer } from './store/router.reducer';
 
+import { AppRootComponent } from './app-root.component';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav.component';
 import { BarComponent } from './bar.component';
@@ -106,6 +107,7 @@ import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
+    AppRootComponent,
     AppComponent,
     NavComponent,
     BarComponent,
@@ -248,6 +250,6 @@ import { environment } from '../environments/environment';
     // TODO: figure out how to discriminate so that some requests do not result in pre-flight
     // { provide: HTTP_INTERCEPTORS,useClass:APIInterceptor,multi:true }
   ],
-  bootstrap: [ AppComponent ]
+  bootstrap: [ AppRootComponent ]
 })
 export class AppModule { }

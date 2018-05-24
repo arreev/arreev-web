@@ -40,7 +40,7 @@ export class NavComponent implements OnInit,OnDestroy
   }
 
   onContent( content:string ) {
-    this.router.navigate( [ content ] ).catch( error => console.log( error ) );
+    this.router.navigate([ content ],{ queryParams:{ from:'nav' } } ).catch( error => console.log( error ) );
   }
 
   ngOnDestroy(): void {

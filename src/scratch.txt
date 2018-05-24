@@ -1,145 +1,184 @@
 
-import { AfterViewInit,Component,Input,OnDestroy,OnInit,ViewEncapsulation } from '@angular/core';
-import { Group } from '../../model/group';
+import { Router,CanActivate,ActivatedRouteSnapshot,RouterStateSnapshot,Params } from '@angular/router';
+import { environment } from '../environments/environment';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { Injectable } from '@angular/core';
+import { isNullOrUndefined } from 'util';
 
-@Component({
-  selector: 'app-group-persons',
-  templateUrl: './persons.component.html',
-  styleUrls: ['./persons.component.css'],
-  animations: [],
-  encapsulation: ViewEncapsulation.Emulated
-})
-export class PersonsComponent implements OnInit,AfterViewInit,OnDestroy
+import * as firebase from 'firebase';
+
+/**
+ * https://firebase.google.com/docs/auth/web/auth-state-persistence
+ */
+@Injectable()
+export class AccountGuard implements CanActivate
 {
-  @Input() ownerid: string;
-  @Input() groupid: string;
+  /*
+   * https://angular.io/guide/router#milestone-5-route-guards
+   * https://medium.com/@ryanchenkie_40935/angular-authentication-using-route-guards-bf7a4ca13ae3
+   *
+   * https://firebase.google.com/docs/auth/web/password-auth
+   * https://firebase.google.com/docs/reference/js/firebase.auth.Auth#signInWithEmailAndPassword
+   */
 
-  constructor( ) {}
+  private _signedin = new BehaviorSubject<boolean>( false );
+  readonly signedin = this._signedin.asObservable();
 
-  ngOnInit(): void { this._ngOnInit(); }
-  ngAfterViewInit(): void { this._ngAfterViewInit(); }
+  private _signinerror = new BehaviorSubject<string>( null );
+  readonly signinerror = this._signinerror.asObservable();
 
-  ngOnDestroy(): void { this._ngOnDestroy(); }
+  private unsubscribes: any[] = [];
 
-  /********************************************************************************************************************/
-
-  private _ngOnInit(): void {
-
+  constructor( private router:Router ) {
+    console.log( 'AccountGuard' );
+    // firebase.auth().onAuthStateChanged(user => this.onAuthStateChanged( user ) );
   }
 
-  private _ngAfterViewInit(): void {}
+  /**
+   *
+   * @param {ActivatedRouteSnapshot} route
+   * @param {RouterStateSnapshot} snapshot
+   * @returns {Observable<boolean> | Promise<boolean> | boolean}
+   */
+  canActivate( route:ActivatedRouteSnapshot,snapshot:RouterStateSnapshot ) : Observable<boolean> | Promise<boolean> | boolean {
+    console.log( 'AccountGuard.canActivate ' + snapshot.url );
 
-  private _ngOnDestroy(): void {}
-}
-
-
-
-
-  private getPlace( latitude:number,longitude:number ) {
-    const request = {
-      location: { lat:latitude,lng:longitude },
-      radius: 25,
-      rankBy: google.maps.places.RankBy.DISTANCE
-    };
-
-    this.places.nearbySearch( request,( results,status ) => {
-      console.log( 'nearbySearch ' + latitude + ',' + longitude + ' ' + Math.sqrt(latitude*latitude + longitude*longitude ) );
-      let _showwaypointnewname = null;
-      let _showwaypointnewaddress = null;
-      if ( status === google.maps.places.PlacesServiceStatus.OK ) {
-        let distance = 100000.0;
-        for ( const r of results ) {
-          const lat = r.geometry.location.lat();
-          const lng = r.geometry.location.lng();
-          if ( (lat === latitude) && (lng === longitude) ) { console.log( 'skip ' + r.name ); continue; }
-          const d = Math.sqrt( lat*lat + lng*lng );
-          console.log( r.name + ' ' + d );
-          if ( d < distance ) {
-            _showwaypointnewname = r.name;
-            _showwaypointnewaddress = r.vicinity;
-            distance = d;
-          }
+    firebase.auth().currentUser; // tslint:disable-line
+    return new Promise( resolve => {
+      const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+        console.log( 'AccountGuard.canActivate.onAuthStateChanged' );
+        const validuser = this.validate( user );
+        if ( validuser ) {
+          this.destination();
+        } else {
+          this.router.navigate([ 'sign-in' ],{ queryParams: { destination:snapshot.url } } );
         }
-      }
-      setTimeout(() => {
-        console.log( 'SHOW IT!' );
-        this.showwaypointnewname = _showwaypointnewname;
-        this.showwaypointnewaddress = _showwaypointnewaddress;
-        this.showwaypointnewlat = latitude;
-        this.showwaypointnewlng = longitude;
-        this.showwaypointnew = true;
-        this.changedetector.detectChanges();
-      },100 );
+        this.unsubscribe();
+        resolve( validuser );
+      } );
+      this.unsubscribes.push( unsubscribe );
     } );
   }
 
+  /**
+   *
+   * @param {string} email
+   * @param {string} password
+   */
+  signIn( email:string,password:string ) {
+    firebase.auth().signInWithEmailAndPassword( email,password ).catch(error => this.onRejected( error ) );
+    const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+      console.log( 'AccountGuard.signIn.onAuthStateChanged' );
+      this.validate( user );
+      this.unsubscribe();
+    } );
+    this.unsubscribes.push( unsubscribe );
+  }
 
+  getOwnerId() : string {
+    const user = firebase.auth().currentUser;
+    if ( isNullOrUndefined( user ) ) {
+      return null;
+    }
+    return user.uid;
+  }
 
-  // private markersBegEndFor( routevm:RouteVM ) {
-  //   this.overlays = [];
+  getEMail() : string {
+    const user = firebase.auth().currentUser;
+    if ( isNullOrUndefined( user ) ) {
+      return null;
+    }
+    return user.email;
+  }
+
+  /**
+   *
+   */
+  signOut() {
+    firebase.auth().signOut().catch(error => this.onRejected( error ) );
+    const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+      console.log( 'AccountGuard.signOut.onAuthStateChanged' );
+      this.validate( user );
+      this.unsubscribe();
+    } );
+    this.unsubscribes.push( unsubscribe );
+  }
+
+  /********************************************************************************************************************/
+
+  private validate( user ) : boolean {
+      const validuser = !isNullOrUndefined( user );
+      this._signedin.next( validuser );
+      return validuser;
+  }
+
+  private destination() {
+    const snapshoturl = this.router.routerState.snapshot.url;
+    const url = new URL( 'me:' + decodeURIComponent( snapshoturl ) );
+    if ( '/sign-in' === url.pathname ) {
+      const destination = url.searchParams.get( 'destination' );
+      const destinationurl = new URL( 'me:'+destination );
+      const destinationpath = destinationurl.pathname.replace('/','' );
+      const query = ''+destinationurl.searchParams as string;
+      const map : { [key:string]:any } = {};
+      query.split('&' ).forEach((pair) => {
+        const name = pair.split( '=' )[ 0 ];
+        const value = pair.split( '=' )[ 1 ];
+        map[ name ] = value;
+      } );
+      if ( destinationpath && destinationpath !== 'null' && destinationpath !== '/null' ) {
+        this.router.navigate([ destinationpath ],{ queryParams:map } );
+      } else {
+        this.router.navigate([ 'home' ] );
+      }
+    }
+  }
+
+  private unsubscribe() {
+    this.unsubscribes.forEach(u => u() );
+    this.unsubscribes = [];
+  }
+
+  // private onAuthStateChanged( user ) {
+  //   console.log( 'AccountGuard.onAuthStateChanged ' + user );
   //
-  //   const _overlays: any[] = [];
+  //   const validuser = !isNullOrUndefined( user );
   //
-  //   /*
-  //    * begAddress
-  //    */
-  //   const begrequest = { query: routevm.begAddress };
-  //   this.places.textSearch( begrequest,( begresults,begstatus ) => {
-  //     if ( begstatus === google.maps.places.PlacesServiceStatus.OK ) {
-  //       for ( const r of begresults ) {
-  //         const marker = new google.maps.Marker();
-  //         marker.setPosition( { lat:r.geometry.location.lat(),lng:r.geometry.location.lng() } );
-  //         marker.setTitle( r.name );
-  //         marker.setClickable( true );
-  //         _overlays.push( marker );
-  //         routevm.begAddressMarker = marker;
-  //         break;
-  //       }
-  //       /*
-  //        * endAddress
-  //        */
-  //       const endrequest = { query: routevm.endAddress };
-  //       this.places.textSearch( endrequest,( endresults,endstatus ) => {
-  //         if ( endstatus === google.maps.places.PlacesServiceStatus.OK ) {
-  //           for ( const r of endresults ) {
-  //             const marker = new google.maps.Marker();
-  //             marker.setPosition( { lat:r.geometry.location.lat(),lng:r.geometry.location.lng() } );
-  //             marker.setTitle( r.name );
-  //             marker.setClickable( true );
-  //             _overlays.push( marker );
-  //             routevm.endAddressMarker = marker;
-  //             break;
-  //           }
-  //           const bounds = new google.maps.LatLngBounds();
-  //           _overlays.forEach(marker => {
-  //             const position = marker.getPosition();
-  //             const lat = position.lat();
-  //             const lng = position.lng();
-  //             if ( (lat !== 0) && (lng !== 0) ) {
-  //               bounds.extend( position );
-  //             }
-  //           } );
-  //           // _overlays.push(
-  //           //   new google.maps.Polyline( { path: [ routevm.begAddressMarker.getPosition(),routevm.endAddressMarker.getPosition() ], geodesic: true, strokeColor: '#FF0000', strokeOpacity: 0.5, strokeWeight: 2 } )
-  //           // );
-  //           this.overlays = _overlays;
-  //           setTimeout(() => { this.map.fitBounds( bounds ); },250 );
-  //         }
-  //       } );
+  //   this._signedin.next( validuser );
+  //
+  //   if ( !validuser ) {
+  //     console.log( 'INVALID USER @ ' + this.router.url );
+  //     const forced = (this.router.url !== '/') && !this.router.url.startsWith( '/sign-in' );
+  //     if ( forced ) {
+  //       this.router.navigate([ 'sign-in' ] );
   //     }
-  //   } );
+  //   } else {
+  //     const snapshoturl = this.router.routerState.snapshot.url;
+  //     const url = new URL( 'me:' + decodeURIComponent( snapshoturl ) );
+  //     if ( '/sign-in' === url.pathname ) {
+  //       const destination = url.searchParams.get( 'destination' );
+  //       const destinationurl = new URL( 'me:'+destination );
+  //       const destinationpath = destinationurl.pathname.replace('/','' );
+  //       const query = ''+destinationurl.searchParams as string;
+  //       const map : { [key:string]:any } = {};
+  //       query.split('&' ).forEach((pair) => {
+  //         const name = pair.split( '=' )[ 0 ];
+  //         const value = pair.split( '=' )[ 1 ];
+  //         map[ name ] = value;
+  //       } );
+  //       if ( destinationpath && destinationpath !== 'null' && destinationpath !== '/null' ) {
+  //         this.router.navigate([ destinationpath ],{ queryParams:map } );
+  //       } else {
+  //         this.router.navigate([ 'home' ] );
+  //       }
+  //     } else {
+  //       this.router.navigate([ 'home' ] );
+  //     }
+  //   }
   // }
 
-
-  <app-routes-waypoint-new *ngIf="showwaypointnew"
-                           [index]=waypoints.length"
-                           [routeid]="selectedroute.id"
-                           [name]="showwaypointnewname"
-                           [type]="showwaypointnewtype"
-                           [address]="showwaypointnewaddress"
-                           [lat]="showwaypointnewlat"
-                           [lng]="showwaypointnewlng"
-
-                           [places]="places"
-
-                           (finished)="onFinishedWaypointNew($event)"></app-routes-waypoint-new>
+  private onRejected( error ) {
+    this._signinerror.next( error.code );
+  }
+}

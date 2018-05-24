@@ -1,4 +1,6 @@
 
+import { forEach } from '@angular/router/src/utils/collection';
+
 export function capitalizeFirstLetter( s:string ) : string {
   if ( (s === null) || (s.length < 1) ) { return s; }
   return s[ 0 ].toUpperCase() + s.slice( 1 );

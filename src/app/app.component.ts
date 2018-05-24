@@ -16,7 +16,7 @@ import { RouterReducerState } from '@ngrx/router-store';
 import { isNullOrUndefined } from 'util';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-app',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   animations: [
@@ -59,21 +59,15 @@ export class AppComponent implements OnInit,OnDestroy
     } );
 
     this.routerstore.select( fromRouter.getRouterState ).subscribe( (rs:RouterReducerState<RouterStateUrl>) => {
-      if ( rs ) {
-        const url = !isNullOrUndefined( rs.state.url ) ? rs.state.url : null;
-        const params = !isNullOrUndefined( rs.state.params ) ? rs.state.params : null;
-        const queryParams = !isNullOrUndefined( rs.state.queryParams ) ? rs.state.queryParams : null;
-        console.log( url + ' ' + params + ' ' + queryParams );
-      }
+      console.log( rs.state.url  );
     } );
   }
 
   onMyAccount() {
     if ( this.signedin ) {
       this.accountguard.signOut();
-    } else {
-      this.router.navigate([ 'sign-in' ] ).catch( error => console.log( error ) );
     }
+    this.router.navigate([ 'sign-in' ],{ queryParams:{ forced:true } } ).catch( error => console.log( error ) );
   }
 
   openedSidenavStart() { this.sidenavstate = 'open'; }
