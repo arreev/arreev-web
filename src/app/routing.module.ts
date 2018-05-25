@@ -20,7 +20,7 @@ export const routes: Routes = [
 
   { path:'home',component:HomeComponent,canActivate:[SecureGuard] },
 
-  { path:'fleet',component:FleetComponent,canActivate:[SecureGuard,AccountGuard] },
+  { path:'rides',component:FleetComponent,canActivate:[SecureGuard,AccountGuard] },
   { path:'routes',component:RoutesComponent,canActivate:[SecureGuard,AccountGuard] },
   { path:'times',component:UnderConstructionComponent,canActivate:[SecureGuard,AccountGuard] },
   { path:'events',component:UnderConstructionComponent,canActivate:[SecureGuard,AccountGuard] },

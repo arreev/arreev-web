@@ -40,7 +40,8 @@ export class NavComponent implements OnInit,OnDestroy
   }
 
   onContent( content:string ) {
-    this.router.navigate([ content ],{ queryParams:{ from:'nav' } } ).catch( error => console.log( error ) );
+    // this.router.navigate([ content ],{ queryParams:{ from:'nav' } } ).catch( error => console.log( error ) );
+    this.router.navigate([ content ] ).catch( error => console.log( error ) );
   }
 
   ngOnDestroy(): void {
@@ -51,7 +52,7 @@ export class NavComponent implements OnInit,OnDestroy
     if ( event instanceof NavigationEnd ) {
       const url = new URL( 'routed:'+event.url );
       let path = '';
-      if ( url.pathname.startsWith( '/fleet' ) ) { path = 'fleet'; }
+      if ( url.pathname.startsWith( '/rides' ) ) { path = 'rides'; }
       if ( url.pathname.startsWith( '/routes' ) ) { path = 'routes'; }
       if ( url.pathname.startsWith( '/times' ) ) { path = 'times'; }
       if ( url.pathname.startsWith( '/events' ) ) { path = 'events'; }

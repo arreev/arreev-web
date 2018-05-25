@@ -1,9 +1,11 @@
 
 import { AfterViewInit,ChangeDetectorRef,Component,OnDestroy,OnInit,ViewChild,ViewEncapsulation } from '@angular/core';
-import { RouteWaypointsComponent } from './route-waypoints.component';
 import { capitalizeFirstLetter,distanceBetween,isBlank } from '../../util';
+import { RouteWaypointsComponent } from './route-waypoints.component';
+import { RouterStateUrl } from '../../store/router.reducer';
 import { RouteMapComponent } from './route-map.component';
 import * as RouteActions from '../../store/route.actions';
+import * as fromRouter from '../../store/router.reducer';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AccountGuard } from '../../accountguard';
 import { ConfirmationService } from 'primeng/api';
@@ -11,6 +13,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { MapService } from '../../map.service';
 import { RouteState } from '../../app.state';
 import { Route } from '../../model/route';
+import { Router } from '@angular/router';
 import { API } from '../../api.service';
 import { Store } from '@ngrx/store';
 
@@ -18,7 +21,7 @@ import {
   activeStateAnimation,fadeInAnimation,gridAnimation,hideShowAnimation,
   scaleInAnimation
 } from '../../app.animations';
-import { animate,state,style,transition,trigger } from '@angular/animations';
+import { RouterReducerState } from '@ngrx/router-store';
 
 @Component({
   selector: 'app-routes',
@@ -58,9 +61,11 @@ export class RoutesComponent implements OnInit,AfterViewInit,OnDestroy
   private markersSubsciption: Subscription;
 
   constructor( private api:API,
+               private router:Router,
                private mapservice:MapService,
                private accountguard:AccountGuard,
                private routestore:Store<RouteState>,
+               private routerstore:Store<RouterStateUrl>,
                private changedetector:ChangeDetectorRef,private confirmationService:ConfirmationService ) {}
 
   ngOnInit(): void { this._ngOnInit(); }
@@ -187,6 +192,7 @@ export class RoutesComponent implements OnInit,AfterViewInit,OnDestroy
     this.selectedroute.state = 'active';
     this.working = true;
     this.routestore.dispatch( new RouteActions.RouteFetchAction( this.selectedroute.id ) );
+    this.router.navigate( [ 'routes' ],{ queryParams:{ routeid:this.selectedroute.id } } );
 
     this.maphideshow = false;
     this.editroute = null;
@@ -303,8 +309,23 @@ export class RoutesComponent implements OnInit,AfterViewInit,OnDestroy
       (route:Route) => { _routes.push( route ); },
       (error:Error) => { this.onError( error ); },
       () => {
-        this.routes = _routes;
         this.working = false;
+        this.routes = _routes;
+        this.assumeSelectedRouteFromRouterState();
+      }
+    );
+  }
+
+  private assumeSelectedRouteFromRouterState() {
+    this.routerstore.select( fromRouter.getRouterState ).take( 1 ).subscribe(
+      (rs:RouterReducerState<RouterStateUrl>) => {
+        const routeid = rs.state.queryParams[ 'routeid' ];
+        if ( routeid ) {
+          const route:Route = this.routes.find( (r:Route) => (r.id === routeid) );
+          if ( route ) {
+            this.onRoute( route );
+          }
+        }
       }
     );
   }

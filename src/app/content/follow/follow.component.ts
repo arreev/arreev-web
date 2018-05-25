@@ -1,9 +1,14 @@
 
 import { Component,OnInit,OnDestroy,ViewEncapsulation,ViewChild,ChangeDetectorRef } from '@angular/core';
 import { FollowMapComponent } from './follow-map.component';
+import { RouterStateUrl } from '../../store/router.reducer';
+import * as fromRouter from '../../store/router.reducer';
+import { RouterReducerState } from '@ngrx/router-store';
 import { AccountGuard } from '../../accountguard';
 import { Fleet } from '../../model/fleet';
+import { Router } from '@angular/router';
 import { API } from '../../api.service';
+import { Store } from '@ngrx/store';
 
 import {
   activeStateAnimation,fadeInAnimation,gridAnimation,hideShowAnimation,
@@ -33,7 +38,9 @@ export class FollowComponent implements OnInit,OnDestroy
   private followMapComponent: FollowMapComponent;
 
   constructor( private api:API,
+               private router:Router,
                private accountguard:AccountGuard,
+               private routerstore:Store<RouterStateUrl>,
                private changedetector:ChangeDetectorRef) {}
 
   ngOnInit(): void { this._ngOnInit(); }
@@ -90,6 +97,7 @@ export class FollowComponent implements OnInit,OnDestroy
     setTimeout(() => {
       this.selectedfleet = fleet;
       this.selectedfleet.state = 'active';
+      this.router.navigate([ 'follow' ],{ queryParams:{ fleetid:this.selectedfleet.id } } );
     },50 );
 
     setTimeout(() => { this.followmaphideshow = true; },500 );
@@ -125,6 +133,21 @@ export class FollowComponent implements OnInit,OnDestroy
       () => {
         this.working = false;
         this.fleets = _fleets;
+        this.assumeSelectedFleetFromRouterState();
+      }
+    );
+  }
+
+  private assumeSelectedFleetFromRouterState() {
+    this.routerstore.select( fromRouter.getRouterState ).take( 1 ).subscribe(
+      (rs:RouterReducerState<RouterStateUrl>) => {
+        const fleetid = rs.state.queryParams[ 'fleetid' ];
+        if ( fleetid ) {
+          const fleet:Fleet = this.fleets.find( (f:Fleet) => (f.id === fleetid) );
+          if ( fleet ) {
+            this.onFleet( fleet );
+          }
+        }
       }
     );
   }

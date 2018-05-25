@@ -34,7 +34,6 @@ export class AccountGuard implements CanActivate
   private virgin = true;
 
   constructor( private router:Router ) {
-    console.log( 'AccountGuard' );
     firebase.initializeApp( environment.firebase );
     this.subscribe();
   }
@@ -46,7 +45,7 @@ export class AccountGuard implements CanActivate
    * @returns {Observable<boolean> | Promise<boolean> | boolean}
    */
   canActivate( route:ActivatedRouteSnapshot,snapshot:RouterStateSnapshot ) : Observable<boolean> | Promise<boolean> | boolean {
-    console.log( 'AccountGuard.canActivate ' + (this.virgin ? 'VIRGIN ' : '' ) + snapshot.url );
+    // console.log( 'AccountGuard.canActivate ' + (this.virgin ? 'VIRGIN ' : '' ) + snapshot.url );
 
     if ( this.virgin === true ) {
       this.virgin = false;

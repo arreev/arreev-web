@@ -1,10 +1,11 @@
 
 import { Component,OnInit,OnDestroy } from '@angular/core';
+import { Router,RouterStateSnapshot } from '@angular/router';
 import { RouterStateUrl } from './store/router.reducer';
+import { RouterReducerState } from '@ngrx/router-store';
 import * as fromRouter from './store/router.reducer';
 import { Subscription } from 'rxjs/Subscription';
 import { AccountGuard } from './accountguard';
-import { Router,RouterStateSnapshot } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { animate,state,style,transition,trigger } from '@angular/animations';
@@ -12,8 +13,6 @@ import { appFade } from './app.animations';
 
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/skip';
-import { RouterReducerState } from '@ngrx/router-store';
-import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-root',
@@ -60,7 +59,7 @@ export class AppComponent implements OnInit,OnDestroy
 
     this.routerstore.select( fromRouter.getRouterState ).subscribe( (rs:RouterReducerState<RouterStateUrl>) => {
       if ( rs ) {
-        console.log( rs.state.url  );
+        // console.log( rs.state.url  );
       }
     } );
   }

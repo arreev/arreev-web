@@ -59,7 +59,7 @@ import { personsReducer } from './store/persons.reducer';
 
 import { routes,RoutingModule } from './routing.module';
 import { routerReducer,StoreRouterConnectingModule,RouterStateSerializer } from '@ngrx/router-store';
-import { CustomSerializer } from './store/router.reducer';
+import { CustomSerializer,RouterEffects } from './store/router.reducer';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav.component';
@@ -227,7 +227,8 @@ import { environment } from '../environments/environment';
       TransporterEffects,
       FollowsEffects,
       GroupEffects,
-      PersonsEffects
+      PersonsEffects,
+      RouterEffects
     ] ),
 
     environment.imports

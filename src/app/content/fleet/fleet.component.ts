@@ -1,6 +1,10 @@
 
+import { activeStateAnimation,fadeInAnimation,gridAnimation,scaleInAnimation } from '../../app.animations';
 import { Component,OnInit,OnDestroy,ViewEncapsulation } from '@angular/core';
+import { RouterStateUrl } from '../../store/router.reducer';
 import * as FleetActions from '../../store/fleet.actions';
+import * as fromRouter from '../../store/router.reducer';
+import { RouterReducerState } from '@ngrx/router-store';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AccountGuard } from '../../accountguard';
 import { ConfirmationService } from 'primeng/api';
@@ -8,13 +12,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { FleetState } from '../../app.state';
 import { Fleet } from '../../model/fleet';
+import { Router } from '@angular/router';
 import { API } from '../../api.service';
 import { Store } from '@ngrx/store';
-import { isBlank } from '../../util';
-
-import { trigger,stagger,transition,query,style,animate,state } from '@angular/animations';
-import { activeStateAnimation,fadeInAnimation,gridAnimation,scaleInAnimation } from '../../app.animations';
-import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-fleet',
@@ -40,8 +40,10 @@ export class FleetComponent implements OnInit,OnDestroy
   private ownerid?: string = null;
 
   constructor( private api:API,
+               private router:Router,
                private accountguard:AccountGuard,
                private fleetstore:Store<FleetState>,
+               private routerstore:Store<RouterStateUrl>,
                private confirmationService:ConfirmationService ) {}
 
   ngOnInit(): void {
@@ -79,6 +81,7 @@ export class FleetComponent implements OnInit,OnDestroy
     setTimeout(() => {
       this.selectedfleet = fleet;
       this.selectedfleet.state = 'active';
+      this.router.navigate([ 'rides' ],{ queryParams: { fleetid:this.selectedfleet.id } } );
     },100 );
   }
 
@@ -133,6 +136,21 @@ export class FleetComponent implements OnInit,OnDestroy
       () => {
         this.working = false;
         this.fleets = _fleets;
+        this.assumeSelectedFleetFromRouterState();
+      }
+    );
+  }
+
+  private assumeSelectedFleetFromRouterState() {
+    this.routerstore.select( fromRouter.getRouterState ).take( 1 ).subscribe(
+     (rs:RouterReducerState<RouterStateUrl>) => {
+        const fleetid = rs.state.queryParams[ 'fleetid' ];
+        if ( fleetid ) {
+          const fleet:Fleet = this.fleets.find( (f:Fleet) => (f.id === fleetid) );
+          if ( fleet ) {
+            this.onFleet( fleet );
+          }
+        }
       }
     );
   }

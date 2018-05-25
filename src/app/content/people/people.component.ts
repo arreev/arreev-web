@@ -1,6 +1,10 @@
 
 import { AfterViewInit,ChangeDetectorRef,Component,OnDestroy,OnInit,ViewChild,ViewEncapsulation } from '@angular/core';
+import { activeStateAnimation,fadeInAnimation,gridAnimation,scaleInAnimation } from '../../app.animations';
+import { RouterStateUrl } from '../../store/router.reducer';
 import * as groupActions from '../../store/group.actions';
+import * as fromRouter from '../../store/router.reducer';
+import { RouterReducerState } from '@ngrx/router-store';
 import * as fromGroup from '../../store/group.reducer';
 import { PersonsComponent } from './persons.component';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -9,10 +13,9 @@ import { ConfirmationService } from 'primeng/api';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { Group } from '../../model/group';
+import { Router } from '@angular/router';
 import { API } from '../../api.service';
 import { Store } from '@ngrx/store';
-
-import { activeStateAnimation,fadeInAnimation,gridAnimation,scaleInAnimation } from '../../app.animations';
 
 @Component({
   selector: 'app-people',
@@ -42,7 +45,9 @@ export class PeopleComponent implements OnInit,AfterViewInit,OnDestroy
   private ownerid?: string = null;
 
   constructor( private api:API,
+               private router:Router,
                private accountguard:AccountGuard,
+               private routerstore:Store<RouterStateUrl>,
                private groupstore:Store<fromGroup.State>,
                private changedetector:ChangeDetectorRef,private confirmationService:ConfirmationService ) {}
 
@@ -122,6 +127,7 @@ export class PeopleComponent implements OnInit,AfterViewInit,OnDestroy
     }
     this.selectedgroup = group;
     this.selectedgroup.state = 'active';
+    this.router.navigate( [ 'people' ],{ queryParams:{ groupid:this.selectedgroup.id } } );
 
     this.editgroup = null;
     setTimeout(() => { this.editgroup = this.selectedgroup; },100 );
@@ -163,7 +169,22 @@ export class PeopleComponent implements OnInit,AfterViewInit,OnDestroy
     this.unSubscribeUI();
       this.groups = groups;
       this.working = false;
+      this.assumeSelectedGroupFromRouterState();
     this.subscribeUI();
+  }
+
+  private assumeSelectedGroupFromRouterState() {
+    this.routerstore.select( fromRouter.getRouterState ).take( 1 ).subscribe(
+      (rs:RouterReducerState<RouterStateUrl>) => {
+        const groupid = rs.state.queryParams[ 'groupid' ];
+        if ( groupid ) {
+          const group:Group = this.groups.find( (r:Group) => (r.id === groupid) );
+          if ( group ) {
+            this.onGroup( group );
+          }
+        }
+      }
+    );
   }
 
   private onError( error:Error ) {
