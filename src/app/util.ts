@@ -36,3 +36,21 @@ export function distanceBetween( p1:google.maps.LatLng,p2:google.maps.LatLng ) :
 
   return d;
 }
+
+/**
+ *
+ * https://toddmotto.com/angular-decorators
+ * https://basarat.gitbooks.io/typescript/docs/javascript/closure.html
+ * https://en.wikipedia.org/wiki/Closure_(computer_programming)
+ *
+ * @param {string} message
+ * @returns {(target) => any}
+ * @constructor
+ */
+export function Consoler( message:string = 'Consoler' ) {
+  const m = message;
+
+  return function( target ) {
+    console.log( m,target.toString() );
+  };
+}

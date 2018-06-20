@@ -1,5 +1,7 @@
 
 .follow-transporter-item {
+  display: flex;
+  flex-direction: row;
   background-color: #CCCCDD;
   margin-bottom: 2px;
   padding: 4px;

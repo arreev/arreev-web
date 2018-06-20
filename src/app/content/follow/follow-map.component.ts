@@ -4,17 +4,20 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { ToggleableInfoWindow } from '../../view/toggleableinfowindow';
+import * as fromFollowers from '../../store/followers.reducer';
 import * as followsActions from '../../store/follows.actions';
 import * as fromFollows from '../../store/follows.reducer';
 import { Transporter } from '../../model/transporter';
 import { Subscription } from 'rxjs/Subscription';
-import { FollowState } from '../../app.state';
+import { FollowerState,FollowState } from '../../app.state';
 import { Follow } from '../../model/follow';
+import { Fleet } from '../../model/fleet';
 import { API } from '../../api.service';
 import { Store } from '@ngrx/store';
 import {} from '@types/googlemaps';
 
 import * as firebase from 'firebase';
+import { Follower } from '../../model/follower';
 
 @Component({
   selector: 'app-follow-map',
@@ -24,20 +27,24 @@ import * as firebase from 'firebase';
 export class FollowMapComponent implements OnInit,OnChanges,OnDestroy
 {
   @Input() ownerid: string;
-  @Input() fleetid: string;
+  @Input() fleet: Fleet;
   @Input() transporterid?: string;
   @Input() map: google.maps.Map;
 
   editfollow?: Follow = null;
   showfollowedit = false;
 
+  private followersSubscription?: Subscription = null;
   private rootreference?: firebase.database.Reference;
   private followsSubscription: Subscription;
   private markers: TransporterMarker[] = [];
   private transporters: Transporter[] = [];
   private follows: Follow[] = [];
+  private followers: Follower[] = [];
 
-  constructor( private api:API,private followsstore:Store<FollowState> ) {}
+  constructor( private api:API,
+               private followsstore:Store<FollowState>,
+               private followersstore:Store<FollowerState> ) {}
 
   ngOnInit(): void { this._ngOnInit(); }
   ngOnChanges( changes: SimpleChanges ): void { this._ngOnChanges( changes ); }
@@ -55,7 +62,8 @@ export class FollowMapComponent implements OnInit,OnChanges,OnDestroy
     /*
      * TODO: not scalable - need to only listen to indiviudual references
      */
-    this.rootreference = firebase.database().ref();
+    const path = 'trackers/' + this.fleet.ownerid;
+    this.rootreference = firebase.database().ref( path );
     this.rootreference.on('value',s => { this.updateFromSnapshot( s ); } );
 
     this.followsSubscription = this.followsstore.select( fromFollows.selectAll ).skip( 1 ).subscribe(
@@ -63,7 +71,13 @@ export class FollowMapComponent implements OnInit,OnChanges,OnDestroy
       (error:Error) => { this.onError( error ); },
       () => {}
     );
-    this.followsstore.dispatch( new followsActions.Query( this.ownerid,this.fleetid ) );
+    this.followsstore.dispatch( new followsActions.Query( this.ownerid,this.fleet.id ) );
+
+    this.followersSubscription = this.followersstore.select( fromFollowers.selectAll ).subscribe(
+      (followers:Follower[]) => { this.fromFollowersStore( followers ); },
+      (error:Error) => { this.onError( error ); },
+      () => {}
+    );
 
     this.fetchTransporters();
   }
@@ -103,15 +117,32 @@ export class FollowMapComponent implements OnInit,OnChanges,OnDestroy
 
   private fetchTransporters() {
     const _transporters: Transporter[] = [];
-    this.api.getTransporters( this.ownerid,this.fleetid ).subscribe(
+    this.api.getTransportersForFleet( this.fleet.id ).subscribe(
       (t:Transporter) => { _transporters.push( t ); },
       (e:Error) => { this.onError( e ); },
       () => {
         this.transporters = _transporters;
         this.createMarkers();
+        this.updateMarkersFollowable();
         this.updateFromSnapshotAndRebounds();
       }
     );
+  }
+
+  private fromFollowersStore( followers:Follower[] ) {
+    if ( !followers ) { return; }
+    followers.forEach(f => { this.appendFollower( f ); } );
+  }
+
+  private appendFollower( follower:Follower ) {
+      const found = this.followers.find(f => (f.id === follower.id) );
+      if ( found ) {
+        const indexOf = this.followers.indexOf( found );
+        this.followers[ indexOf ] = follower;
+      } else {
+        this.followers.push( follower );
+      }
+      this.updateMarkersFollowable();
   }
 
   private createMarkers() {
@@ -126,6 +157,7 @@ export class FollowMapComponent implements OnInit,OnChanges,OnDestroy
       marker.addListener('click',() => { this.onEditFollow( marker.transporterid ); } );
       marker.setMap( this.map );
       marker.infowindow.open( this.map,marker );
+      marker.setVisible( false );
 
       this.markers.push( marker );
     } );
@@ -178,7 +210,7 @@ export class FollowMapComponent implements OnInit,OnChanges,OnDestroy
   }
 
   private fromFollowsStore( follows?:Follow[] ) {
-    console.log( 'FollowMapComponent.fromFollowsStore ' + follows.length );
+    // console.log( 'FollowMapComponent.fromFollowsStore ' + follows.length );
     this.follows = follows;
   }
 
@@ -204,9 +236,41 @@ export class FollowMapComponent implements OnInit,OnChanges,OnDestroy
     this.showfollowedit = true;
   }
 
+  private updateMarkersFollowable() {
+    this.markers.forEach( m => {
+      const transporter = this.transporters.find(t => (t.id === m.transporterid) );
+      if ( transporter ) {
+        if ( this.ownerid === transporter.ownerid ) {
+          m.infowindow.open( this.map,m );
+          m.setVisible( true );
+        } else {
+          m.infowindow.close();
+          m.setVisible( false );
+        }
+      }
+    } );
+
+    this.followers.forEach(follower => {
+      const transporter = this.transporters.find( t => ( t.id === follower.transporterid )  );
+      if ( transporter ) {
+        const marker = this.markers.find(( m: TransporterMarker ) => (m.transporterid === follower.transporterid) );
+        if ( marker ) {
+          if ( follower.followable ) {
+            marker.infowindow.open( this.map,marker );
+          } else {
+            marker.infowindow.close();
+          }
+          marker.setVisible( follower.followable );
+        }
+      }
+    } );
+  }
+
   private _ngOnDestroy(): void {
     this.followsSubscription.unsubscribe();
+    this.followsSubscription.unsubscribe();
     this.clearMarkers();
+    this.followers = [];
   }
 }
 
@@ -228,7 +292,7 @@ class TransporterMarker extends google.maps.Marker
     this.transporterimageurl = transporter.imageURL;
 
     const html = infoHTML
-      .replace('$image',transporter.imageURL )
+      .replace('$image',transporter.imageURL );
       // .replace('$name',transporter.name )
     this.infowindow = new ToggleableInfoWindow();
     this.infowindow.setOptions( { disableAutoPan:true } );

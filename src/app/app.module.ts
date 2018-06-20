@@ -27,8 +27,8 @@ import { ConfirmationService } from 'primeng/api';
 import { SecureGuard } from './secure-guard.service';
 import { AccountGuard } from './accountguard';
 import { LocaleService } from './locale.service';
-import { UserService } from './user.service';
 import { MapService } from './map.service';
+import { FollowersService } from './followers-service';
 import { API } from './api.service';
 
 import { AppRouteReuseStrategy } from './app.route-reuse-strategy';
@@ -44,6 +44,7 @@ import { WaypointsEffects } from './store/waypoints-effects.service';
 import { AssignmentEffects } from './store/assignment-effects.service';
 import { TransporterEffects } from './store/transporter-effects.service';
 import { FollowsEffects } from './store/follows-effects.service';
+import { FollowersEffects } from './store/followers-effects.service';
 import { GroupEffects } from './store/group-effects.serivce';
 import { PersonsEffects } from './store/persons-effects.service';
 
@@ -54,6 +55,7 @@ import { waypointReducer } from './store/waypoint.reducer';
 import { assignmentReducer } from './store/assignment.reducer';
 import { transporterReducer } from './store/transporter.reducer';
 import { followsReducer } from './store/follows.reducer';
+import { followersReducer } from './store/followers.reducer';
 import { groupReducer } from './store/group.reducer';
 import { personsReducer } from './store/persons.reducer';
 
@@ -102,6 +104,7 @@ import { AngularFireStorageModule } from 'angularfire2/storage';
 
 import { AgmCoreModule } from '@agm/core';
 
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 
 @NgModule({
@@ -214,9 +217,14 @@ import { environment } from '../environments/environment';
       assignment:assignmentReducer,
       transporter:transporterReducer,
       follows:followsReducer,
+      followers:followersReducer,
       group:groupReducer,
       routerReducer: routerReducer
     } ),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,                       // Retains last 25 states
+      logOnly: environment.production,  // Restrict extension to log-only mode
+    }),
 
 
     EffectsModule.forRoot([
@@ -226,6 +234,7 @@ import { environment } from '../environments/environment';
       AssignmentEffects,
       TransporterEffects,
       FollowsEffects,
+      FollowersEffects,
       GroupEffects,
       PersonsEffects,
       RouterEffects
@@ -242,8 +251,8 @@ import { environment } from '../environments/environment';
     SecureGuard,
     AccountGuard,
     LocaleService,
-    UserService,
     MapService,
+    FollowersService,
     API,
 
     // TODO: figure out how to discriminate so that some requests do not result in pre-flight

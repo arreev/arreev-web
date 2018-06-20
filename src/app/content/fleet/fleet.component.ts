@@ -16,6 +16,8 @@ import { Router } from '@angular/router';
 import { API } from '../../api.service';
 import { Store } from '@ngrx/store';
 
+import { Consoler } from '../../util';
+
 @Component({
   selector: 'app-fleet',
   templateUrl: './fleet.component.html',
@@ -26,6 +28,7 @@ import { Store } from '@ngrx/store';
   animations: [ gridAnimation,scaleInAnimation,fadeInAnimation,activeStateAnimation ],
   encapsulation: ViewEncapsulation.Emulated
 })
+// @Consoler( 'FleetComponent' )
 export class FleetComponent implements OnInit,OnDestroy
 {
   fleets: Fleet[] = [];

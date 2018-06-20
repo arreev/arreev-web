@@ -1,0 +1,48 @@
+
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Invitation } from '../../model/invitation';
+import { Observable } from 'rxjs/Observable';
+
+import * as firebase from 'firebase';
+
+export interface Follower
+{
+  transporterid?:string;
+  followable?: boolean;
+}
+
+export class FollowersMonitor
+{
+  followByInvitation( invitation:Invitation ) : Observable<Follower> {
+    console.log( 'FollowersMonitor.followByInvitation ' + invitation );
+    if ( !invitation ) { return; }
+
+    const _follows= new BehaviorSubject<Follower>( null );
+
+    firebase.database().ref('followers' )
+      .child( invitation.ownerid )
+      .child( invitation.personid )
+      .on('value',s => {
+        const o:object = s.val();
+        const _transporterid = Object.keys( o )[0] as string;
+        const _followable = Object.values( o )[0] as boolean;
+        const follower: Follower = {
+          transporterid:_transporterid,
+          followable:_followable
+        };
+        _follows.next( follower );
+      } );
+
+    return _follows.asObservable();
+  }
+
+  release() {
+    /*
+     * TODO: keep track of child listeners as added above and off all
+     * https://firebase.google.com/docs/database/web/read-and-write#detach_listeners
+     */
+    firebase.database().ref('followers' ).off('value' );
+
+    console.log( 'FollowersMonitor.release' );
+  }
+}

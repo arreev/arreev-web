@@ -2,6 +2,7 @@
 import { Component,OnDestroy,OnInit } from '@angular/core';
 import { AccountGuard } from './accountguard';
 import { Subscription } from 'rxjs/Subscription';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-signin',
@@ -14,7 +15,7 @@ export class SignInComponent implements OnInit,OnDestroy
   password?: string = null;
   message = '';
 
-  private accountguardSubscription?: Subscription = null
+  private accountguardSubscription?: Subscription = null;
 
   constructor( private accountguard:AccountGuard ) {}
 
@@ -34,7 +35,7 @@ export class SignInComponent implements OnInit,OnDestroy
   }
 
   private setMessage( m:string ) {
-    this.message = m ? m.replace( 'auth/','' ) : '';
+    this.message = m ? m.replace('auth/','' ) : '';
   }
 
   private _ngOnDestroy(): void {

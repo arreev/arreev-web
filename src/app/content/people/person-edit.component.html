@@ -30,7 +30,14 @@
     </div>
   </div>
 
-  <button pButton type="button" icon="fa-times" (click)="onDelete()" class="ui-button-secondary" style="color:maroon;width:32px;"></button>
+  <div style="height:20px;"></div>
+
+  <div class="person-edit-actions">
+    <button pButton type="button" icon="fa-times" (click)="onDelete()" class="ui-button-secondary" style="color:maroon;width:32px;"></button>
+    <div style="flex:1;"></div>
+    <input pInputText type="email" [disabled]="working" [(ngModel)]="person.email" placeholder="email" (ngModelChange)="onModelChange()" style="margin-right:10px;width:256px;"/>
+    <button *ngIf="person.email" [disabled]="working" pButton type="button" icon="fa-share-alt-square" label="invite" (click)="onInvite()"></button>
+  </div>
 
   <div style="height:20px;"></div>
 
@@ -40,7 +47,7 @@
     </div>
     <div class="ui-toolbar-group-right">
       <span>&nbsp;</span>
-      <button pButton type="button" label="ok" (click)="onOK()"></button>
+      <button [disabled]="working" pButton type="button" label="ok" (click)="onOK()"></button>
     </div>
   </p-toolbar>
 

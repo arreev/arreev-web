@@ -131,7 +131,13 @@ export class AccountGuard implements CanActivate
   }
 
   private onAuthStateChanged( user ) {
-    // console.log( 'AccountGuard.onAuthStateChanged' );
+    if ( user && !user.emailVerified ) {
+      this._signinerror.next( 'email has not been verified' );
+      firebase.auth().currentUser.sendEmailVerification().catch(r => console.log( r ) );
+      this.signOut();
+      return;
+    }
+
     const validuser = !isNullOrUndefined( user );
     this._signedin.next( validuser );
     if ( validuser ) {

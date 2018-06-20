@@ -4,6 +4,7 @@ import { Entity } from './entity';
 export interface Transporter extends Entity
 {
   ownerid?: string;
+  fleetid?: string;
 
   name?: string;
   type?: string;

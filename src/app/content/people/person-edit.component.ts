@@ -6,10 +6,12 @@ import {
 import * as personsActions from '../../store/persons.actions';
 import * as fromPersons from '../../store/persons.reducer';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Invitation } from '../../model/invitation';
 import { ConfirmationService } from 'primeng/api';
 import { Subscription } from 'rxjs/Subscription';
 import { Storage } from '@google-cloud/storage';
 import { Person } from '../../model/person';
+import { API } from '../../api.service';
 import { isBlank } from '../../util';
 import { Store } from '@ngrx/store';
 
@@ -37,7 +39,8 @@ export class PersonEditComponent implements OnInit,OnChanges,OnDestroy
   private personsSubscription: Subscription;
   private uiSubscription: Subscription;
 
-  constructor( private personsstore:Store<fromPersons.State>,
+  constructor( private api:API,
+               private personsstore:Store<fromPersons.State>,
                private confirmationService:ConfirmationService ) {}
 
   ngOnInit(): void { this._ngOnInit(); }
@@ -47,6 +50,7 @@ export class PersonEditComponent implements OnInit,OnChanges,OnDestroy
   onImage() { this._onImage(); }
   onInputFile() { this._onInputFile(); }
   onDelete() { this._onDelete(); }
+  onInvite() { this._onInvite(); }
   onOK() { this._onOK(); }
 
   ngOnDestroy(): void { this._ngOnDestroy(); }
@@ -92,6 +96,29 @@ export class PersonEditComponent implements OnInit,OnChanges,OnDestroy
 
   private _onDelete() {
     this.confirmationService.confirm({ header:this.person.name,message:`Are you sure you want to delete ?`,accept: () => { this.delete( this.person ); } } );
+  }
+
+  private _onInvite() {
+    this.working = true;
+
+    const path = 'invitations/'+this.ownerid+':'+this.person.id;
+
+    const entry = {
+      ownerid: this.ownerid,
+      personid: this.person.id,
+      email: this.person.email,
+      status: 'pending'
+    };
+
+    firebase.database().ref( path )
+      .set( entry )
+      .then(() => { this.working = false; } );
+
+    // this.api.postInvitation( this.ownerid,this.person ).subscribe(
+    //   (invitation:Invitation) => console.log( invitation ),
+    //   (error:Error) => this.onError( error ),
+    //   () => { this.working = false; }
+    // );
   }
 
   private _onOK() {

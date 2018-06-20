@@ -1,5 +1,6 @@
 
 import { Entity } from './entity';
+import { Invitation } from './invitation';
 
 export interface Fleet extends Entity
 {
@@ -15,6 +16,7 @@ export interface Fleet extends Entity
   status?: string;
 
   state?: string; // internal use
+  invitation?: Invitation; // internal use
 }
 
 export function dumpFleet( fleet:Fleet ) :string {

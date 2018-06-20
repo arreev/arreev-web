@@ -3,6 +3,7 @@ import { Component,OnInit,OnDestroy } from '@angular/core';
 import { Router,RouterStateSnapshot } from '@angular/router';
 import { RouterStateUrl } from './store/router.reducer';
 import { RouterReducerState } from '@ngrx/router-store';
+import { FollowersService } from './followers-service';
 import * as fromRouter from './store/router.reducer';
 import { Subscription } from 'rxjs/Subscription';
 import { AccountGuard } from './accountguard';
@@ -49,6 +50,7 @@ export class AppComponent implements OnInit,OnDestroy
 
   constructor( private router:Router,
                private accountguard:AccountGuard,
+               private followersservice:FollowersService, // not used here, but we want to kick-off this background service
                private routerstore:Store<RouterStateUrl> ) {}
 
   ngOnInit(): void {

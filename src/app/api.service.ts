@@ -2,9 +2,11 @@
 import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Transporter } from './model/transporter';
 import { Assignment } from './model/assignment';
+import { Invitation } from './model/invitation';
 import { Observable } from 'rxjs/Observable';
 import { Waypoint } from './model/waypoint';
 import { Injectable } from '@angular/core';
+import { isNullOrUndefined } from 'util';
 import { Person } from './model/person';
 import { Follow } from './model/follow';
 import { JWTToken } from './jwt-token';
@@ -17,7 +19,6 @@ import { environment } from '../environments/environment';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/concatMap';
-import { isNullOrUndefined } from 'util';
 
 class APIResponse
 {
@@ -45,6 +46,7 @@ class GroupsResponse extends APIResponse { groups?: Group[] = null; }
 class GroupResponse extends APIResponse { group?: Group = null; id?: string = null; }
 class PersonsResponse extends APIResponse { persons?: Person[] = null; }
 class PersonResponse extends APIResponse { person?: Person = null; id?: string = null; }
+class InvitationResponse extends APIResponse { invitation?: Invitation = null; }
 
 class StorageMetadata
 {
@@ -152,6 +154,23 @@ export class API
     this.assertOwnerId( ownerid );
 
     const url = environment.arreev_api_host + '/transporters?ownerid='+ownerid+'&fleetid='+fleetid;
+
+    const observable = this.http
+      .get<TransportersResponse>( url )
+      .concatMap( r => {
+        return Observable.from( r.transporters );
+      } );
+
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} fleetid
+   * @returns {Observable<Transporter>}
+   */
+  getTransportersForFleet( fleetid:string ) : Observable<Transporter> {
+    const url = environment.arreev_api_host + '/transporters?fleetid='+fleetid;
 
     const observable = this.http
       .get<TransportersResponse>( url )
@@ -671,6 +690,26 @@ export class API
       .concatMap( r => {
         return Observable.of( r.id );
       } );
+    return observable;
+  }
+
+  /**
+   *
+   * @param {string} ownerid
+   * @param {Person} person
+   * @returns {Observable<string>}
+   */
+  postInvitation( ownerid:string,person:Person ) : Observable<Invitation> {
+    this.assertOwnerId( ownerid );
+
+    const body = JSON.stringify( person );
+
+    const observable = this.http
+      .post<InvitationResponse>(environment.arreev_api_host + '/invitation?ownerid=' + ownerid,body )
+      .concatMap( r => {
+        return Observable.of( r.invitation );
+      } );
+
     return observable;
   }
 

@@ -1,0 +1,5 @@
+
+.person-edit-actions {
+  display: flex;
+  flex-direction: row;
+}

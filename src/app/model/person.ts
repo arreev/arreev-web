@@ -7,6 +7,7 @@ export interface Person extends Entity
   groupid?: string;
 
   name?: string;
+  email?: string;
   type?: string;
   category?: string;
   description?: string;

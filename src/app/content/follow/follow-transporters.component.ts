@@ -66,7 +66,8 @@ export class FollowTransportersComponent implements OnInit,OnChanges,OnDestroy
 
   private fetchTransporters() {
     const _transporters: Transporter[] = [];
-    this.api.getTransporters( this.ownerid,this.fleetid ).subscribe(
+    // this.api.getTransporters( ownerid,this.fleetid ).subscribe(
+    this.api.getTransportersForFleet( this.fleetid ).subscribe(
       (t:Transporter) => { _transporters.push( t ); } ,
       (e:Error) => { this.onError( e ); },
       () => {

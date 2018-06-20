@@ -1,19 +1,27 @@
 
 import { Component,OnInit,OnDestroy,ViewEncapsulation,ViewChild,ChangeDetectorRef } from '@angular/core';
+import * as fromFollowers from '../../store/followers.reducer';
 import { FollowMapComponent } from './follow-map.component';
 import { RouterStateUrl } from '../../store/router.reducer';
 import * as fromRouter from '../../store/router.reducer';
 import { RouterReducerState } from '@ngrx/router-store';
+import { capitalizeFirstLetter } from '../../util';
 import { AccountGuard } from '../../accountguard';
+import { Subscription } from 'rxjs/Subscription';
+import { FollowerState } from '../../app.state';
+import { Follower } from '../../model/follower';
 import { Fleet } from '../../model/fleet';
 import { Router } from '@angular/router';
 import { API } from '../../api.service';
+import { User } from '../../model/user';
 import { Store } from '@ngrx/store';
 
 import {
   activeStateAnimation,fadeInAnimation,gridAnimation,hideShowAnimation,
   scaleInAnimation
 } from '../../app.animations';
+
+import * as firebase from 'firebase';
 
 @Component({
   selector: 'app-follow',
@@ -33,22 +41,27 @@ export class FollowComponent implements OnInit,OnDestroy
   overlays: any[] = [];
   map: google.maps.Map;
   followmaphideshow = false;
+  followingnote = '';
 
   @ViewChild( FollowMapComponent )
   private followMapComponent: FollowMapComponent;
+
+  private followersSubscription?: Subscription = null;
 
   constructor( private api:API,
                private router:Router,
                private accountguard:AccountGuard,
                private routerstore:Store<RouterStateUrl>,
-               private changedetector:ChangeDetectorRef) {}
+               private followersstore:Store<FollowerState> ) {}
 
   ngOnInit(): void { this._ngOnInit(); }
 
-  cardBorder( fleet:Fleet ) { this._cardBorder( fleet ); }
+  isShared( fleet:Fleet ) : boolean { return this._isShared( fleet ); }
+
   onFleet( fleet:Fleet ) { this._onFleet( fleet ); }
   onTransporterSelection( transporterid:string ) { this._onTransporterSelection( transporterid ); }
   onMapReady( event ) { this._onMapReady( event ); }
+  onFindARide() {}
   onZoomMapToFleet() { this._onZoomMapToFleet(); }
   onRefresh() { this._onRefresh(); }
 
@@ -78,16 +91,28 @@ export class FollowComponent implements OnInit,OnDestroy
 
     this.working = true;
 
+    this.followersSubscription = this.followersstore.select( fromFollowers.selectAll ).subscribe(
+      (followers:Follower[]) => { this.fromFollowersStore( followers ); },
+      (error:Error) => { this.onError( error ); },
+      () => {}
+    );
+
     this.fetchFleets();
   }
 
-  private _cardBorder( fleet:Fleet ) : string { return( this.selectedfleet === fleet ? '2px solid #9090C0' : '' ); }
+  private _isShared( fleet:Fleet ) :boolean {
+    if ( fleet.ownerid ) {
+      return ( fleet.ownerid !== this.ownerid );
+    }
+    return false;
+  }
 
   private _onFleet( fleet:Fleet ) {
     if ( this.selectedfleet === fleet ) {
       return;
     }
     if ( this.selectedfleet != null ) {
+      this.followingnote = '';
       this.selectedfleet.state = 'inactive';
     }
 
@@ -97,10 +122,28 @@ export class FollowComponent implements OnInit,OnDestroy
     setTimeout(() => {
       this.selectedfleet = fleet;
       this.selectedfleet.state = 'active';
+      this.setFollowingNote();
       this.router.navigate([ 'follow' ],{ queryParams:{ fleetid:this.selectedfleet.id } } );
     },50 );
 
     setTimeout(() => { this.followmaphideshow = true; },500 );
+  }
+
+  private setFollowingNote() {
+    this.followingnote = '';
+    if ( !this.selectedfleet ) { return; }
+
+    const me = this;
+
+    if ( this.selectedfleet.ownerid !== this.ownerid ) {
+      firebase.database().ref('users' )
+        .child( this.selectedfleet.ownerid )
+        .once( 'value' )
+        .then( function( snapshot ) {
+          const user = snapshot.val() as User;
+          me.followingnote = 'Following: ' + capitalizeFirstLetter( user.firstname ) + ' ' + capitalizeFirstLetter( user.lastname );
+        } );
+    }
   }
 
   private _onTransporterSelection( transporterid:string ) {
@@ -120,22 +163,44 @@ export class FollowComponent implements OnInit,OnDestroy
     this.selectedfleet = null;
     this.selectedtransporterid = null;
     this.followmaphideshow = false;
+    this.followingnote = '';
     this.fetchFleets();
+  }
+
+  private fromFollowersStore( followers:Follower[] ) {
+    if ( !followers ) { return; }
+    followers.forEach(follower => {
+      this.api.getTransporter( follower.transporterid ).subscribe(transporter => {
+        this.api.getFleet( transporter.fleetid ).subscribe(fleet => {
+          this.append( fleet );
+        } );
+      } );
+    } );
   }
 
   private fetchFleets() {
     this.working = true;
 
-    const _fleets: Fleet[] = [];
+    this.fleets = [];
+
     this.api.getFleets( this.ownerid ).subscribe(
-      (f:Fleet) => { _fleets.push( f ); },
+      ( fleet:Fleet ) => { this.append( fleet ); },
       (e:Error) => this.onError( e ),
       () => {
         this.working = false;
-        this.fleets = _fleets;
         this.assumeSelectedFleetFromRouterState();
       }
     );
+  }
+
+  private append( fleet:Fleet ) {
+    const found: Fleet = this.fleets.find( f => (f.id === fleet.id) );
+    if ( found ) {
+      const indexOf = this.fleets.indexOf( found );
+      this.fleets[ indexOf ] = fleet;
+    } else {
+      this.fleets.push( fleet );
+    }
   }
 
   private assumeSelectedFleetFromRouterState() {
@@ -157,5 +222,7 @@ export class FollowComponent implements OnInit,OnDestroy
     console.log( error );
   }
 
-  private _ngOnDestroy(): void {}
+  private _ngOnDestroy(): void {
+    this.followersSubscription.unsubscribe();
+  }
 }

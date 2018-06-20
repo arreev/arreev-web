@@ -31,7 +31,8 @@ export class FleetTransporterParkComponent implements OnInit,OnDestroy
   /********************************************************************************************************************/
 
   private _ngOnInit(): void {
-    firebase.database().ref().once('value',s => {
+    const path = 'trackers/' + this.ownerid;
+    firebase.database().ref( path ).once('value',s => {
       this.updateFromSnapshot( s );
     } );
   }
@@ -45,7 +46,8 @@ export class FleetTransporterParkComponent implements OnInit,OnDestroy
       name: this.transportername
     };
 
-    firebase.database().ref( this.transporterid )
+    const path = 'trackers/' + this.ownerid + '/' + this.transporterid;
+    firebase.database().ref( path )
       .set( entry )
       .then(() => this.finished.emit() )
       .catch(e => this.onError( e ) );

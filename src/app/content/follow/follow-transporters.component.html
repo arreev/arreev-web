@@ -6,7 +6,10 @@
               [value]="transporters"  [hidden]="followtransporterslist.isEmpty()" [@list-animation]="transporters.length">
     <ng-template let-transporter pTemplate="item">
       <div class="follow-transporter-item" [@transporter-active-state]="transporter.state" (click)="onTransporter(transporter)">
-        &nbsp;&nbsp;{{transporter.name}}
+        <span style="margin-left:5px;">{{transporter.name}}</span>
+        <div style="flex:1;"></div>
+        <!--<span style="font-size:7pt;margin-right:5px;">{{transporter.latitude}} , {{transporter.longitude}}</span>-->
+        <span style="margin-left:5px;">{{transporter.id}}</span>
       </div>
     </ng-template>
   </p-dataList>
