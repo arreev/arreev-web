@@ -219,6 +219,10 @@ export class FollowMapComponent implements OnInit,OnChanges,OnDestroy
   }
 
   private onEditFollow( transporterid:string ) {
+    //
+  }
+
+  private onDoFollowOptions( transporterid:string ) {
     const transporter = this.transporters.find((t:Transporter) => (t.id === transporterid) );
     const follow = this.follows.find((f:Follow) => (f.transporterid === transporterid) );
     this.editfollow  = {

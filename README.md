@@ -70,6 +70,24 @@ in /node_modules/primeng/components/chips/chips.js - comment out backspace delet
 https://github.com/ngrx/store-devtools<br>
 https://blog.schwarty.com/using-ngrx-store-devtools-with-the-angular-cli-a3b5f88f12e9
 
+# FB Rules
+WAS:
+{
+  "rules": {
+    ".read": true,
+    ".write": true
+  }
+}
+
+NOW:
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null"
+  }
+}
+
+
 # Deploy
 https://cloud.google.com/appengine/docs/standard/java/getting-started/hosting-a-static-website<br>
 1. ng build --prod
